@@ -1,0 +1,4 @@
+com\abml\jpa\hibernate\repository\PersonaRepository.class
+com\abml\jpa\hibernate\service\PersonaService.class
+com\abml\jpa\hibernate\model\Persona.class
+com\ejercicioabml\abmlcontroller\AbmlcontrollerApplication.class
