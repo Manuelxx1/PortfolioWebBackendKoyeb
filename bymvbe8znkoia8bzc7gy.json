@@ -1,0 +1,57 @@
+[
+{
+    "type": "header",
+    "version": "4.8.4",
+    "comment": "Export to JSON plugin for PHPMyAdmin"
+},
+{
+    "type": "database",
+    "name": "bymvbe8znkoia8bzc7gy"
+},
+{
+    "type": "table",
+    "name": "hibernate_sequence",
+    "database": "bymvbe8znkoia8bzc7gy",
+    "data": 
+[
+{
+    "next_val": "1"
+},
+{
+    "next_val": "1"
+},
+{
+    "next_val": "1"
+},
+{
+    "next_val": "1"
+},
+{
+    "next_val": "1"
+}
+]
+
+}
+,{
+    "type": "table",
+    "name": "persona",
+    "database": "bymvbe8znkoia8bzc7gy",
+    "data": 
+[
+{
+    "id": "1",
+    "apellido": "Alegre",
+    "edad": "39",
+    "educacion": "Primaria,Secundaria,Terciaria completa, Educacion Terciaria 1:Auxiliar de Diseño Grafico en Instituto Padre Adolfo Kolping, Educacion Terciaria 2: Auxiliar Administrativo Contable en Fundacion Alfa, Educacion Terciaria 3: Tecnico de Smartphones en ISE Digital, IDIOMAS: Español,Ingles Intermedio ",
+    "email": "manuelbaidoxx6@gmail.com",
+    "experiencia": "PUESTO: Auxiliar de Diseño Grafico y Atencion al Publico en Taller de Diseño, AÑO: 2012-2016,PUESTO: Tecnico de Smartphones,Tablets,Notebooks,PC de Escritorio y Atencion al Publico en Servicio Tecnico,AÑO: 2018-2022 ",
+    "informacion": "DESARROLLADOR WEB FULL STACK JR ",
+    "nombre": "Manuel",
+    "password": "ingresaraportfolio",
+    "dni": "30790186",
+    "nombre_usuario": null
+}
+]
+
+}
+]
