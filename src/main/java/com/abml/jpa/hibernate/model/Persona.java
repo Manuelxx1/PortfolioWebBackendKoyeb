@@ -37,7 +37,7 @@ import lombok.Setter;
    //@Table(name = "Persona")
 public class Persona   {
     @Id //correspondiente al ID y la clave principal en la base de datos
-    @GeneratedValue (strategy=GenerationType.SEQUENCE)
+    @GeneratedValue (strategy=GenerationType.IDENTITY)
 
     public Long id;
      public Long dni;
