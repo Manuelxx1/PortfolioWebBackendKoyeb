@@ -27,15 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-//para crear las tables en nuestra base de datos
-//es fundamental las siguientes anotations
-@EnableJpaRepositories (basePackages = "com.abml.jpa.hibernate.repository") //Escanea el repositorio bajo el paquete especificado
-
-@EntityScan (basePackages = "com.abml.jpa.hibernate.model")//Escanea las entidades bajo el paquete especificado
-
-@ComponentScan (basePackages = "com.abml.jpa.hibernate.service", "com.abml.jpa.hibernate.model", "com.ejercicioabml.abmlcontroller.NoticiaController",
-"com.abml.jpa.hibernate.repository" ) // Especifica el paquete que se va a escanear, de lo contrario, solo el paquete donde se encuentra esta clase
 
 //luego de haber creado la table ya es posibles realizar el ABML en la base de datos usando los endpoints
 @RestController 
@@ -46,12 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
-public class AbmlcontrollerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AbmlcontrollerApplication.class, args);
-	}
-        
         
         //con Autowired inyectamos la dependecia que queremos usar sin crear un objeto instancia de esa class
         
