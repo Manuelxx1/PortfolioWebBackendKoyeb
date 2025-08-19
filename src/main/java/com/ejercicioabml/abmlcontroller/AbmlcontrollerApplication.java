@@ -34,7 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @EntityScan (basePackages = "com.abml.jpa.hibernate.model")//Escanea las entidades bajo el paquete especificado
 
-@ComponentScan (basePackages = "com.abml.jpa.hibernate.service") // Especifica el paquete que se va a escanear, de lo contrario, solo el paquete donde se encuentra esta clase
+@ComponentScan (basePackages = "com.abml.jpa.hibernate.service", "com.abml.jpa.hibernate.model", "com.ejercicioabml.abmlcontroller.NoticiaController",
+"com.abml.jpa.hibernate.repository" ) // Especifica el paquete que se va a escanear, de lo contrario, solo el paquete donde se encuentra esta clase
 
 //luego de haber creado la table ya es posibles realizar el ABML en la base de datos usando los endpoints
 @RestController 
