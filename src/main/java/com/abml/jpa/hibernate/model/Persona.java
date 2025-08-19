@@ -68,3 +68,18 @@ public class Persona   {
    
          
 }
+
+@Entity
+public class Noticia {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String titulo;
+
+    @Column(columnDefinition = "TEXT")
+    private String informacion;
+
+    private String linkHtml;
+}
+
