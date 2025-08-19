@@ -10,7 +10,7 @@ import com.abml.jpa.hibernate.model.Noticia;
 
 
 
-import com.abml.jpa.hibernate.service.PersonaService;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @EntityScan (basePackages = "com.abml.jpa.hibernate.model")//Escanea las entidades bajo el paquete especificado
 
-@ComponentScan (basePackages = "com.abml.jpa.hibernate.service") // Especifica el paquete que se va a escanear, de lo contrario, solo el paquete donde se encuentra esta clase
 
 
 
