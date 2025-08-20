@@ -18,9 +18,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 "com.abml.jpa.hibernate.repository" ) // Especifica el paquete que se va a escanear, de lo contrario, solo el paquete donde se encuentra esta clase
 
 
-public class AbmlcontrollerApplication {
+public class AbmlApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AbmlcontrollerApplication.class, args);
+		SpringApplication.run(AbmlApplication.class, args);
 	}
         
