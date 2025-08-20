@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
-
+public class AbmlcontrollerApplication {
 
         
         //con Autowired inyectamos la dependecia que queremos usar sin crear un objeto instancia de esa class
@@ -277,10 +277,4 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
 
     } 
         
-        
-   
-   
-
-         
-
 }
