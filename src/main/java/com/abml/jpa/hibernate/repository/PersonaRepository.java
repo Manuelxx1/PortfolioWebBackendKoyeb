@@ -58,6 +58,7 @@ void deleteBydni(Long dni);
       boolean existsByNombreAndPassword(String paramnombre,String parampassword);     
 
     
-   
+   List<Persona> findByInformacionContainingIgnoreCase(String frase);
+
 }
 
