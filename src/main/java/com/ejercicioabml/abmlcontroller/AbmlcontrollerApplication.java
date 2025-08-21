@@ -12,8 +12,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-
-
+//para conectarse directo al repository sin usar el service
+import com.abml.jpa.hibernate.repository.PersonaRepository;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -277,4 +277,31 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
 
     } 
         
+     @RestController
+@RequestMapping("/api/personas")
+public class PersonaController {
+
+    @Autowired
+    private PersonaRepository personaRepository;
+
+    @Value("${servidor.html.base-url}")
+    private String baseUrl; // Ej: http://localhost:8080/htmls/
+
+    @GetMapping("/html-link")
+    public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+        List<Persona> personas = personaRepository.findByInformacionContainingIgnoreCase(frase);
+
+        if (personas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró información que contenga esa frase.");
+        }
+
+        String nombreArchivo = frase.toLowerCase().replace(" ", "-") + ".html";
+        String urlCompleta = baseUrl + nombreArchivo;
+
+        String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
+        return ResponseEntity.ok(htmlLink);
+    }
+}
+   
 }
