@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 //para conectarse directo al repository sin usar el service
 import com.abml.jpa.hibernate.repository.PersonaRepository;
 
+
+import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
