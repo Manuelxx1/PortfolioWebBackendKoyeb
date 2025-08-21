@@ -277,9 +277,9 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
 
     } 
         
-     @RestController
-@RequestMapping("/api/personas")
-public class PersonaController {
+     
+
+
 
     @Autowired
     private PersonaRepository personaRepository;
@@ -302,6 +302,6 @@ public class PersonaController {
         String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
         return ResponseEntity.ok(htmlLink);
     }
-}
+
    
 }
