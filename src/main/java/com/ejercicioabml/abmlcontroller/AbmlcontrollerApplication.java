@@ -288,39 +288,39 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
 @Autowired
 private PersonaRepository personaRepository;
 
-@Value("${servidor.html.base-url}")
-private String baseUrl; // Ej: http://localhost:8080/htmls/
+@Value("${base.url}")
+    private String baseUrl;
 
-@GetMapping("/html-link")
-public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
-    if (frase == null || frase.isBlank()) {
-        return ResponseEntity.badRequest().body("La frase no puede estar vacía.");
-    }
+        @GetMapping("/html-link")
+    public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+        if (frase == null || frase.isBlank()) {
+            return ResponseEntity.badRequest().body("La frase no puede estar vacía.");
+        }
 
-    // Normaliza la baseUrl para que siempre termine con "/"
-    String urlBase = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+        // Normaliza la URL base para que siempre termine con "/"
+        String urlBase = baseUrl.trim();
+        if (!urlBase.endsWith("/")) {
+            urlBase += "/";
+        }
 
-    List<Persona> personas = personaRepository.findAll();
+        List<Persona> personas = personaRepository.findAll();
 
-    for (Persona persona : personas) {
-        String info = persona.getInformacion();
-        if (info == null) continue; // Evita NullPointerException
+        for (Persona persona : personas) {
+            String info = persona.getInformacion();
+            if (info == null) continue;
 
-        String[] palabras = frase.toLowerCase().split("\\s+");
-
-        for (String palabra : palabras) {
-            if (info.toLowerCase().contains(palabra)) {
-                String urlCompleta = urlBase + "explicacion.html";
-                String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
-                return ResponseEntity.ok(htmlLink);
+            String[] palabras = frase.toLowerCase().split("\\s+");
+            for (String palabra : palabras) {
+                if (info.toLowerCase().contains(palabra)) {
+                    String urlCompleta = urlBase + "explicacion.html";
+                    String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
+                    return ResponseEntity.ok(htmlLink);
+                }
             }
         }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró información que contenga esa palabra.");
     }
-
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body("No se encontró información que contenga esa palabra.");
-}
-
-    
    
 }
