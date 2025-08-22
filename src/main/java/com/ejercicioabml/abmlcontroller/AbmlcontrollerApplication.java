@@ -285,24 +285,32 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
      
 
 
+@Autowired
+private PersonaRepository personaRepository;
 
-    @Autowired
-    private PersonaRepository personaRepository;
+@Value("${servidor.html.base-url}")
+private String baseUrl; // Ej: http://localhost:8080/htmls/
 
-    @Value("${servidor.html.base-url}")
-    private String baseUrl; // Ej: http://localhost:8080/htmls/
-
-    @GetMapping("/html-link")
+@GetMapping("/html-link")
 public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+    if (frase == null || frase.isBlank()) {
+        return ResponseEntity.badRequest().body("La frase no puede estar vacía.");
+    }
+
+    // Normaliza la baseUrl para que siempre termine con "/"
+    String urlBase = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+
     List<Persona> personas = personaRepository.findAll();
 
     for (Persona persona : personas) {
-        String info = persona.getInformacion().toLowerCase();
-        String[] palabras = frase.toLowerCase().split(" ");
+        String info = persona.getInformacion();
+        if (info == null) continue; // Evita NullPointerException
+
+        String[] palabras = frase.toLowerCase().split("\\s+");
 
         for (String palabra : palabras) {
-            if (info.contains(palabra)) {
-                String urlCompleta = baseUrl + "explicacion.html";
+            if (info.toLowerCase().contains(palabra)) {
+                String urlCompleta = urlBase + "explicacion.html";
                 String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
                 return ResponseEntity.ok(htmlLink);
             }
@@ -310,8 +318,9 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     }
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body("No se encontró información que contenga esa palabra.");
+            .body("No se encontró información que contenga esa palabra.");
 }
 
+    
    
 }
