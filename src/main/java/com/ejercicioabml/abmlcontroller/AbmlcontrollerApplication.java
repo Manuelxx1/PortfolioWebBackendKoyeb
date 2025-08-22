@@ -291,25 +291,17 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
-        @GetMapping("/html-link")
+      @GetMapping("/html-link")
 public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     List<Persona> personas = personaRepository.findAll();
 
-    // Normaliza la baseUrl para que siempre tenga barra
-    String urlBase = (baseUrl != null ? baseUrl.trim() : "");
-    if (!urlBase.endsWith("/")) {
-        urlBase += "/";
-    }
-
     for (Persona persona : personas) {
-        String info = persona.getInformacion();
-        if (info == null) continue; // Evita NullPointerException
-
-        String[] palabras = frase.toLowerCase().split("\\s+");
+        String info = persona.getInformacion().toLowerCase();
+        String[] palabras = frase.toLowerCase().split(" ");
 
         for (String palabra : palabras) {
-            if (info.toLowerCase().contains(palabra)) {
-                String urlCompleta = urlBase + "explicacion.html";
+            if (info.contains(palabra)) {
+                String urlCompleta = baseUrl + "explicacion.html";
                 String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
                 return ResponseEntity.ok(htmlLink);
             }
@@ -319,6 +311,7 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("No se encontró información que contenga esa palabra.");
 }
+  
 
 
 }
