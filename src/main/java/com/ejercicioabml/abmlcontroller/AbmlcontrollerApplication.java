@@ -291,36 +291,26 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
-        @GetMapping("/html-link")
-    public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
-        if (frase == null || frase.isBlank()) {
-            return ResponseEntity.badRequest().body("La frase no puede estar vacía.");
-        }
+        
+   @GetMapping("/html-link")
+public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+    List<Persona> personas = personaRepository.findAll();
 
-        // Normaliza la URL base para que siempre termine con "/"
-        String urlBase = baseUrl.trim();
-        if (!urlBase.endsWith("/")) {
-            urlBase += "/";
-        }
+    for (Persona persona : personas) {
+        String info = persona.getInformacion().toLowerCase();
+        String[] palabras = frase.toLowerCase().split(" ");
 
-        List<Persona> personas = personaRepository.findAll();
-
-        for (Persona persona : personas) {
-            String info = persona.getInformacion();
-            if (info == null) continue;
-
-            String[] palabras = frase.toLowerCase().split("\\s+");
-            for (String palabra : palabras) {
-                if (info.toLowerCase().contains(palabra)) {
-                    String urlCompleta = urlBase + "explicacion.html";
-                    String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
-                    return ResponseEntity.ok(htmlLink);
-                }
+        for (String palabra : palabras) {
+            if (info.contains(palabra)) {
+                String urlCompleta = baseUrl + "explicacion.html";
+                String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
+                return ResponseEntity.ok(htmlLink);
             }
         }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("No se encontró información que contenga esa palabra.");
     }
-   
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body("No se encontró información que contenga esa palabra.");
+}
+
 }
