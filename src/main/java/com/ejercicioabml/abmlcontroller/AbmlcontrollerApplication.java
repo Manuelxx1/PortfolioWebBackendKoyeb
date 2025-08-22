@@ -293,20 +293,25 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
     private String baseUrl; // Ej: http://localhost:8080/htmls/
 
     @GetMapping("/html-link")
-    public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
-        List<Persona> personas = personaRepository.findByInformacionContainingIgnoreCase(frase);
+public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+    List<Persona> personas = personaRepository.findAll();
 
-        if (personas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("No se encontró información que contenga esa frase.");
+    for (Persona persona : personas) {
+        String info = persona.getInformacion().toLowerCase();
+        String[] palabras = frase.toLowerCase().split(" ");
+
+        for (String palabra : palabras) {
+            if (info.contains(palabra)) {
+                String urlCompleta = baseUrl + "explicacion.html";
+                String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
+                return ResponseEntity.ok(htmlLink);
+            }
         }
-
-        String nombreArchivo = frase.toLowerCase().replace(" ", "-") + ".html";
-        String urlCompleta = baseUrl + nombreArchivo;
-
-        String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
-        return ResponseEntity.ok(htmlLink);
     }
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body("No se encontró información que contenga esa palabra.");
+}
 
    
 }
