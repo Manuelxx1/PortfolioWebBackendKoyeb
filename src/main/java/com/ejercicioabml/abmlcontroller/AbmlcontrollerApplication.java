@@ -3,8 +3,8 @@ package com.ejercicioabml.abmlcontroller;
 
 
 import com.abml.jpa.hibernate.model.Persona;
-
-
+//normalizar búsqueda sin acento
+import java.text.Normalizer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -291,16 +291,22 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
-      @GetMapping("/html-link")
+      
+
+@GetMapping("/html-link")
 public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     List<Persona> personas = personaRepository.findAll();
 
+    // Normalizamos la frase del usuario (sin acentos, en minúscula)
+    String fraseNormalizada = quitarAcentos(frase.toLowerCase());
+    String[] palabras = fraseNormalizada.split(" ");
+
     for (Persona persona : personas) {
-        String info = persona.getInformacion().toLowerCase();
-        String[] palabras = frase.toLowerCase().split(" ");
+        // Normalizamos también la información de la persona
+        String infoNormalizada = quitarAcentos(persona.getInformacion().toLowerCase());
 
         for (String palabra : palabras) {
-            if (info.contains(palabra)) {
+            if (infoNormalizada.contains(palabra)) {
                 String urlCompleta = baseUrl + "explicacion.html";
                 String htmlLink = "<html><body><a href=\"" + urlCompleta + "\" target=\"_blank\">Ver explicación</a></body></html>";
                 return ResponseEntity.ok(htmlLink);
@@ -311,7 +317,13 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("No se encontró información que contenga esa palabra.");
 }
-  
+
+// Función para quitar acentos
+private String quitarAcentos(String texto) {
+    return Normalizer.normalize(texto, Normalizer.Form.NFD)
+                     .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+}
+
 
 
 }
