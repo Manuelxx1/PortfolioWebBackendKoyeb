@@ -302,7 +302,7 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
         for (String palabra : palabras) {
             if (info.contains(palabra)) {
                 String urlCompleta = baseUrl + "explicacion.html";
-                String htmlLink = "<html><body><a href=\"" + urlCompleta + "\">Ver explicación</a></body></html>";
+                String htmlLink = "<html><body><a href=\"" + urlCompleta + "\" target=\"_blank\">Ver explicación</a></body></html>";
                 return ResponseEntity.ok(htmlLink);
             }
         }
