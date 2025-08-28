@@ -325,5 +325,12 @@ private String quitarAcentos(String texto) {
 }
 
 
+        // Archivo de tu controlador de Spring Boot
+// ...
+@GetMapping("/test-param")
+public ResponseEntity<String> testearParametro(@RequestParam String frase) {
+    System.out.println("Parámetro recibido: '" + frase + "'");
+    return ResponseEntity.ok("Recibido: " + frase);
+}
 
 }
