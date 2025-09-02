@@ -37,7 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController 
 //@CrossOrigin afecta el funcionamiento de Postman
 //@CrossOrigin es fundamental para conectar angular con el backend Springboot
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://4200-cs-a039ce25-3610-425a-9d0a-fbf343f80023.cs-us-east1-pkhd.cloudshell.dev")
+
 
 
 
