@@ -1,17 +1,11 @@
-# Usa una imagen base liviana con Java 17
-FROM openjdk:17-jdk-slim
-
-# Crea un directorio de trabajo dentro del contenedor
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copia el archivo JAR al contenedor
-COPY target/abmlcontroller-0.0.1-SNAPSHOT.jar app.jar
-
-# Expone el puerto que Render asigna dinámicamente
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/abmlcontroller-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# Render usa la variable de entorno PORT, así que Spring Boot debe respetarla
 ENV PORT=8080
-
-# Comando para ejecutar la app
 ENTRYPOINT ["java", "-jar", "app.jar"]
