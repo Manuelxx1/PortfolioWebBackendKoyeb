@@ -404,6 +404,7 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("No se encontró información que contenga esa palabra.");
 }
+        */
 
 // Función para quitar acentos
 private String quitarAcentos(String texto) {
@@ -411,7 +412,6 @@ private String quitarAcentos(String texto) {
                      .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 }
 
-*/
         // Archivo de tu controlador de Spring Boot
 // ...
 @GetMapping("/test-param")
