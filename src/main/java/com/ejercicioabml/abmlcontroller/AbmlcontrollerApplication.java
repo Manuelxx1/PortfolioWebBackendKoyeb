@@ -293,16 +293,58 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
-private static final Map<String, String> archivoPorPalabra = Map.ofEntries(
-    Map.entry("agua", "agua.html"),
-    Map.entry("informacion", "agua.html"),
-        Map.entry("informacion",  "explicacion.html" ),
-    Map.entry("sistema","explicacion.html"),
-    Map.entry("solar", "explicacion.html")
+
+private static final Map<String, List<String>> archivoPorPalabra = Map.of(
+    "agua", List.of("agua.html", "explicacion.html"),
+    "informacion", List.of("agua.html", "explicacion.html"),
+    "sistema", List.of("sistema.html", "explicacion.html"),
+    "solar", List.of("solar.html", "explicacion.html")
 );
 
+        //map ampliado a varios HTML
+       @GetMapping("/html-link")
+public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+    List<Persona> personas = personaRepository.findAll();
+    String fraseNormalizada = quitarAcentos(frase.toLowerCase());
+    String[] palabras = fraseNormalizada.split(" ");
 
-        
+    Set<String> archivosCoincidentes = new LinkedHashSet<>();
+
+    for (Persona persona : personas) {
+        String infoNormalizada = quitarAcentos(persona.getInformacion().toLowerCase());
+
+        for (String palabra : palabras) {
+            if (infoNormalizada.contains(palabra)) {
+                List<String> archivos = archivoPorPalabra.get(palabra);
+                if (archivos != null) {
+                    archivosCoincidentes.addAll(archivos);
+                }
+            }
+        }
+    }
+
+    if (archivosCoincidentes.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("No se encontró información que contenga esa palabra.");
+    }
+
+    // Generar HTML con todos los enlaces encontrados
+    StringBuilder htmlBuilder = new StringBuilder("<html><body>");
+    for (String archivo : archivosCoincidentes) {
+        String urlCompleta = baseUrl + archivo;
+        htmlBuilder.append("<a href=\"").append(urlCompleta)
+                   .append("\" target=\"_blank\">Ver ").append(archivo.replace(".html", ""))
+                   .append("</a><br>");
+    }
+    htmlBuilder.append("</body></html>");
+
+    return ResponseEntity.ok(htmlBuilder.toString());
+}
+ 
+
+
+ /*       
+ Para el filtrado por Map pero limitado
 @GetMapping("/html-link")
 public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     List<Persona> personas = personaRepository.findAll();
@@ -327,10 +369,11 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
         .body("No se encontró información que contenga esa palabra.");
 }
 
-
+*/
 
         
 /*
+Para el simple retorna explicación.html
 @GetMapping("/html-link")
 public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     List<Persona> personas = personaRepository.findAll();
