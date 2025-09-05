@@ -13,6 +13,12 @@ import com.abml.jpa.hibernate.service.PersonaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
+
+import java.util.Set;  // si usás Set para evitar duplicados
+import java.util.LinkedHashSet; // si usás LinkedHashSet como en el ejemplo anterior
+
+
 
 //para conectarse directo al repository sin usar el service
 import com.abml.jpa.hibernate.repository.PersonaRepository;
