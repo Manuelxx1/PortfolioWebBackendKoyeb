@@ -293,8 +293,44 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
-      
+private static final Map<String, String> archivoPorPalabra = Map.ofEntries(
+    Map.entry("agua", "agua.html"),
+    Map.entry("informacion", "agua.html"),
+        Map.entry("informacion",  "explicacion.html" ),
+    Map.entry("sistema","explicacion.html"),
+    Map.entry("solar", "explicacion.html")
+);
 
+
+        
+@GetMapping("/html-link")
+public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+    List<Persona> personas = personaRepository.findAll();
+
+    String fraseNormalizada = quitarAcentos(frase.toLowerCase());
+    String[] palabras = fraseNormalizada.split(" ");
+
+    for (Persona persona : personas) {
+        String infoNormalizada = quitarAcentos(persona.getInformacion().toLowerCase());
+
+        for (String palabra : palabras) {
+            if (infoNormalizada.contains(palabra)) {
+                String archivoHtml = archivoPorPalabra.getOrDefault(palabra, "explicacion.html");
+                String urlCompleta = baseUrl + archivoHtml;
+                String htmlLink = "<html><body><a href=\"" + urlCompleta + "\" target=\"_blank\">Ver explicación</a></body></html>";
+                return ResponseEntity.ok(htmlLink);
+            }
+        }
+    }
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body("No se encontró información que contenga esa palabra.");
+}
+
+
+
+        
+/*
 @GetMapping("/html-link")
 public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     List<Persona> personas = personaRepository.findAll();
@@ -326,7 +362,7 @@ private String quitarAcentos(String texto) {
                      .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 }
 
-
+*/
         // Archivo de tu controlador de Spring Boot
 // ...
 @GetMapping("/test-param")
