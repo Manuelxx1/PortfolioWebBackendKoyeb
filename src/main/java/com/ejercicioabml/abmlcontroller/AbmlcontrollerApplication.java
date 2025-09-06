@@ -305,7 +305,7 @@ private static final Map<String, List<String>> archivoPorPalabra = Map.of(
     "informacion", List.of("agua.html", "explicacion.html","El planeta tierra"),
     "sistema", List.of("sistema.html", "explicacion.html"),
     "solar", List.of("solar.html", "explicacion.html"),
-"planeta", List.of( "El planeta tierra")
+"planeta", List.of( "El planeta tierra"),
 "tierra", List.of( "El planeta tierra")
         
 );
