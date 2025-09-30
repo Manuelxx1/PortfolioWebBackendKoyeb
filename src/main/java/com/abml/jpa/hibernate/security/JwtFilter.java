@@ -1,7 +1,7 @@
 @Component
 public class JwtFilter extends OncePerRequestFilter {
   @Autowired private JwtUtil jwtUtil;
-  @Autowired private UserService userService;
+  @Autowired private PersonaService userService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
