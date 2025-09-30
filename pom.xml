@@ -51,6 +51,9 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		  <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-security"/>
+  <dependency groupId="io.jsonwebtoken" artifactId="jjwt" version="0.9.1"/>
 	</dependencies>
 
 	<build>
