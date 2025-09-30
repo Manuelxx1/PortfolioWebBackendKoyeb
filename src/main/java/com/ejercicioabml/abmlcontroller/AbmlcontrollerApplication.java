@@ -60,7 +60,8 @@ public class AbmlcontrollerApplication {
                 //en la variable interPersona se guarda los datos de la class PersonaService
                 //que es la encargada de llamar a JPARepositories
                 PersonaService interPersona ;
-       
+       @Autowired private JwtUtil jwtUtil;
+  @Autowired private AuthenticationManager authManager;
         
         //ENDPOINTS
         //cuando accedemos a  la ruta personas/traer
@@ -422,5 +423,29 @@ public ResponseEntity<String> testearParametro(@RequestParam String frase) {
     System.out.println("Parámetro recibido: '" + frase + "'");
     return ResponseEntity.ok("Recibido: " + frase);
 }
+
+        //login copilot
+  @PostMapping("/register")
+  public ResponseEntity<?> register(@RequestBody Persona user) {
+    return ResponseEntity.ok(interPersona.save(user));
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody Persona user) {
+    authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+    String token = jwtUtil.generateToken(user.getUsername());
+    return ResponseEntity.ok(Map.of("token", token));
+  }
+
+  @GetMapping("/profile")
+  public ResponseEntity<?> profile() {
+    return ResponseEntity.ok("Acceso autorizado al perfil");
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+  }
+        
 
 }
