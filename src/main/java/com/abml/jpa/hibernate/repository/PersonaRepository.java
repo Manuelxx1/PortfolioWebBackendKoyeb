@@ -60,5 +60,8 @@ void deleteBydni(Long dni);
     
    List<Persona> findByInformacionContainingIgnoreCase(String frase);
 
+ //login nuevo copilot
+ Optional<User> findByUsername(String username);
+
 }
 
