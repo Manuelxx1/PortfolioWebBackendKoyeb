@@ -8,8 +8,18 @@ import java.text.Normalizer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Value;
 
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
 
+//import java.util.Map;
 import com.abml.jpa.hibernate.service.PersonaService;
+import com.abml.jpa.hibernate.security.JwtUtil;
+
+
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +32,7 @@ import java.util.LinkedHashSet; // si usás LinkedHashSet como en el ejemplo ant
 
 //para conectarse directo al repository sin usar el service
 import com.abml.jpa.hibernate.repository.PersonaRepository;
+
 
 
 import org.springframework.http.HttpStatus;
