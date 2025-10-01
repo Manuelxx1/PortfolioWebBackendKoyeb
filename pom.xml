@@ -63,6 +63,22 @@
 	  <artifactId>jjwt</artifactId>
 	  <version>0.9.1</version>
 	  </dependency>
+
+		<!-- Spring Security -->
+<dependency>
+  <groupId>org.springframework.security</groupId>
+  <artifactId>spring-security-config</artifactId>
+</dependency>
+
+<!-- Servlet API (para jakarta.servlet) -->
+<dependency>
+  <groupId>jakarta.servlet</groupId>
+  <artifactId>jakarta.servlet-api</artifactId>
+  <version>6.0.0</version>
+  <scope>provided</scope>
+</dependency>
+
+		
 	</dependencies>
 
 	<build>
