@@ -114,17 +114,18 @@ public class PersonaService {
         return listaPersonas;
        }
 
-  @Autowired private PasswordEncoder encoder;
+@Autowired
+private PasswordEncoder encoder;
 
-  public User save(Persona user) {
+public Persona save(Persona user) {
     user.setPassword(encoder.encode(user.getPassword()));
     return persoRepository.save(user);
-  }
+}
 
-  public User findByUsername(String username) {
-    return persoRepository.findByUsername(username).orElse(null);
-  }
-   
+public Persona findByUsername(String username) {
+    return persoRepository.findByNombre(username).orElse(null);
+}
+
 }
      
    
