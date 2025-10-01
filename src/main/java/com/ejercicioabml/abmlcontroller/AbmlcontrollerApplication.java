@@ -412,27 +412,25 @@ public ResponseEntity<String> testearParametro(@RequestParam String frase) {
 }
 
         //login copilot
-  @PostMapping("/register")
-public ResponseEntity<?> register(@RequestBody Persona user) {
-  return ResponseEntity.ok(interPersona.save(user));
-}
 
-@PostMapping("/login")
-public ResponseEntity<?> login(@RequestBody Persona user) {
-  authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getNombre(), user.getPassword()));
-  String token = jwtUtil.generateToken(user.getNombre());
-  return ResponseEntity.ok(Map.of("token", token));
-}
+        
+@PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody Persona user) {
+        return ResponseEntity.ok(interPersona.save(user));
+    }
 
-@GetMapping("/profile")
-public ResponseEntity<?> profile() {
-  return ResponseEntity.ok("Acceso autorizado al perfil");
-}
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Persona user) {
+        authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.getNombre(), user.getPassword())
+        );
+        String token = jwtUtil.generateToken(user.getNombre());
+        return ResponseEntity.ok(Map.of("token", token));
+    }
 
-@Bean
-public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-  return config.getAuthenticationManager();
-}
-
+    @GetMapping("/profile")
+    public ResponseEntity<?> profile() {
+        return ResponseEntity.ok("Acceso autorizado al perfil");
+    }
 
 }
