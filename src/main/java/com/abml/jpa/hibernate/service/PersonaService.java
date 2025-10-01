@@ -126,9 +126,6 @@ public Persona findByUsername(String username) {
     return persoRepository.findByNombre(username).orElse(null);
 }
 
-public boolean buscarPorNombre(String paramnombre, String parampassword) {
-    return persoRepository.existsByNombreAndPassword(paramnombre, parampassword);
-}
 
 
 }
