@@ -1,63 +1,29 @@
+
 package com.ejercicioabml.abmlcontroller;
 
-
-
 import com.abml.jpa.hibernate.model.Persona;
-//normalizar búsqueda sin acento
-import java.text.Normalizer;
-import org.springframework.http.ResponseEntity;
+import com.abml.jpa.hibernate.repository.PersonaRepository;
+import com.abml.jpa.hibernate.service.PersonaService;
+import com.abml.jpa.hibernate.security.JwtUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.http.ResponseEntity;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationConfiguration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import org.springframework.web.bind.annotation.*;
 
-//import java.util.Map;
-import com.abml.jpa.hibernate.service.PersonaService;
-import com.abml.jpa.hibernate.security.JwtUtil;
-
-
-
+import java.text.Normalizer;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Map;
+import java.util.Set;
+import java.util.LinkedHashSet;
 
-import java.util.Set;  // si usás Set para evitar duplicados
-import java.util.LinkedHashSet; // si usás LinkedHashSet como en el ejemplo anterior
-
-
-
-//para conectarse directo al repository sin usar el service
-import com.abml.jpa.hibernate.repository.PersonaRepository;
-
-
-
-import org.springframework.http.HttpStatus;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 
 //luego de haber creado la table ya es posibles realizar el ABML en la base de datos usando los endpoints
