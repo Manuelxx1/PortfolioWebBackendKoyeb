@@ -32,8 +32,8 @@ import lombok.Setter;
 //ylos @getters para obtner los datos en el controller y enviarlo hacia el Front End en este caso 
 //hacia angular
 //
-@Getter @Setter //getters y setter automatizados,no hace falta crearlos
-@Entity //@Entity: indica que esta es una entidad con la que se va a trabajar para hacer la persistencia hacia la base de datos
+//@Getter @Setter //getters y setter automatizados,no hace falta crearlos
+//@Entity //@Entity: indica que esta es una entidad con la que se va a trabajar para hacer la persistencia hacia la base de datos
    //@Table(name = "Persona")
 /* public class Persona   {
     @Id //correspondiente al ID y la clave principal en la base de datos
