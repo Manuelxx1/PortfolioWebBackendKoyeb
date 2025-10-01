@@ -3,6 +3,7 @@ package com.abml.jpa.hibernate.config;
 
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.security.JwtFilter;
+import org.springframework.security.authentication.AuthenticationConfiguration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
