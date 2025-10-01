@@ -26,6 +26,10 @@ public class SecurityConfig {
   @Autowired
   private JwtFilter jwtFilter;
 
+  @Autowired
+private AuthenticationManager authenticationManager;
+
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
@@ -47,8 +51,5 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-    return config.getAuthenticationManager();
-  }
+  
 }
