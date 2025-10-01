@@ -51,7 +51,7 @@ import lombok.Setter;
                 private String experiencia;
                 private String educacion;
                 
-    
+    */
            /* public Persona(int Pid,String Pnombre, String Papellido,int Pedad){
              //cuando obtenemos los datos desde un JSP/HTML o un simulador de solicitudes HTTP REST como el software Postman
              //guardamos en las variables y asi poder acceder a esos valores
@@ -67,8 +67,7 @@ import lombok.Setter;
         */     
    
          
-}
-*/
+//}
 
 package com.abml.jpa.hibernate.model;
 
