@@ -1,7 +1,8 @@
-            package com.abml.jpa.hibernate.security;
+package com.abml.jpa.hibernate.security;
 
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.service.PersonaService;
+import com.abml.jpa.hibernate.security.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,7 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private PersonaService userService;
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
 
     String authHeader = request.getHeader("Authorization");
@@ -35,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
       String token = authHeader.substring(7);
       String username = jwtUtil.extractUsername(token);
-      Persona user = userService.findByUsername(username); // ← reemplazado User por Persona
+      Persona user = userService.findByUsername(username);
 
       if (user != null && jwtUtil.validateToken(token, username)) {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
@@ -44,6 +45,6 @@ public class JwtFilter extends OncePerRequestFilter {
       }
     }
 
-    chain.doFilter(request, response);
+    filterChain.doFilter(request, response);
   }
 }
