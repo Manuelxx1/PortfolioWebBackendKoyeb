@@ -39,17 +39,17 @@ public class Persona   {
     @Id //correspondiente al ID y la clave principal en la base de datos
     @GeneratedValue (strategy=GenerationType.IDENTITY)
 
-    public Long id;
-     public Long dni;
+    private Long id;
+     private Long dni;
 
-    public String nombre;
-    public String apellido;
-    public String email;
-      public String password;
-    public int edad;
-          public String informacion;
-                public String experiencia;
-                public String educacion;
+    private String nombre;
+    private String apellido;
+    private String email;
+      private String password;
+    private int edad;
+          private String informacion;
+                private String experiencia;
+                private String educacion;
                 
     
            /* public Persona(int Pid,String Pnombre, String Papellido,int Pedad){
