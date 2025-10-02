@@ -1,10 +1,8 @@
 package com.ejercicioabml.abmlcontroller.security;
 
-
-import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.service.PersonaService;
-
-import com.ejercicioabml.abmlcontroller.security.JwtUtil;
+import com.abml.jpa.hibernate.model.Persona;
+import com.abml.jpa.hibernate.security.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,41 +10,53 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private JwtUtil jwtUtil;
+    @Autowired
+    private JwtUtil jwtUtil;
 
-  @Autowired
-  private PersonaService userService;
+    private PersonaService userService;
 
-  @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-    String authHeader = request.getHeader("Authorization");
+        if (userService == null) {
+            userService = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(request.getServletContext())
+                .getBean(PersonaService.class);
+        }
 
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      String token = authHeader.substring(7);
-      String username = jwtUtil.extractUsername(token);
-      Persona user = userService.findByUsername(username);
+        String authHeader = request.getHeader("Authorization");
 
-      if (user != null && jwtUtil.validateToken(token, username)) {
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-            username, null, List.of());
-        SecurityContextHolder.getContext().setAuthentication(auth);
-      }
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            String username = jwtUtil.extractUsername(token);
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                Persona user = userService.findByUsername(username);
+
+                if (user != null && jwtUtil.validateToken(token, user)) {
+                    UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(user, null, null);
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+        }
+
+        filterChain.doFilter(request, response);
     }
-
-    filterChain.doFilter(request, response);
-  }
 }
