@@ -3,7 +3,8 @@ package com.ejercicioabml.abmlcontroller.security;
 
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.service.PersonaService;
-import com.abml.jpa.hibernate.security.JwtUtil;
+
+import com.ejercicioabml.abmlcontroller.security.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
