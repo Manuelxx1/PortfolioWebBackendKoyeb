@@ -5,12 +5,8 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Etapa 2: Imagen final con JDK 17
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-
-# Puerto expuesto (ajustá si usás otro)
 EXPOSE 8080
-
-# Comando de ejecución
 ENTRYPOINT ["java", "-jar", "app.jar"]
