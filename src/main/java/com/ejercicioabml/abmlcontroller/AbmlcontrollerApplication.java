@@ -34,9 +34,10 @@ import java.util.LinkedHashSet;
 
 
 
+private final AuthenticationManager authManager;
 
-
-public class AbmlcontrollerApplication {
+public class AbmlcontrollerApplication (AuthenticationManager authManager) {
+    this.authManager = authManager;
 
         
         //con Autowired inyectamos la dependecia que queremos usar sin crear un objeto instancia de esa class
@@ -48,7 +49,7 @@ public class AbmlcontrollerApplication {
                 //que es la encargada de llamar a JPARepositories
                 PersonaService interPersona ;
        @Autowired private JwtUtil jwtUtil;
-  @Autowired private AuthenticationManager authManager;
+//@Autowired private AuthenticationManager authManager;
         
         //ENDPOINTS
         //cuando accedemos a  la ruta personas/traer
