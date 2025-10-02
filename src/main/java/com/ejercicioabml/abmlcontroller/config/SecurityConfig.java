@@ -1,7 +1,7 @@
 package com.ejercicioabml.abmlcontroller.config;
 
 
-import com.abml.jpa.hibernate.security.JwtFilter;
+import com.ejercicioabml.abmlcontroller.security.JwtFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
