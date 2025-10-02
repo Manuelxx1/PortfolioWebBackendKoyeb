@@ -1,4 +1,6 @@
 package com.ejercicioabml.abmlcontroller.config;
+//import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationConfiguration;
 
 
 import com.ejercicioabml.abmlcontroller.security.JwtFilter;
@@ -47,8 +49,10 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  @Bean
-  public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-    return http.getSharedObject(AuthenticationManager.class);
-  }
+@Bean
+public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+}
+
+  
 }
