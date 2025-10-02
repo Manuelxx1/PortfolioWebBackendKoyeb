@@ -34,10 +34,21 @@ import java.util.LinkedHashSet;
 
 
 
-private final AuthenticationManager authManager;
 
-public class AbmlcontrollerApplication (AuthenticationManager authManager) {
-    this.authManager = authManager;
+
+public class AbmlcontrollerApplication{
+                                        
+    private final AuthenticationManager authManager;
+   // private final PersonaService interPersona;
+    private final JwtUtil jwtUtil;
+
+    public AbmlcontrollerApplication(AuthenticationManager authManager,JwtUtil jwtUtil) {
+    
+                                     
+        this.authManager = authManager;
+        
+        this.jwtUtil = jwtUtil;
+    }
 
         
         //con Autowired inyectamos la dependecia que queremos usar sin crear un objeto instancia de esa class
@@ -48,7 +59,7 @@ public class AbmlcontrollerApplication (AuthenticationManager authManager) {
   @Autowired  private PersonaService interPersona ;
                 
                 
-       @Autowired private JwtUtil jwtUtil;
+       //@Autowired private JwtUtil jwtUtil;
 //@Autowired private AuthenticationManager authManager;
         
         //ENDPOINTS
