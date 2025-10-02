@@ -42,12 +42,12 @@ public class AbmlcontrollerApplication (AuthenticationManager authManager) {
         
         //con Autowired inyectamos la dependecia que queremos usar sin crear un objeto instancia de esa class
         
-        @Autowired
-
-        private 
-                //en la variable interPersona se guarda los datos de la class PersonaService
+        
+//en la variable interPersona se guarda los datos de la class PersonaService
                 //que es la encargada de llamar a JPARepositories
-                PersonaService interPersona ;
+  @Autowired  private PersonaService interPersona ;
+                
+                
        @Autowired private JwtUtil jwtUtil;
 //@Autowired private AuthenticationManager authManager;
         
