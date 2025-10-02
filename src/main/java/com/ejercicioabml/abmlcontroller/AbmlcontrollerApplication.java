@@ -4,7 +4,7 @@ package com.ejercicioabml.abmlcontroller;
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
 import com.abml.jpa.hibernate.service.PersonaService;
-import com.abml.jpa.hibernate.security.JwtUtil;
+import com.ejercicioabml.abmlcontroller.security.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
