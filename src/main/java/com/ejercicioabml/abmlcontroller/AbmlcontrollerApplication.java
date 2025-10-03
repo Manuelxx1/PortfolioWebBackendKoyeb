@@ -274,7 +274,7 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
        
               // Función de inicio de sesión
         //usando @RequestBody 
- @PostMapping("/login")
+ @PostMapping("/loginsinjwt")
     public boolean  Login(@RequestBody Persona perso){
 
          boolean login= interPersona.buscarPorNombre(perso.getNombre(),perso.getPassword());
