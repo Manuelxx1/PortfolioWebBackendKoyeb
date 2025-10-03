@@ -35,17 +35,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    new AntPathRequestMatcher("/login"),
-                    new AntPathRequestMatcher("/register")
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+        http
+          // 1. Deshabilita CSRF porque es una API stateless
+          .csrf(csrf -> csrf.disable())
+          
+          // 2. Define qué rutas permites sin autenticación
+          .authorizeHttpRequests(auth -> auth
+              // endpoints públicos
+              .requestMatchers("/login", "/register").permitAll()
+              
+              // endpoint protegido: requiere JWT válido
+              .requestMatchers("/profile").authenticated()
+              
+              // TODO: si tienes más rutas que quieres públicas, añádelas aquí
+              
+              // el resto: público
+              .anyRequest().permitAll()
+          )
+          
+          // 3. Stateless: sin sesión HTTP
+          .sessionManagement(sm -> sm
+              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          );
+        
+        // 4. Inserta el filtro de JWT antes del filtro de usuario/clave
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
