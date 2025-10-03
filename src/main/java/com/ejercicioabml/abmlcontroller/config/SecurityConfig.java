@@ -72,10 +72,22 @@ public class SecurityConfig {
 desactivado por recursion
 Al eliminar ese método, Spring inyectará internamente el auténtico ProviderManager (no un proxy de sí mismo),
 con lo que authManager.authenticate(...) dejará de entrar en recursión.
-*/
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+    */
+
+/**
+     * Este bean le indica a Spring cómo obtener el AuthenticationManager real
+     * de la configuración de seguridad ya creada.
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) 
+            throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
     
 }
