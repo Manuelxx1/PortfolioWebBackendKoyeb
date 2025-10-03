@@ -68,9 +68,14 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+/*
+desactivado por recursion
+Al eliminar ese método, Spring inyectará internamente el auténtico ProviderManager (no un proxy de sí mismo),
+con lo que authManager.authenticate(...) dejará de entrar en recursión.
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+    */
 }
