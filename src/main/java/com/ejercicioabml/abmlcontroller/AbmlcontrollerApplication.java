@@ -432,13 +432,21 @@ public ResponseEntity<String> testearParametro(@RequestParam String frase) {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Persona user) {
-        authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(user.getNombre(), user.getPassword())
-        );
-        String token = jwtUtil.generateToken(user.getNombre());
-        return ResponseEntity.ok(Map.of("token", token));
-    }
+public ResponseEntity<?> login(@RequestBody Persona user) {
+  try {
+    authManager.authenticate(
+      new UsernamePasswordAuthenticationToken(user.getNombre(), user.getPassword())
+    );
+  } catch (AuthenticationException ex) {
+    // Aquí ves el mensaje real en los logs
+    log.error("Error de autenticación: ", ex);
+    return ResponseEntity
+      .status(HttpStatus.UNAUTHORIZED)
+      .body(Map.of("error", "Nombre de usuario o contraseña inválidos"));
+  }
+  String token = jwtUtil.generateToken(user.getNombre());
+  return ResponseEntity.ok(Map.of("token", token));
+}
 
     @GetMapping("/profile")
     public ResponseEntity<?> profile() {
