@@ -293,8 +293,8 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
 
 
   //login sinjwt copilot
-  @RestController
-public class LoginController {
+
+
 //llamado al repository directo sin usar service
     @Autowired
     private PersonaRepository personaRepository;
@@ -321,7 +321,7 @@ public class LoginController {
             Map.of("error", "Nombre o contraseña incorrectos")
         );
     }
-}
+
 
 
 
