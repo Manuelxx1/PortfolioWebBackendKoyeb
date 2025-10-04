@@ -271,7 +271,7 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
         }
         
         
-       
+       /*
               // Función de inicio de sesión
         //usando @RequestBody 
  @PostMapping("/loginsinjwt")
@@ -289,8 +289,40 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
    return login;
 
     } 
-        
-     
+        */
+
+
+  //login sinjwt copilot
+  @RestController
+public class LoginController {
+//llamado al repository directo sin usar service
+    @Autowired
+    private PersonaRepository personaRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/loginsinjwt")
+    public ResponseEntity<?> login(@RequestBody Persona user) {
+        Optional<Persona> personaOpt = personaRepository.findByNombre(user.getNombre());
+
+        if (personaOpt.isPresent()) {
+            Persona personaEnBD = personaOpt.get();
+
+            if (passwordEncoder.matches(user.getPassword(), personaEnBD.getPassword())) {
+                return ResponseEntity.ok(Map.of(
+                    "mensaje", "Login exitoso",
+                    "usuario", personaEnBD.getNombre()
+                ));
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+            Map.of("error", "Nombre o contraseña incorrectos")
+        );
+    }
+}
+
 
 
 @Autowired
