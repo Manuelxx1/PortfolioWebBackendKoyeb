@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.AuthenticationConfiguration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
@@ -295,10 +296,12 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
 
   //login sinjwt copilot
 
-
+@PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody Persona user) {
+        return ResponseEntity.ok(interPersona.save(user));
+    }
 //llamado al repository directo sin usar service
-    @Autowired
-    private PersonaRepository personaRepository;
+    
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -456,8 +459,8 @@ public ResponseEntity<String> testearParametro(@RequestParam String frase) {
     return ResponseEntity.ok("Recibido: " + frase);
 }
 
-        //login copilot
-
+        //login jwt copilot
+/*
         
 @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Persona user) {
@@ -481,5 +484,6 @@ public ResponseEntity<?> login(@RequestBody Persona user) {
     public ResponseEntity<?> profile() {
         return ResponseEntity.ok("Acceso autorizado al perfil");
     }
+  */
 
 }
