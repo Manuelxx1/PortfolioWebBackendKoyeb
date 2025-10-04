@@ -295,7 +295,10 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
 
 
   //login sinjwt copilot
-
+//a pesar que no se usa jwt se usa unas clasess
+  //de springsecurity como BCryptPasswordEncoder en securityconfig  para codificar
+  //la contraseña que llega del form para insertar 
+  //eso en base de datos y no quede expuesto el dato
 @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Persona user) {
         return ResponseEntity.ok(interPersona.save(user));
@@ -309,10 +312,19 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
     @PostMapping("/loginsinjwt")
     public ResponseEntity<?> login(@RequestBody Persona user) {
         Optional<Persona> personaOpt = personaRepository.findByNombre(user.getNombre());
-
+//se verifica si el usuario existe y se guarda
+      //en personaEnBD
         if (personaOpt.isPresent()) {
             Persona personaEnBD = personaOpt.get();
-
+//aquí la lógica de verificación si la contraseña
+          //que llega desde el form es igual 
+          // al de la db 
+          //como la contraseña de la db está codificada 
+          //se utiliza passwordEncoder para codificar 
+          //lo que llegó del form y luego comparar con matches
+          //si los datos codificados son iguales 
+          //resultado true "mensaje", "Login exitoso" 
+          //o false "error", "Nombre o contraseña incorrectos"
             if (passwordEncoder.matches(user.getPassword(), personaEnBD.getPassword())) {
                 return ResponseEntity.ok(Map.of(
                     "mensaje", "Login exitoso",
