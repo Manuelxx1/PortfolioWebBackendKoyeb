@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 import java.text.Normalizer;
 import java.util.List;
