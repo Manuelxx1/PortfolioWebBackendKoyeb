@@ -382,7 +382,10 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     Set<String> archivosCoincidentes = new LinkedHashSet<>();
 
     for (Persona persona : personas) {
-        String infoNormalizada = quitarAcentos(persona.getInformacion().toLowerCase());
+        String info = persona.getInformacion();
+    if (info == null || info.trim().isEmpty()) continue;
+
+    String infoNormalizada = quitarAcentos(info.toLowerCase());
 
         for (String palabra : palabras) {
             if (infoNormalizada.contains(palabra)) {
