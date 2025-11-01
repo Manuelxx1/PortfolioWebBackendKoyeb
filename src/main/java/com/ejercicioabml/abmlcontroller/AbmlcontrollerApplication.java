@@ -316,6 +316,11 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
       //en personaEnBD
         if (personaOpt.isPresent()) {
             Persona personaEnBD = personaOpt.get();
+
+          // 👇 Logs para depurar
+        System.out.println("Contraseña enviada: " + user.getPassword());
+        System.out.println("Contraseña en BD: " + personaEnBD.getPassword());
+        System.out.println("Match: " + passwordEncoder.matches(user.getPassword(), personaEnBD.getPassword()));
 //aquí la lógica de verificación si la contraseña
           //que llega desde el form es igual 
           // al de la db 
