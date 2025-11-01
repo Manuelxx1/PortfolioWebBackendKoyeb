@@ -20,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +46,9 @@ public class AbmlcontrollerApplication{
     private final AuthenticationManager authManager;
    // private final PersonaService interPersona;
     private final JwtUtil jwtUtil;
+//logs en render
+  private static final Logger logger = LoggerFactory.getLogger(AbmlcontrollerApplication.class);
+
 
     public AbmlcontrollerApplication(AuthenticationManager authManager,JwtUtil jwtUtil) {
     
@@ -317,10 +323,13 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
         if (personaOpt.isPresent()) {
             Persona personaEnBD = personaOpt.get();
 
-          // 👇 Logs para depurar
-        System.out.println("Contraseña enviada: " + user.getPassword());
-        System.out.println("Contraseña en BD: " + personaEnBD.getPassword());
-        System.out.println("Match: " + passwordEncoder.matches(user.getPassword(), personaEnBD.getPassword()));
+          // 👇 Logs para depurar en render
+        logger.info("Contraseña enviada: {}", user.getPassword());
+logger.info("Contraseña en BD: {}", personaEnBD.getPassword());
+logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), personaEnBD.getPassword()));
+
+
+          
 //aquí la lógica de verificación si la contraseña
           //que llega desde el form es igual 
           // al de la db 
