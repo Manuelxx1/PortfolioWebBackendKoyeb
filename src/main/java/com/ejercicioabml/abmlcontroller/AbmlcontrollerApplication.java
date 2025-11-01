@@ -32,7 +32,7 @@ import java.util.LinkedHashSet;
 @RestController 
 //@CrossOrigin afecta el funcionamiento de Postman
 //@CrossOrigin es fundamental para conectar angular con el backend Springboot
-@CrossOrigin(origins = "https://4200-cs-a039ce25-3610-425a-9d0a-fbf343f80023.cs-us-east1-pkhd.cloudshell.dev")
+@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
 
 
 
