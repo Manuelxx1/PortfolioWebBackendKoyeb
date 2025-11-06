@@ -372,6 +372,7 @@ private static final Map<String, List<String>> archivoPorPalabra = Map.of(
         
 );
 
+  /*
         //map ampliado a varios HTML
        @GetMapping("/html-link")
 public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
@@ -414,7 +415,48 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
 
     return ResponseEntity.ok(htmlBuilder.toString());
 }
- 
+ */
+  
+//endpoint modificado para que coincida
+  //con palabras parciales para busqueda en tiempo real
+  @GetMapping("/html-link")
+public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
+    List<Persona> personas = personaRepository.findAll();
+    String fraseNormalizada = quitarAcentos(frase.toLowerCase());
+    String[] palabras = fraseNormalizada.split(" ");
+
+    Set<String> archivosCoincidentes = new LinkedHashSet<>();
+
+    for (Persona persona : personas) {
+        String info = quitarAcentos(Optional.ofNullable(persona.getInformacion()).orElse("").toLowerCase());
+        if (info.isEmpty()) continue;
+
+        for (String palabra : palabras) {
+            if (info.contains(palabra)) {
+                // Buscar claves que contengan la palabra parcial
+                archivoPorPalabra.keySet().stream()
+                    .filter(clave -> clave.contains(palabra))
+                    .forEach(clave -> archivosCoincidentes.addAll(archivoPorPalabra.get(clave)));
+            }
+        }
+    }
+
+    if (archivosCoincidentes.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("No se encontró información que contenga esa palabra.");
+    }
+
+    // Generar HTML con los enlaces
+    String html = archivosCoincidentes.stream()
+        .map(archivo -> {
+            String url = baseUrl + archivo;
+            String nombre = archivo.replace(".html", "");
+            return "<a href=\"" + url + "\" target=\"_blank\">Ver " + nombre + "</a><br>";
+        })
+        .collect(Collectors.joining());
+
+    return ResponseEntity.ok("<html><body>" + html + "</body></html>");
+}
 
 
  /*       
