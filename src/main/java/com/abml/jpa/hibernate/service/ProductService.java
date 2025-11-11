@@ -2,6 +2,8 @@ package com.abml.jpa.hibernate.service;
 import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class ProductService {
