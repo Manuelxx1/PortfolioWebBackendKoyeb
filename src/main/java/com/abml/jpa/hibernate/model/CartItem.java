@@ -17,19 +17,28 @@ import java.util.List;
 @Entity
 @Table(name = "cart_items")
 public class CartItem {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-  @ManyToOne
-  @JoinColumn(name = "product_id")
-  private Product product;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-  private Integer quantity;
+    private Integer quantity;
 
-  @Column(name = "added_at")
-  private LocalDateTime addedAt;
+    @Column(name = "added_at")
+    private LocalDateTime addedAt;
+
+    // Getters y setters
+    public void setUser(User user) { this.user = user; }
+    public void setProduct(Product product) { this.product = product; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
+
+    public User getUser() { return user; }
 }
