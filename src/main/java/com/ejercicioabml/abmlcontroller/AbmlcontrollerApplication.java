@@ -2,8 +2,13 @@
 package com.ejercicioabml.abmlcontroller;
 
 import com.abml.jpa.hibernate.model.Persona;
+import com.abml.jpa.hibernate.model.Product;
+import com.abml.jpa.hibernate.model.User;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
 import com.abml.jpa.hibernate.service.PersonaService;
+import com.abml.jpa.hibernate.service.ProductService;
+import com.abml.jpa.hibernate.service.CartService;
+
 import com.ejercicioabml.abmlcontroller.security.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -561,82 +566,55 @@ public ResponseEntity<?> login(@RequestBody Persona user) {
 
   //para el eshop
   //para product 
+@Autowired private ProductService productService;
 
-@RequestMapping("/api/products")
-public class ProductController {
-
-  @Autowired private ProductRepository productRepo;
-
-  @GetMapping
-  public List<Product> getAll() {
-    return productRepo.findAll();
+  @GetMapping("/api/products")
+  public List<Product> getAllProducts() {
+    return productService.getAllProducts();
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Product> getById(@PathVariable Long id) {
-    return productRepo.findById(id)
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
-  }
-}
+  public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    try {
+      Product product = productService.getProductById(id);
+      return ResponseEntity.ok(product);
+    } catch (RuntimeException e) {
+      return ResponseEntity.notFound().build();
+    }
+        }
 
-  //para el carrito 
-  
-@RequestMapping("/api/cart")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class CartController {
 
-  @Autowired private CartItemRepository cartRepo;
-  @Autowired private ProductRepository productRepo;
-  @Autowired private UserRepository userRepo;
+    @Autowired private CartService cartService;
 
-  // Obtener el carrito del usuario actual
-  @GetMapping
+  @GetMapping("/api/cart")
   public List<CartItem> getCart(HttpSession session) {
     User user = (User) session.getAttribute("user");
     if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-    return cartRepo.findByUser(user);
+    return cartService.getCart(user);
   }
 
-  // Agregar producto al carrito
   @PostMapping("/add")
   public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body, HttpSession session) {
     User user = (User) session.getAttribute("user");
     if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
     Long productId = Long.valueOf(body.get("productId").toString());
-    Integer quantity = Integer.valueOf(body.get("quantity").toString());
+    int quantity = Integer.parseInt(body.get("quantity").toString());
 
-    Product product = productRepo.findById(productId)
-      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-    CartItem item = new CartItem();
-    item.setUser(user);
-    item.setProduct(product);
-    item.setQuantity(quantity);
-    item.setAddedAt(LocalDateTime.now());
-
-    cartRepo.save(item);
-    return ResponseEntity.ok("Producto agregado al carrito");
+    cartService.addToCart(user, productId, quantity);
+    return ResponseEntity.ok("Producto agregado");
   }
 
-  // Eliminar producto del carrito
   @DeleteMapping("/remove/{id}")
   public ResponseEntity<?> removeFromCart(@PathVariable Long id, HttpSession session) {
     User user = (User) session.getAttribute("user");
     if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-    CartItem item = cartRepo.findById(id)
-      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-    if (!item.getUser().getId().equals(user.getId())) {
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-    }
-
-    cartRepo.delete(item);
-    return ResponseEntity.ok("Producto eliminado del carrito");
+    cartService.removeFromCart(user, id);
+    return ResponseEntity.ok("Producto eliminado");
   }
-}
+
+  
 
 
 }
