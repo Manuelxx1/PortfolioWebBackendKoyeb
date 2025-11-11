@@ -1,3 +1,5 @@
+package com.abml.jpa.hibernate.service;
+
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
 
