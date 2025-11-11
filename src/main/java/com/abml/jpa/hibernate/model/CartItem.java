@@ -1,3 +1,5 @@
+package com.abml.jpa.hibernate.model;
+
 @Entity
 @Table(name = "cart_items")
 public class CartItem {
