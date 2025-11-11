@@ -4,6 +4,7 @@ import com.abml.jpa.hibernate.repository.ProductRepository;
 import com.abml.jpa.hibernate.repository.CartItemRepository;
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.User;
+import com.abml.jpa.hibernate.model.Product;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
