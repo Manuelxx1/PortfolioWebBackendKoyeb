@@ -1,3 +1,6 @@
+import org.springframework.data.jpa.repository.ProductRepository;
+
+
 @Service
 public class ProductService {
 
