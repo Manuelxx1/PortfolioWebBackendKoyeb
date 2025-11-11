@@ -9,6 +9,7 @@ package com.abml.jpa.hibernate.repository;
  */
 
 import com.abml.jpa.hibernate.model.CartItem;
+import com.abml.jpa.hibernate.model.User;
 import java.util.List;
 import java.util.Optional;
 //class JpaRepository (que maneja repositorios JPA
