@@ -1,3 +1,8 @@
+import org.springframework.data.jpa.repository.ProductRepository;
+import org.springframework.data.jpa.repository.CartItemRepository;
+
+import com.abml.jpa.hibernate.model.User;
+
 @Service
 public class CartService {
 
