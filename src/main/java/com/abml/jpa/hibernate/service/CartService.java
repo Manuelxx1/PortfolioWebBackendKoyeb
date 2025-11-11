@@ -7,6 +7,7 @@ import com.abml.jpa.hibernate.model.User;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
 
 @Service
