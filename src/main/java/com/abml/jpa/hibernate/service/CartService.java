@@ -2,7 +2,7 @@
 package com.abml.jpa.hibernate.service;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 import com.abml.jpa.hibernate.repository.CartItemRepository;
-
+import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.User;
 
 @Service
