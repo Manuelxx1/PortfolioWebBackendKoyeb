@@ -26,6 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
+import jakarta.servlet.http.HttpSession;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
