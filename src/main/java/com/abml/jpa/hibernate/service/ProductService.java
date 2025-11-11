@@ -1,4 +1,4 @@
-import org.springframework.data.jpa.repository.ProductRepository;
+import com.abml.jpa.hibernate.repository.ProductRepository;
 
 
 @Service
