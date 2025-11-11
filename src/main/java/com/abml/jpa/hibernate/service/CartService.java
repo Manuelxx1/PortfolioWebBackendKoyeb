@@ -5,6 +5,10 @@ import com.abml.jpa.hibernate.repository.CartItemRepository;
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.User;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 @Service
 public class CartService {
 
