@@ -1,3 +1,5 @@
+package com.abml.jpa.hibernate.model;
+
 @Entity
 @Table(name = "users")
 public class User {
