@@ -32,5 +32,14 @@ public class Product {
   private String category;
 
   @Column(name = "created_at")
-  private LocalDateTime createdAt;
+
+ private LocalDateTime createdAt;
+  
+  //getters 
+  public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public BigDecimal getPrice() { return price; }
+    public Integer getStock() { return stock; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }
