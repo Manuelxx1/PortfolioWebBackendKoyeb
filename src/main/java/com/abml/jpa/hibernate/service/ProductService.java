@@ -12,9 +12,10 @@ public class ProductService {
 
   @Autowired private ProductRepository productRepo;
 
-  public List<Product> getAllProducts() {
-    return productRepo.findAll();
-  }
+  public List<Product> searchByName(String name) {
+    return productRepo.findByNameContainingIgnoreCase(name);
+}
+
 
   public Product getProductById(Long id) {
     return productRepo.findById(id)
