@@ -572,10 +572,11 @@ public ResponseEntity<?> login(@RequestBody Persona user) {
   //para product 
 @Autowired private ProductService productService;
 
-  @GetMapping("/api/products")
-  public List<Product> getAllProducts() {
-    return productService.getAllProducts();
-  }
+  @GetMapping("/api/products/search")
+public List<Product> searchProducts(@RequestParam String name) {
+    return productService.searchByName(name);
+}
+
 
   @GetMapping("/{id}")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
