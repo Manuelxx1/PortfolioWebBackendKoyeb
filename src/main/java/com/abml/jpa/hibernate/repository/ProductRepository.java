@@ -16,4 +16,7 @@ import org.springframework.stereotype.Repository;
 //hacemos un mapping con @Repository
 @Repository 
 @Component
-public interface ProductRepository extends JpaRepository<Product, Long> {}
+public interface ProductRepository extends JpaRepository<Product, Long> {
+  List<Product> findByNameContainingIgnoreCase(String name);
+
+}
