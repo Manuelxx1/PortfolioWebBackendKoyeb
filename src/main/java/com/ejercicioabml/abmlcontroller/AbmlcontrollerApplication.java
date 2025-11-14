@@ -30,8 +30,7 @@ import jakarta.servlet.http.HttpSession;
 
 import com.mercadopago.MercadoPago;
 import com.mercadopago.resources.Preference;
-import com.mercadopago.resources.PreferenceItem;
-
+import com.mercadopago.resources.datastructures.preference.Item;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -632,7 +631,7 @@ public List<Product> searchProducts(@RequestParam String name) {
     public String createPayment(@RequestBody Product product) throws Exception {
         Preference preference = new Preference();
 
-        PreferenceItem item = new PreferenceItem();
+        Item item = new Item();
         item.setTitle(product.getName())
             .setQuantity(1)
             .setUnitPrice((float) product.getPrice());
@@ -643,12 +642,11 @@ public List<Product> searchProducts(@RequestParam String name) {
         return preference.getInitPoint(); // URL de pago sandbox
     }
 
-    // Webhook para confirmar pagos
-    @PostMapping("api/payments/webhook")
+    @PostMapping("/api/payments/webhook")
     public void webhook(@RequestBody String body) {
         System.out.println("Webhook recibido: " + body);
         // Aquí marcás el pedido como pagado en tu DB
-    }
+      }
 
 
 }
