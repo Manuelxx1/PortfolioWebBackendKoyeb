@@ -25,7 +25,9 @@ public class PaymentController {
         Item item = new Item();
         item.setTitle(product.getName())
             .setQuantity(1)
-            .setUnitPrice(product.getPrice()); // ✅ ahora usa BigDecimal
+            // ✅ Convertimos BigDecimal a float solo aquí
+            //porque el sdk de mp lo exige
+            .setUnitPrice(product.getPrice().floatValue());
 
         preference.appendItem(item);
         preference.save();
