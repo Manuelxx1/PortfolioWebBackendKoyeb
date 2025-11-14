@@ -28,9 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import jakarta.servlet.http.HttpSession;
 
-import com.mercadopago.MercadoPago;
-import com.mercadopago.resources.Preference;
-import com.mercadopago.resources.datastructures.preference.Item;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +68,7 @@ public class AbmlcontrollerApplication{
         
         this.jwtUtil = jwtUtil;
 
-      // Token de prueba (sandbox)
-        MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
+      
     }
 
         
@@ -625,27 +622,7 @@ public List<Product> searchProducts(@RequestParam String name) {
   }
 
                                      
-//mercado pago 
-    @PostMapping("/api/payments/create")
-    public String createPayment(@RequestBody Product product) throws Exception {
-        Preference preference = new Preference();
 
-        Item item = new Item();
-        item.setTitle(product.getName())
-            .setQuantity(1)
-            .setUnitPrice((float) product.getPrice());
-
-        preference.appendItem(item);
-        preference.save();
-
-        return preference.getInitPoint(); // URL de pago sandbox
-    }
-
-    @PostMapping("/api/payments/webhook")
-    public void webhook(@RequestBody String body) {
-        System.out.println("Webhook recibido: " + body);
-        // Aquí marcás el pedido como pagado en tu DB
-      }
 
 
 }
