@@ -25,7 +25,7 @@ public class PaymentController {
         Item item = new Item();
         item.setTitle(product.getName())
             .setQuantity(1)
-            .setUnitPrice(BigDecimal.valueOf(product.getPrice())); // ✅ ahora usa BigDecimal
+            .setUnitPrice(product.getPrice()); // ✅ ahora usa BigDecimal
 
         preference.appendItem(item);
         preference.save();
