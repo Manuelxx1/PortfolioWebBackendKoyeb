@@ -6,12 +6,17 @@ import com.mercadopago.resources.datastructures.preference.Item;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+
+    //@CrossOrigin es fundamental para conectar angular con el backend Springboot
+@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
+
 @RequestMapping("/api/payments")
 public class PaymentController {
 
     public PaymentController() {
         // Inicializá el SDK con tu Access Token de prueba (sandbox)
-        MercadoPago.SDK.setAccessToken("TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        // Token de prueba (sandbox)
+        MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
     }
 
     // Endpoint para crear la preferencia de pago
