@@ -93,11 +93,12 @@
     </dependency>
           
          <!--mercadopago-->
-           <dependency>
+<dependency>
   <groupId>com.mercadopago</groupId>
   <artifactId>sdk-java</artifactId>
-  <version>2.1.9</version>
+  <version>1.9.0</version>
 </dependency>
+
 
   </dependencies>
 
