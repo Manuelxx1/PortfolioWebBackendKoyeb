@@ -73,7 +73,7 @@ public class AbmlcontrollerApplication{
         this.jwtUtil = jwtUtil;
 
       // Token de prueba (sandbox)
-        MercadoPago.SDK.setAccessToken("TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
     }
 
         
