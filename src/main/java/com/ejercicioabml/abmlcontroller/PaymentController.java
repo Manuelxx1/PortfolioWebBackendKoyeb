@@ -14,7 +14,11 @@ public class PaymentController {
 
     public PaymentController() {
         // Inicializá el SDK con tu Access Token de prueba (sandbox)
+        try {
         MercadoPago.SDK.setAccessToken("TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    } catch (com.mercadopago.exceptions.MPConfException e) {
+        System.err.println("Error configurando MercadoPago: " + e.getMessage());
+        }
     }
 
     // Endpoint para crear la preferencia de pago
