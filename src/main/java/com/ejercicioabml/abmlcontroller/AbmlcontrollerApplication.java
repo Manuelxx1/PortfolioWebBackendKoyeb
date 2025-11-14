@@ -31,7 +31,6 @@ import jakarta.servlet.http.HttpSession;
 import com.mercadopago.MercadoPago;
 import com.mercadopago.resources.Preference;
 import com.mercadopago.resources.datastructures.preference.Item;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
