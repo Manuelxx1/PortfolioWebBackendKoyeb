@@ -1,4 +1,4 @@
-package com.ejercicioabml.abmlcontroller;
+package com.abml.jpa.hibernate.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
