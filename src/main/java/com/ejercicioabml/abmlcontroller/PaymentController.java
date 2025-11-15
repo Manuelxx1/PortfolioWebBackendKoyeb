@@ -67,7 +67,7 @@ Double amount = (Double) payload.get("transaction_amount");
     Orders savedOrder = orderRepository.save(orders);
 
     // devolvemos el ID del pedido recién guardado
-    return ResponseEntity.ok(savedOrder.getId()););
+    return ResponseEntity.ok(savedOrder.getId());
 }
 
     //muestra si el pedido u orders 
