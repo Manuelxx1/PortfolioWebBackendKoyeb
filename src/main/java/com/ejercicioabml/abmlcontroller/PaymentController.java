@@ -71,4 +71,15 @@ Double amount = (Double) payload.get("transaction_amount");
     return ResponseEntity.ok("Webhook procesado");
 }
 
+    //muestra si el pedido u orders 
+    //que se registro en la tabla orders 
+    //fue procesado correctamente 
+    
+@GetMapping("/orders/{id}")
+public ResponseEntity<Orders> getOrder(@PathVariable Long id) {
+    return orderRepository.findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+}
+
 }
