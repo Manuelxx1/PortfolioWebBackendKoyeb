@@ -15,8 +15,7 @@ public class PaymentController {
     public PaymentController() {
         // Inicializá el SDK con tu Access Token de prueba (sandbox)
         try {
-        MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784
-");
+        MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
     } catch (com.mercadopago.exceptions.MPConfException e) {
         System.err.println("Error configurando MercadoPago: " + e.getMessage());
         }
