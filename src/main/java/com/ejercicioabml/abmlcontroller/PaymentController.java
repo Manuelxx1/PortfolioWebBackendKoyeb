@@ -57,10 +57,10 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 Double amount = (Double) payload.get("transaction_amount");
         String productName = "Producto"; // Podés ajustar según tu lógica
 
-        Order order = new Order();
-        order.setProductName(productName);
-        order.setAmount(BigDecimal.valueOf(amount));
-        order.setStatus(status);
+        Orders orders = new Orders();
+        orders.setProductName(productName);
+        orders.setAmount(BigDecimal.valueOf(amount));
+        orders.setStatus(status);
 
         orderRepository.save(order);
     // Aquí actualizás tu base de datos según el estado
