@@ -6,6 +6,7 @@ import com.mercadopago.MercadoPago;
 import com.mercadopago.resources.Preference;
 import com.mercadopago.resources.datastructures.preference.Item;
 import org.springframework.web.bind.annotation.*;
+import com.abml.jpa.hibernate.repository.OrderRepository;
 
 import java.math.BigDecimal;
 import java.util.Map;
