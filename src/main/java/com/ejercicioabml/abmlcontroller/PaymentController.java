@@ -50,7 +50,7 @@ private final OrderRepository orderRepository;
 
     // Webhook para recibir notificaciones de Mercado Pago
     @PostMapping("/webhook")
-public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+public ResponseEntity<Long> webhook(@RequestBody Map<String, Object> payload) {
     System.out.println("Webhook recibido: " + payload);
 
     // Ejemplo: leer el estado
