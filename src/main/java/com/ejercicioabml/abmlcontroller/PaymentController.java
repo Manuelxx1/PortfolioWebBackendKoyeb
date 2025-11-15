@@ -51,7 +51,15 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
     // Ejemplo: leer el estado
     String status = (String) payload.get("status");
     Integer paymentId = (Integer) payload.get("id");
+Double amount = (Double) payload.get("transaction_amount");
+        String productName = "Producto"; // Podés ajustar según tu lógica
 
+        Order order = new Order();
+        order.setProductName(productName);
+        order.setAmount(BigDecimal.valueOf(amount));
+        order.setStatus(status);
+
+        orderRepository.save(order);
     // Aquí actualizás tu base de datos según el estado
     // pedidoService.updatePaymentStatus(paymentId, status);
 
