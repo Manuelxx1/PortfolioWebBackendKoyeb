@@ -64,11 +64,10 @@ Double amount = (Double) payload.get("transaction_amount");
         orders.setAmount(BigDecimal.valueOf(amount));
         orders.setStatus(status);
 
-        orderRepository.save(orders);
-    // Aquí actualizás tu base de datos según el estado
-    // pedidoService.updatePaymentStatus(paymentId, status);
+    Orders savedOrder = orderRepository.save(orders);
 
-    return ResponseEntity.ok("Webhook procesado");
+    // devolvemos el ID del pedido recién guardado
+    return ResponseEntity.ok(savedOrder.getId()););
 }
 
     //muestra si el pedido u orders 
