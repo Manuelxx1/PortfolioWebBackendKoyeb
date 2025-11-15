@@ -7,12 +7,16 @@ import com.mercadopago.resources.datastructures.preference.Item;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
+
 
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
-
-    public PaymentController() {
+private final OrderRepository orderRepository;
+    public PaymentController(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
         // Inicializá el SDK con tu Access Token de prueba (sandbox)
         try {
         MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
