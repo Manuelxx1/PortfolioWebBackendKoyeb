@@ -15,7 +15,8 @@ public class PaymentController {
     public PaymentController() {
         // Inicializá el SDK con tu Access Token de prueba (sandbox)
         try {
-        MercadoPago.SDK.setAccessToken("TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784
+");
     } catch (com.mercadopago.exceptions.MPConfException e) {
         System.err.println("Error configurando MercadoPago: " + e.getMessage());
         }
@@ -25,7 +26,9 @@ public class PaymentController {
     @PostMapping("/create")
     public String createPayment(@RequestBody Product product) throws Exception {
         Preference preference = new Preference();
-
+// Configurás la URL del webhook aquí
+    preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook");
+        
         Item item = new Item();
         item.setTitle(product.getName())
             .setQuantity(1)
