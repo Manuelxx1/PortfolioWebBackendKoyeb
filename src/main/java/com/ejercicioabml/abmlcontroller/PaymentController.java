@@ -45,8 +45,17 @@ public class PaymentController {
 
     // Webhook para recibir notificaciones de Mercado Pago
     @PostMapping("/webhook")
-    public void webhook(@RequestBody String body) {
-        System.out.println("Webhook recibido: " + body);
-        // Aquí marcás el pedido como pagado en tu base de datos
-    }
+public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+    System.out.println("Webhook recibido: " + payload);
+
+    // Ejemplo: leer el estado
+    String status = (String) payload.get("status");
+    Integer paymentId = (Integer) payload.get("id");
+
+    // Aquí actualizás tu base de datos según el estado
+    // pedidoService.updatePaymentStatus(paymentId, status);
+
+    return ResponseEntity.ok("Webhook procesado");
+}
+
 }
