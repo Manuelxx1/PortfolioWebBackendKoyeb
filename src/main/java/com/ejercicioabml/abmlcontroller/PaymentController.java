@@ -62,7 +62,7 @@ Double amount = (Double) payload.get("transaction_amount");
         orders.setAmount(BigDecimal.valueOf(amount));
         orders.setStatus(status);
 
-        orderRepository.save(order);
+        orderRepository.save(orders);
     // Aquí actualizás tu base de datos según el estado
     // pedidoService.updatePaymentStatus(paymentId, status);
 
