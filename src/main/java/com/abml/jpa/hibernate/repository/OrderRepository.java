@@ -1,4 +1,4 @@
-package com.ejercicioabml.abmlcontroller;
+package com.abml.jpa.hibernate.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
