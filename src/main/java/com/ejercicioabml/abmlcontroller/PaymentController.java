@@ -4,9 +4,9 @@ import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.client.preference.ItemRequest;
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.preference.Item;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +34,15 @@ public class PaymentController {
     @PostMapping("/create")
     public ResponseEntity<String> createPreference() {
         try {
-            Item item = new Item()
-                    .setTitle("Producto de prueba")
-                    .setQuantity(1)
-                    .setUnitPrice(new BigDecimal("100"));
+            ItemRequest item = ItemRequest.builder()
+                    .title("Producto de prueba")
+                    .quantity(1)
+                    .unitPrice(new BigDecimal("100"))
+                    .build();
 
-            PreferenceRequest request = new PreferenceRequest()
-                    .setItems(Arrays.asList(item));
+            PreferenceRequest request = PreferenceRequest.builder()
+                    .items(Arrays.asList(item))
+                    .build();
 
             Preference preference = preferenceClient.create(request);
 
@@ -61,13 +63,13 @@ public class PaymentController {
             Payment payment = paymentClient.get(paymentId);
 
             // Ejemplo: guardar en tu tabla orders
-            Orders orders = new Orders();
-            orders.setId(payment.getId());
-            orders.setProductName(payment.getDescription());
-            orders.setAmount(payment.getTransactionAmount().intValue());
-            orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
+            Order order = new Order();
+            order.setId(payment.getId());
+            order.setProductName(payment.getDescription());
+            order.setAmount(payment.getTransactionAmount().intValue());
+            order.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
 
-            orderRepository.save(orders);
+            orderRepository.save(order);
 
             return ResponseEntity.ok("Webhook procesado correctamente");
         } catch (Exception e) {
