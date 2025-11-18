@@ -63,13 +63,13 @@ public class PaymentController {
             Payment payment = paymentClient.get(paymentId);
 
             // Ejemplo: guardar en tu tabla orders
-            Order order = new Order();
-            order.setId(payment.getId());
-            order.setProductName(payment.getDescription());
-            order.setAmount(payment.getTransactionAmount().intValue());
-            order.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
+            Orders orders = new Orders();
+            orders.setId(payment.getId());
+            orders.setProductName(payment.getDescription());
+            orders.setAmount(payment.getTransactionAmount().intValue());
+            orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
 
-            orderRepository.save(order);
+            orderRepository.save(orders);
 
             return ResponseEntity.ok("Webhook procesado correctamente");
         } catch (Exception e) {
