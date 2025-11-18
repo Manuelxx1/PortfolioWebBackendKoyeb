@@ -53,24 +53,28 @@ private final OrderRepository orderRepository;
 
     // Webhook para recibir notificaciones de Mercado Pago
     @PostMapping("/webhook")
-public ResponseEntity<Long> webhook(@RequestBody Map<String, Object> payload) {
-    System.out.println("Webhook recibido: " + payload);
+public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+    try {
+        // 1. Extraer el payment_id del webhook
+        String paymentId = payload.get("data").toString();
 
-    // Ejemplo: leer el estado
-    String status = (String) payload.get("status");
-    Integer paymentId = (Integer) payload.get("id");
-Double amount = (Double) payload.get("transaction_amount");
-        String productName = "Producto"; // Podés ajustar según tu lógica
+        // 2. Consultar Mercado Pago con el paymentId
+        Payment payment = mercadoPagoClient.getPayment(paymentId);
 
+        // 3. Crear/actualizar el pedido en la base de datos
         Orders orders = new Orders();
-        orders.setProductName(productName);
-        orders.setAmount(BigDecimal.valueOf(amount));
-        orders.setStatus(status);
+        orders.setId(payment.getId());
+        orders.setProductName(payment.getDescription());
+        orders.setAmount(payment.getTransactionAmount().intValue());
+        orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
 
-    Orders savedOrder = orderRepository.save(orders);
+        orderRepository.save(orders);
 
-    // devolvemos el ID del pedido recién guardado
-    return ResponseEntity.ok(savedOrder.getId());
+        return ResponseEntity.ok("Webhook procesado correctamente");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body("Error procesando webhook: " + e.getMessage());
+    }
 }
 
     //muestra si el pedido u orders 
