@@ -1,5 +1,5 @@
 package com.ejercicioabml.abmlcontroller;
-import com.abml.jpa.hibernate.model.Orders;
+
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
@@ -24,7 +24,7 @@ public class PaymentController {
     private final PreferenceClient preferenceClient;
 
     public PaymentController() {
-        // ⚠️ Usá tu Access Token de PRUEBA (sandbox)
+        //  Usá tu Access Token de PRUEBA (sandbox)
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
         this.paymentClient = new PaymentClient();
         this.preferenceClient = new PreferenceClient();
