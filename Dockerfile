@@ -1,4 +1,4 @@
-# Etapa de build
+# Etapa de build con Maven
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 WORKDIR /app
@@ -16,11 +16,13 @@ COPY src ./src
 # Compilamos y empaquetamos
 RUN mvn clean package -DskipTests
 
-# Etapa de runtime
+# Etapa de runtime con JDK limpio
 FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
+# Copiamos el JAR generado desde la etapa de build
 COPY --from=build /app/target/*.jar app.jar
 
+# Ejecutamos la aplicación
 ENTRYPOINT ["java","-jar","app.jar"]
