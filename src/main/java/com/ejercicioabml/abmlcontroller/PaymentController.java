@@ -1,81 +1,66 @@
 package com.ejercicioabml.abmlcontroller;
 
-import com.abml.jpa.hibernate.model.Product;
-import com.abml.jpa.hibernate.model.Orders;
-import com.mercadopago.MercadoPago;
-import com.mercadopago.resources.Preference;
-import com.mercadopago.resources.datastructures.preference.Item;
-import org.springframework.web.bind.annotation.*;
-import com.abml.jpa.hibernate.repository.OrderRepository;
-
-//import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-//import org.springframework.web.bind.annotation.*;
-
+import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
+import com.mercadopago.client.preference.PreferenceClient;
+import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.resources.payment.Payment;
+import com.mercadopago.resources.preference.Preference;
+import com.mercadopago.resources.preference.Item;
 
-//import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Map;
-import org.springframework.http.ResponseEntity;
-
 
 @RestController
 @RequestMapping("/api/payments")
-    //@CrossOrigin es fundamental para conectar angular con el backend Springboot
-@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
-
 public class PaymentController {
-private final OrderRepository orderRepository;
-    public PaymentController(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-        // Inicializá el SDK con tu Access Token de prueba (sandbox)
+
+    private final PaymentClient paymentClient;
+    private final PreferenceClient preferenceClient;
+
+    public PaymentController() {
+        // ⚠️ Usá tu Access Token de PRUEBA (sandbox)
+        MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
+        this.paymentClient = new PaymentClient();
+        this.preferenceClient = new PreferenceClient();
+    }
+
+    // Crear preferencia de pago
+    @PostMapping("/create")
+    public ResponseEntity<String> createPreference() {
         try {
-        MercadoPago.SDK.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
-    } catch (com.mercadopago.exceptions.MPConfException e) {
-        System.err.println("Error configurando MercadoPago: " + e.getMessage());
+            Item item = new Item()
+                    .setTitle("Producto de prueba")
+                    .setQuantity(1)
+                    .setUnitPrice(new BigDecimal("100"));
+
+            PreferenceRequest request = new PreferenceRequest()
+                    .setItems(Arrays.asList(item));
+
+            Preference preference = preferenceClient.create(request);
+
+            return ResponseEntity.ok(preference.getInitPoint());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creando preferencia: " + e.getMessage());
         }
     }
 
-    // Endpoint para crear la preferencia de pago
-    @PostMapping("/create")
-    public String createPayment(@RequestBody Product product) throws Exception {
-        Preference preference = new Preference();
-// Configurás la URL del webhook aquí
-    preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook");
-        
-        Item item = new Item();
-        item.setTitle(product.getName())
-            .setQuantity(1)
-            // ✅ Convertimos BigDecimal a float solo aquí
-            //porque el sdk de mp lo exige
-            .setUnitPrice(product.getPrice().floatValue());
-
-        preference.appendItem(item);
-        preference.save();
-
-        // Devuelve la URL de pago (init_point) para redirigir desde Angular
-        return preference.getInitPoint();
-    }
-
-
-    
-    
-    private final PaymentClient paymentClient = new PaymentClient();
-    // Webhook para recibir notificaciones de Mercado Pago
+    // Webhook para recibir notificaciones de pagos
     @PostMapping("/webhook")
-public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
-    try {
-            // 1. Extraer el payment_id del webhook
+    public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+        try {
             Map<String, Object> data = (Map<String, Object>) payload.get("data");
             String paymentId = data.get("id").toString();
 
-            // 2. Consultar Mercado Pago con el paymentId
             Payment payment = paymentClient.get(paymentId);
 
-            // 3. Guardar el pedido en la base de datos
+            // Ejemplo: guardar en tu tabla orders
             Orders orders = new Orders();
             orders.setId(payment.getId());
             orders.setProductName(payment.getDescription());
@@ -86,21 +71,8 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
             return ResponseEntity.ok("Webhook procesado correctamente");
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Error procesando webhook: " + e.getMessage());
+                    .body("Error procesando webhook: " + e.getMessage());
         }
-            }
-
-    //muestra si el pedido u orders 
-    //que se registro en la tabla orders 
-    //fue procesado correctamente 
-    
-@GetMapping("/orders/{id}")
-public ResponseEntity<Orders> getOrder(@PathVariable Long id) {
-    return orderRepository.findById(id)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
-}
-
+    }
 }
