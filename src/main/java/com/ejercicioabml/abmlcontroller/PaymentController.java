@@ -8,6 +8,15 @@ import com.mercadopago.resources.datastructures.preference.Item;
 import org.springframework.web.bind.annotation.*;
 import com.abml.jpa.hibernate.repository.OrderRepository;
 
+//import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+//import org.springframework.web.bind.annotation.*;
+
+import com.mercadopago.client.payment.PaymentClient;
+import com.mercadopago.resources.payment.Payment;
+
+//import java.util.Map;
+
 import java.math.BigDecimal;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
@@ -51,31 +60,37 @@ private final OrderRepository orderRepository;
         return preference.getInitPoint();
     }
 
+
+    
+    
+    private final PaymentClient paymentClient = new PaymentClient();
     // Webhook para recibir notificaciones de Mercado Pago
     @PostMapping("/webhook")
 public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
     try {
-        // 1. Extraer el payment_id del webhook
-        String paymentId = payload.get("data").toString();
+            // 1. Extraer el payment_id del webhook
+            Map<String, Object> data = (Map<String, Object>) payload.get("data");
+            String paymentId = data.get("id").toString();
 
-        // 2. Consultar Mercado Pago con el paymentId
-        Payment payment = mercadoPagoClient.getPayment(paymentId);
+            // 2. Consultar Mercado Pago con el paymentId
+            Payment payment = paymentClient.get(paymentId);
 
-        // 3. Crear/actualizar el pedido en la base de datos
-        Orders orders = new Orders();
-        orders.setId(payment.getId());
-        orders.setProductName(payment.getDescription());
-        orders.setAmount(payment.getTransactionAmount().intValue());
-        orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
+            // 3. Guardar el pedido en la base de datos
+            Orders orders = new Orders();
+            orders.setId(payment.getId());
+            orders.setProductName(payment.getDescription());
+            orders.setAmount(payment.getTransactionAmount().intValue());
+            orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
 
-        orderRepository.save(orders);
+            orderRepository.save(orders);
 
-        return ResponseEntity.ok("Webhook procesado correctamente");
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body("Error procesando webhook: " + e.getMessage());
-    }
-}
+            return ResponseEntity.ok("Webhook procesado correctamente");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Error procesando webhook: " + e.getMessage());
+        }
+            }
 
     //muestra si el pedido u orders 
     //que se registro en la tabla orders 
