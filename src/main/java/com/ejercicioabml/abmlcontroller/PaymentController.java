@@ -22,6 +22,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payments")
+    //@CrossOrigin es fundamental para conectar angular con el backend Springboot
+@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
 public class PaymentController {
 
     private final PaymentClient paymentClient;
