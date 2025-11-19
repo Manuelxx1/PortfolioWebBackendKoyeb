@@ -63,37 +63,39 @@ public class PaymentController {
         }
     }
 
-    // Webhook para recibir notificaciones de pagos
-    @PostMapping("/webhook")
-    public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
-        try {
-            Map<String, Object> data = (Map<String, Object>) payload.get("data");
-            String paymentId = data.get("id").toString();
-
-            Payment payment = paymentClient.get(paymentId);
-
-            // Ejemplo: guardar en tu tabla orders
-            // ASUME que existe la clase Orders y orderRepository
-            
-            Orders orders = new Orders();
-            orders.setId(payment.getId());
-            orders.setProductName(payment.getDescription());
-            orders.setAmount(payment.getTransactionAmount().intValue());
-            orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
-
-            orderRepository.save(orders);
-            
-            
-            // Simulación de procesamiento
-            System.out.println("Pago recibido. ID de pago: " + payment.getId() + ", Estado: " + payment.getStatus());
 
 
-            return ResponseEntity.ok("Webhook procesado correctamente");
-        } catch (Exception e) {
-            System.err.println("Error procesando webhook: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error procesando webhook: " + e.getMessage());
-        }
+// Webhook para recibir notificaciones de pagos
+@PostMapping("/webhook")
+public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+    try {
+        Map<String, Object> data = (Map<String, Object>) payload.get("data");
+        String paymentIdPayload = data.get("id").toString(); // Lo dejamos para ver qué ID recibimos del webhook
+
+        Payment payment = paymentClient.get(paymentIdPayload);
+
+        // Ejemplo: guardar en tu tabla orders
+        Orders orders = new Orders();
+        
+        // CORRECCIÓN 1: Usar el Long ID del objeto Payment
+        // El ID del Payment de MP es un Long
+        orders.setId(payment.getId()); 
+        
+        orders.setProductName(payment.getDescription());
+        
+        // CORRECCIÓN 2: Usar el BigDecimal para el monto (getTransactionAmount())
+        // El TransactionAmount ya es un BigDecimal
+        orders.setAmount(payment.getTransactionAmount()); 
+        
+        orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
+
+        orderRepository.save(orders); // Descomentar cuando OrderRepository esté inyectado y Orders esté definida
+
+        return ResponseEntity.ok("Webhook procesado correctamente");
+    } catch (Exception e) {
+        // ... manejo de error
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error procesando webhook: " + e.getMessage());
+    }
     }
 }
