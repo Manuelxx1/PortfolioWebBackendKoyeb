@@ -54,7 +54,9 @@ public class PaymentController {
 
             PreferenceRequest request = PreferenceRequest.builder()
                     .items(Arrays.asList(item))
-                    .build();
+                    .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook") //  Aquí tu webhook público
+                .build();
+                
 
             Preference preference = preferenceClient.create(request);
 
