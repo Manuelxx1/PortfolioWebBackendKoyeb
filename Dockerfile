@@ -3,26 +3,27 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copiamos pom.xml primero para aprovechar cache de dependencias
+# Copiamos solo el pom para preparar dependencias
 COPY pom.xml .
 
-# Limpiamos dependencias viejas y descargamos las nuevas
-RUN mvn dependency:purge-local-repository -DmanualInclude="com.mercadopago:sdk-java" \
-    && mvn dependency:go-offline
+# 1) Borramos cualquier rastro previo del SDK en el repo local
+RUN rm -rf /root/.m2/repository/com/mercadopago
+
+# 2) Forzamos actualización de metadatos y dependencias
+RUN mvn -U dependency:go-offline
 
 # Copiamos el código fuente
 COPY src ./src
 
-# Compilamos y empaquetamos
-RUN mvn clean package -DskipTests
+# 3) Antes de compilar, mostramos el arbol de dependencias para verificar versión
+RUN mvn -U dependency:tree && \
+    mvn -U clean package -DskipTests
 
 # Etapa de runtime con JDK limpio
 FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
-# Copiamos el JAR generado desde la etapa de build
 COPY --from=build /app/target/*.jar app.jar
 
-# Ejecutamos la aplicación
 ENTRYPOINT ["java","-jar","app.jar"]
