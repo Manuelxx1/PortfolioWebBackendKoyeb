@@ -4,7 +4,8 @@ import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceRequest;
-import com.mercadopago.client.preference.ItemRequest;
+// CAMBIO IMPORTANTE AQUÍ: ItemRequest ya no existe
+import com.mercadopago.client.preference.PreferenceItemRequest; 
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 
@@ -22,19 +23,24 @@ public class PaymentController {
 
     private final PaymentClient paymentClient;
     private final PreferenceClient preferenceClient;
+    
+    // NOTA: Para que el webhook funcione, DEBES inyectar un repository aquí.
+    private final OrderRepository orderRepository; 
 
     public PaymentController() {
-        //  Usá tu Access Token de PRUEBA (sandbox)
+        // Usá tu Access Token de PRUEBA (sandbox)
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
         this.paymentClient = new PaymentClient();
         this.preferenceClient = new PreferenceClient();
+        // this.orderRepository = orderRepository; // Inyectar mediante constructor o @Autowired
     }
 
     // Crear preferencia de pago
     @PostMapping("/create")
     public ResponseEntity<String> createPreference() {
         try {
-            ItemRequest item = ItemRequest.builder()
+            // CAMBIO IMPORTANTE AQUÍ: Usamos PreferenceItemRequest
+            PreferenceItemRequest item = PreferenceItemRequest.builder()
                     .title("Producto de prueba")
                     .quantity(1)
                     .unitPrice(new BigDecimal("100"))
@@ -48,6 +54,8 @@ public class PaymentController {
 
             return ResponseEntity.ok(preference.getInitPoint());
         } catch (Exception e) {
+            System.err.println("Error creando preferencia: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creando preferencia: " + e.getMessage());
         }
@@ -63,6 +71,8 @@ public class PaymentController {
             Payment payment = paymentClient.get(paymentId);
 
             // Ejemplo: guardar en tu tabla orders
+            // ASUME que existe la clase Orders y orderRepository
+            
             Orders orders = new Orders();
             orders.setId(payment.getId());
             orders.setProductName(payment.getDescription());
@@ -70,9 +80,16 @@ public class PaymentController {
             orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
 
             orderRepository.save(orders);
+            
+            
+            // Simulación de procesamiento
+            System.out.println("Pago recibido. ID de pago: " + payment.getId() + ", Estado: " + payment.getStatus());
+
 
             return ResponseEntity.ok("Webhook procesado correctamente");
         } catch (Exception e) {
+            System.err.println("Error procesando webhook: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error procesando webhook: " + e.getMessage());
         }
