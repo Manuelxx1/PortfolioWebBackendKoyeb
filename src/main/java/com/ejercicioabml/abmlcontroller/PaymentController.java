@@ -100,5 +100,11 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 .body("Error procesando webhook: " + e.getMessage());
     }
 }
+//ver los registros de pedidos u orders de la base de datos 
+    @GetMapping("/orders")
+public List<Orders> getOrders() {
+    return orderRepository.findAll();
+}
+
 
 }
