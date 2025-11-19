@@ -84,7 +84,8 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
         Orders orders = new Orders();
         orders.setId(payment.getId());
         orders.setProductName(payment.getDescription());
-        orders.setAmount(payment.getTransactionAmount().intValue());
+        orders.setAmount(payment.getTransactionAmount()); // correcto
+
         orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
 
         orderRepository.save(orders);
