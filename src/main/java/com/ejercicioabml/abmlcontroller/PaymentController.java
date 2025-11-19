@@ -27,8 +27,9 @@ public class PaymentController {
     private final PreferenceClient preferenceClient;
     
     // NOTA: Para que el webhook funcione, DEBES inyectar un repository aquí.
-    private final OrderRepository orderRepository; 
-
+    @Autowired
+    private OrderRepository orderRepository;
+   
     public PaymentController() {
         // Usá tu Access Token de PRUEBA (sandbox)
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
