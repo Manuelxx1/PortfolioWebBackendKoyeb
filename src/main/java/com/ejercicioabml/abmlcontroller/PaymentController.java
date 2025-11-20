@@ -77,6 +77,9 @@ public class PaymentController {
 @PostMapping("/webhook")
 public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
     try {
+        // Loguear o registrar el JSON completo que llega
+        System.out.println("Payload recibido en webhook: " + payload);
+
         // El campo "data" trae el objeto con el id del pago
         Map<String, Object> data = (Map<String, Object>) payload.get("data");
 
@@ -91,18 +94,22 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
         Orders orders = new Orders();
         orders.setId(payment.getId());
         orders.setProductName(payment.getDescription());
-        orders.setAmount(payment.getTransactionAmount()); // correcto
-
-        orders.setStatus(payment.getStatus()); // "approved", "pending", "rejected"
+        orders.setAmount(payment.getTransactionAmount());
+        orders.setStatus(payment.getStatus());
 
         orderRepository.save(orders);
 
         return ResponseEntity.ok("Webhook procesado correctamente");
     } catch (Exception e) {
+        // También loguear el error para entender qué pasó
+        System.err.println("Error procesando webhook: " + e.getMessage());
+        e.printStackTrace();
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error procesando webhook: " + e.getMessage());
     }
 }
+
 //ver los registros de pedidos u orders de la base de datos 
     @GetMapping("/orders")
 public List<Orders> getOrders() {
