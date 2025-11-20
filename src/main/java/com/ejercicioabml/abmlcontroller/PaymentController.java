@@ -74,30 +74,29 @@ public class PaymentController {
 
 // Webhook para recibir notificaciones de pagos
 // Webhook para recibir notificaciones de pagos
-    @PostMapping("/webhook")
-    public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
-        System.out.println("Payload recibido en webhook: " + payload);
+@PostMapping("/webhook")
+public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+    System.out.println("Payload recibido en webhook: " + payload);
 
-        try {
+    try {
+        String topic = (String) payload.get("topic");
+
+        if ("payment".equals(topic)) {
             Map<String, Object> data = (Map<String, Object>) payload.get("data");
             Long paymentId = Long.parseLong(data.get("id").toString());
 
             try {
-                // Consultamos el pago con el SDK
                 Payment payment = paymentClient.get(paymentId);
 
-                // Creamos la entidad Orders SIN setear el id
                 Orders orders = new Orders();
                 orders.setProductName(payment.getDescription());
-                orders.setAmount(payment.getTransactionAmount());
+                orders.setAmount(payment.getTransactionAmount()));
                 orders.setStatus(payment.getStatus());
 
-    // Guardamos el ID del comprador
-     if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                 orders.setUserId(payment.getPayer().getId());
-    }
-                
-                // Guardamos en la base
+                if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+                    orders.setUserId(payment.getPayer().getId());
+                }
+
                 orderRepository.save(orders);
                 System.out.println("Pago guardado en DB: " + orders);
 
@@ -105,13 +104,18 @@ public class PaymentController {
                 System.err.println("No se encontró el pago con id " + paymentId + ": " + ex.getMessage());
             }
 
-            // Siempre responder 200 OK
-            return ResponseEntity.ok("Webhook recibido");
-        } catch (Exception e) {
-            System.err.println("Error procesando webhook: " + e.getMessage());
-            return ResponseEntity.ok("Webhook recibido pero no procesado");
+        } else if ("merchant_order".equals(topic)) {
+            // Solo loguear, no guardar en DB
+            String resourceUrl = (String) payload.get("resource");
+            System.out.println("Webhook merchant_order recibido: " + resourceUrl);
         }
+
+        return ResponseEntity.ok("Webhook recibido");
+    } catch (Exception e) {
+        System.err.println("Error procesando webhook: " + e.getMessage());
+        return ResponseEntity.ok("Webhook recibido pero no procesado");
     }
+}
 
 
 //ver los registros de pedidos u orders de la base de datos 
