@@ -1,5 +1,6 @@
 package com.ejercicioabml.abmlcontroller;
 import com.abml.jpa.hibernate.repository.OrderRepository;
+import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.model.Orders;
 import com.abml.jpa.hibernate.model.Users;
 
@@ -34,6 +35,8 @@ public class PaymentController {
     // NOTA: Para que el webhook funcione, DEBES inyectar un repository aquí.
     @Autowired
     private OrderRepository orderRepository;
+        @Autowired
+    private UserRepository usersRepository;
    
     public PaymentController() {
         // Usá tu Access Token de PRUEBA (sandbox)
