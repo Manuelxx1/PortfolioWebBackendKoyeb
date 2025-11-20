@@ -12,10 +12,13 @@ public class Orders {
 
     private String productName;
     private BigDecimal amount;
-    private String status; // approved, rejected, pending
+    private String status;
 
     @Column(name = "user_id")
-    private Long userId; // ID del comprador en Mercado Pago
+    private Long userId;
+
+    @Column(name = "total")
+    private BigDecimal total; //  nuevo campo obligatorio en la tabla
 
     // Getters y setters
     public Long getId() { return id; }
@@ -32,4 +35,7 @@ public class Orders {
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
+
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }
 }
