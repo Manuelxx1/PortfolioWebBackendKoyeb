@@ -90,7 +90,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
                 Orders orders = new Orders();
                 orders.setProductName(payment.getDescription());
-                orders.setAmount(payment.getTransactionAmount()));
+                orders.setAmount(payment.getTransactionAmount());
                 orders.setStatus(payment.getStatus());
 
                 if (payment.getPayer() != null && payment.getPayer().getId() != null) {
