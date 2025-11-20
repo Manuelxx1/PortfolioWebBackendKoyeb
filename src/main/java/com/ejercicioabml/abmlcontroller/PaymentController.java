@@ -109,6 +109,9 @@ public class PaymentController {
                             }
                         }
 
+                        //Seteamos el campo total (igual al amount)
+orders.setTotal(payment.getTransactionAmount());
+
                         orderRepository.save(orders);
                         System.out.println("Pago guardado en DB: " + orders);
 
