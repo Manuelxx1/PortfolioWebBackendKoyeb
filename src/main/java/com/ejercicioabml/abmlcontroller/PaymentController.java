@@ -74,54 +74,62 @@ public class PaymentController {
 
 // Webhook para recibir notificaciones de pagos
 // Webhook para recibir notificaciones de pagos
-@PostMapping("/webhook")
-public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
-    System.out.println("Payload recibido en webhook: " + payload);
+ @PostMapping("/webhook")
+    public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+        System.out.println("Payload recibido en webhook: " + payload);
 
-    try {
-        String topic = (String) payload.get("topic");
+        try {
+            String topic = (String) payload.get("topic");
+            Long paymentId = null;
 
-        if ("payment".equals(topic)) {
-            Map<String, Object> data = (Map<String, Object>) payload.get("data");
-            Long paymentId = Long.parseLong(data.get("id").toString());
+            if ("payment".equals(topic)) {
+                // Puede venir con data o con resource
+                if (payload.containsKey("data")) {
+                    Map<String, Object> data = (Map<String, Object>) payload.get("data");
+                    paymentId = Long.parseLong(data.get("id").toString());
+                } else if (payload.containsKey("resource")) {
+                    paymentId = Long.parseLong(payload.get("resource").toString());
+                }
 
-            try {
-                Payment payment = paymentClient.get(paymentId);
+                if (paymentId != null) {
+                    try {
+                        Payment payment = paymentClient.get(paymentId);
 
-                Orders orders = new Orders();
-                orders.setProductName(payment.getDescription());
-                orders.setAmount(payment.getTransactionAmount());
-                orders.setStatus(payment.getStatus());
+                        Orders orders = new Orders();
+                        orders.setProductName(payment.getDescription());
+                        orders.setAmount(payment.getTransactionAmount());
+                        orders.setStatus(payment.getStatus());
 
-                if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-    try {
-        orders.setUserId(Long.parseLong(payment.getPayer().getId()));
-    } catch (NumberFormatException e) {
-        System.err.println("El userId no es numérico: " + payment.getPayer().getId());
-    }
-}
+                        // Conversión de String a Long para el userId
+                        if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+                            try {
+                                orders.setUserId(Long.parseLong(payment.getPayer().getId()));
+                            } catch (NumberFormatException e) {
+                                System.err.println("El userId no es numérico: " + payment.getPayer().getId());
+                            }
+                        }
 
+                        orderRepository.save(orders);
+                        System.out.println("Pago guardado en DB: " + orders);
 
-                orderRepository.save(orders);
-                System.out.println("Pago guardado en DB: " + orders);
+                    } catch (Exception ex) {
+                        System.err.println("No se encontró el pago con id " + paymentId + ": " + ex.getMessage());
+                    }
+                }
 
-            } catch (Exception ex) {
-                System.err.println("No se encontró el pago con id " + paymentId + ": " + ex.getMessage());
+            } else if ("merchant_order".equals(topic)) {
+                // Solo loguear, no guardar en DB
+                String resourceUrl = (String) payload.get("resource");
+                System.out.println("Webhook merchant_order recibido: " + resourceUrl);
+                // Si querés, podés consultar la API de MP para obtener más info del merchant_order
             }
 
-        } else if ("merchant_order".equals(topic)) {
-            // Solo loguear, no guardar en DB
-            String resourceUrl = (String) payload.get("resource");
-            System.out.println("Webhook merchant_order recibido: " + resourceUrl);
+            return ResponseEntity.ok("Webhook recibido");
+        } catch (Exception e) {
+            System.err.println("Error procesando webhook: " + e.getMessage());
+            return ResponseEntity.ok("Webhook recibido pero no procesado");
         }
-
-        return ResponseEntity.ok("Webhook recibido");
-    } catch (Exception e) {
-        System.err.println("Error procesando webhook: " + e.getMessage());
-        return ResponseEntity.ok("Webhook recibido pero no procesado");
     }
-}
-
 
 //ver los registros de pedidos u orders de la base de datos 
     @GetMapping("/orders")
