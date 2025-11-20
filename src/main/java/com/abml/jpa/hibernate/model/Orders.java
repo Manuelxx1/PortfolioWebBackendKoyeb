@@ -20,6 +20,10 @@ public class Orders {
     @Column(name = "total")
     private BigDecimal total; //  nuevo campo obligatorio en la tabla
 
+@ManyToOne
+    @JoinColumn(name = "user_id") // foreign key hacia users.id
+    private Users user;
+    
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
