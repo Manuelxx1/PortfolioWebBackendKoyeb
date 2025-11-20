@@ -76,39 +76,39 @@ public class PaymentController {
 // Webhook para recibir notificaciones de pagos
 @PostMapping("/webhook")
 public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+    System.out.println("Payload recibido en webhook: " + payload);
+
     try {
-        // Loguear o registrar el JSON completo que llega
-        System.out.println("Payload recibido en webhook: " + payload);
-
-        // El campo "data" trae el objeto con el id del pago
         Map<String, Object> data = (Map<String, Object>) payload.get("data");
+        Long paymentId = Long.parseLong(data.get("id").toString());
 
-        // Convertimos el id a Long
-        String paymentIdStr = data.get("id").toString();
-        Long paymentId = Long.parseLong(paymentIdStr);
+        try {
+            // Intentamos consultar el pago
+            Payment payment = paymentClient.get(paymentId);
 
-        // Consultamos el pago con el SDK
-        Payment payment = paymentClient.get(paymentId);
+            // Si existe, lo guardamos en la base
+            Orders orders = new Orders();
+            orders.setId(payment.getId());
+            orders.setProductName(payment.getDescription());
+            orders.setAmount(payment.getTransactionAmount());
+            orders.setStatus(payment.getStatus());
 
-        // Ejemplo: guardar en tu tabla orders
-        Orders orders = new Orders();
-        orders.setId(payment.getId());
-        orders.setProductName(payment.getDescription());
-        orders.setAmount(payment.getTransactionAmount());
-        orders.setStatus(payment.getStatus());
+            orderRepository.save(orders);
 
-        orderRepository.save(orders);
+            System.out.println("Pago guardado en DB: " + orders);
+        } catch (Exception ex) {
+            // Si el pago no existe (ejemplo simulador), no rompemos
+            System.err.println("No se encontró el pago con id " + paymentId);
+        }
 
-        return ResponseEntity.ok("Webhook procesado correctamente");
+        //  Siempre responder 200 OK
+        return ResponseEntity.ok("Webhook recibido");
     } catch (Exception e) {
-        // También loguear el error para entender qué pasó
         System.err.println("Error procesando webhook: " + e.getMessage());
-        e.printStackTrace();
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error procesando webhook: " + e.getMessage());
+        return ResponseEntity.ok("Webhook recibido pero no procesado");
     }
 }
+
 
 //ver los registros de pedidos u orders de la base de datos 
     @GetMapping("/orders")
