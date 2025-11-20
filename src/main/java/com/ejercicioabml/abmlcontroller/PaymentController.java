@@ -92,6 +92,11 @@ public class PaymentController {
                 orders.setAmount(payment.getTransactionAmount());
                 orders.setStatus(payment.getStatus());
 
+    // Guardamos el ID del comprador
+     if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+                 orders.setUserId(payment.getPayer().getId());
+    }
+                
                 // Guardamos en la base
                 orderRepository.save(orders);
                 System.out.println("Pago guardado en DB: " + orders);
