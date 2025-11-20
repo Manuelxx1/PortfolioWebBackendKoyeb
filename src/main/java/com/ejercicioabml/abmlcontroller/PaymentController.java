@@ -74,40 +74,39 @@ public class PaymentController {
 
 // Webhook para recibir notificaciones de pagos
 // Webhook para recibir notificaciones de pagos
-@PostMapping("/webhook")
-public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
-    System.out.println("Payload recibido en webhook: " + payload);
-
-    try {
-        Map<String, Object> data = (Map<String, Object>) payload.get("data");
-        Long paymentId = Long.parseLong(data.get("id").toString());
+    @PostMapping("/webhook")
+    public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+        System.out.println("Payload recibido en webhook: " + payload);
 
         try {
-            // Intentamos consultar el pago
-            Payment payment = paymentClient.get(paymentId);
+            Map<String, Object> data = (Map<String, Object>) payload.get("data");
+            Long paymentId = Long.parseLong(data.get("id").toString());
 
-            // Si existe, lo guardamos en la base
-            Orders orders = new Orders();
-            orders.setId(payment.getId());
-            orders.setProductName(payment.getDescription());
-            orders.setAmount(payment.getTransactionAmount());
-            orders.setStatus(payment.getStatus());
+            try {
+                // Consultamos el pago con el SDK
+                Payment payment = paymentClient.get(paymentId);
 
-            orderRepository.save(orders);
+                // Creamos la entidad Orders SIN setear el id
+                Orders orders = new Orders();
+                orders.setProductName(payment.getDescription());
+                orders.setAmount(BigDecimal.valueOf(payment.getTransactionAmount()));
+                orders.setStatus(payment.getStatus());
 
-            System.out.println("Pago guardado en DB: " + orders);
-        } catch (Exception ex) {
-            // Si el pago no existe (ejemplo simulador), no rompemos
-            System.err.println("No se encontró el pago con id " + paymentId);
+                // Guardamos en la base
+                orderRepository.save(orders);
+                System.out.println("Pago guardado en DB: " + orders);
+
+            } catch (Exception ex) {
+                System.err.println("No se encontró el pago con id " + paymentId + ": " + ex.getMessage());
+            }
+
+            // Siempre responder 200 OK
+            return ResponseEntity.ok("Webhook recibido");
+        } catch (Exception e) {
+            System.err.println("Error procesando webhook: " + e.getMessage());
+            return ResponseEntity.ok("Webhook recibido pero no procesado");
         }
-
-        //  Siempre responder 200 OK
-        return ResponseEntity.ok("Webhook recibido");
-    } catch (Exception e) {
-        System.err.println("Error procesando webhook: " + e.getMessage());
-        return ResponseEntity.ok("Webhook recibido pero no procesado");
     }
-}
 
 
 //ver los registros de pedidos u orders de la base de datos 
