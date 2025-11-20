@@ -14,6 +14,9 @@ public class Orders {
     private BigDecimal amount;
     private String status; // approved, rejected, pending
 
+    @Column(name = "user_id")
+    private Long userId; // ID del comprador en Mercado Pago
+
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -26,4 +29,7 @@ public class Orders {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 }
