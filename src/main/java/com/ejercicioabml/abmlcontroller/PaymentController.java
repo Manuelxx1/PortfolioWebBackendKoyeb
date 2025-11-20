@@ -94,8 +94,13 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 orders.setStatus(payment.getStatus());
 
                 if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                    orders.setUserId(payment.getPayer().getId());
-                }
+    try {
+        orders.setUserId(Long.parseLong(payment.getPayer().getId()));
+    } catch (NumberFormatException e) {
+        System.err.println("El userId no es numérico: " + payment.getPayer().getId());
+    }
+}
+
 
                 orderRepository.save(orders);
                 System.out.println("Pago guardado en DB: " + orders);
