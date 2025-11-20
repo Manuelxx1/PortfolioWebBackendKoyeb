@@ -89,7 +89,7 @@ public class PaymentController {
                 // Creamos la entidad Orders SIN setear el id
                 Orders orders = new Orders();
                 orders.setProductName(payment.getDescription());
-                orders.setAmount(BigDecimal.valueOf(payment.getTransactionAmount()));
+                orders.setAmount(payment.getTransactionAmount());
                 orders.setStatus(payment.getStatus());
 
                 // Guardamos en la base
