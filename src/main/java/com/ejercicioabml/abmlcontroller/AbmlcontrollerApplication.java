@@ -3,6 +3,7 @@ package com.ejercicioabml.abmlcontroller;
 
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.model.Product;
+import com.abml.jpa.hibernate.model.Users;
 
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
@@ -595,14 +596,14 @@ public List<Product> searchProducts(@RequestParam String name) {
 
   @GetMapping("/api/cart")
   public List<CartItem> getCart(HttpSession session) {
-    User user = (User) session.getAttribute("user");
+    Users user = (Users) session.getAttribute("user");
     if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     return cartService.getCart(user);
   }
 
   @PostMapping("/add")
   public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body, HttpSession session) {
-    User user = (User) session.getAttribute("user");
+    Users user = (Users) session.getAttribute("user");
     if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
     Long productId = Long.valueOf(body.get("productId").toString());
@@ -614,7 +615,7 @@ public List<Product> searchProducts(@RequestParam String name) {
 
   @DeleteMapping("/remove/{id}")
   public ResponseEntity<?> removeFromCart(@PathVariable Long id, HttpSession session) {
-    User user = (User) session.getAttribute("user");
+    Users user = (Users) session.getAttribute("user");
     if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
     cartService.removeFromCart(user, id);
