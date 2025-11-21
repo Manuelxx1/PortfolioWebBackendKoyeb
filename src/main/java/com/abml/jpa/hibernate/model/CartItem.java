@@ -23,7 +23,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users user;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -35,10 +35,10 @@ public class CartItem {
     private LocalDateTime addedAt;
 
     // Getters y setters
-    public void setUser(User user) { this.user = user; }
+    public void setUser(Users user) { this.user = user; }
     public void setProduct(Product product) { this.product = product; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
 
-    public User getUser() { return user; }
+    public Users getUser() { return user; }
 }
