@@ -98,10 +98,12 @@ public class PaymentController {
                                 user = usersRepository.findByMpUserId(mpUserId)
                                         .orElseGet(() -> {
                                             Users newUser = new Users();
-                                            newUser.setMpUserId(mpUserId);
-                                            newUser.setEmail(payment.getPayer().getEmail());
-                                            newUser.setName(payment.getPayer().getFirstName());
-                                            return usersRepository.save(newUser);
+      newUser.setMpUserId(mpUserId);
+       newUser.setEmail(payment.getPayer().getEmail());
+newUser.setName(payment.getPayer().getFirstName());
+newUser.setUsername(payment.getPayer().getEmail()); // aquí seteás el username
+return usersRepository.save(newUser);
+
                                         });
                             } catch (NumberFormatException e) {
                                 System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
