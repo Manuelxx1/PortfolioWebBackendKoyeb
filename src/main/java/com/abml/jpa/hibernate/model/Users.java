@@ -26,6 +26,16 @@ public class Users {
     @Column(name = "mp_user_id", unique = true)
     private Long mpUserId; //  ID del usuario en Mercado Pago
 
+
+    
+    //  Nuevo campo para mapear la columna 'username' de la tabla
+    private String username;
+
+    // Relación inversa opcional (solo si querés navegar desde Users hacia Orders)
+   // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //private List<Orders> orders;
+    
+    
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -38,4 +48,9 @@ public class Users {
 
     public Long getMpUserId() { return mpUserId; }
     public void setMpUserId(Long mpUserId) { this.mpUserId = mpUserId; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+   // public List<Orders> getOrders() { return orders; }
+   // public void setOrders(List<Orders> orders) { this.orders = orders; }
   }
