@@ -3,7 +3,7 @@ package com.ejercicioabml.abmlcontroller;
 
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.model.Product;
-import com.abml.jpa.hibernate.model.User;
+
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
 import com.abml.jpa.hibernate.service.PersonaService;
