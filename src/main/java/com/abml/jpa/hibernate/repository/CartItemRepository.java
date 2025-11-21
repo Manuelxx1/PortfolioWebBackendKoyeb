@@ -9,7 +9,7 @@ package com.abml.jpa.hibernate.repository;
  */
 
 import com.abml.jpa.hibernate.model.CartItem;
-import com.abml.jpa.hibernate.model.User;
+import com.abml.jpa.hibernate.model.Users;
 import java.util.List;
 import java.util.Optional;
 //class JpaRepository (que maneja repositorios JPA
@@ -30,5 +30,5 @@ import org.springframework.stereotype.Repository;
 @Repository 
 @Component
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-  List<CartItem> findByUser(User user);
+  List<CartItem> findByUser(Users user);
 }
