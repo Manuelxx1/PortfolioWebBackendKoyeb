@@ -3,7 +3,7 @@ package com.abml.jpa.hibernate.service;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 import com.abml.jpa.hibernate.repository.CartItemRepository;
 import com.abml.jpa.hibernate.model.CartItem;
-import com.abml.jpa.hibernate.model.User;
+import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.model.Product;
 
 import org.springframework.stereotype.Service;
@@ -18,11 +18,11 @@ public class CartService {
   @Autowired private CartItemRepository cartRepo;
   @Autowired private ProductRepository productRepo;
 
-  public List<CartItem> getCart(User user) {
+  public List<CartItem> getCart(Users user) {
     return cartRepo.findByUser(user);
   }
 
-  public void addToCart(User user, Long productId, int quantity) {
+  public void addToCart(Users user, Long productId, int quantity) {
     Product product = productRepo.findById(productId)
       .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
@@ -35,7 +35,7 @@ public class CartService {
     cartRepo.save(item);
   }
 
-  public void removeFromCart(User user, Long cartItemId) {
+  public void removeFromCart(Users user, Long cartItemId) {
     CartItem item = cartRepo.findById(cartItemId)
       .orElseThrow(() -> new RuntimeException("Item no encontrado"));
 
