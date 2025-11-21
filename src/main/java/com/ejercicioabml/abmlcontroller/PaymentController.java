@@ -97,18 +97,32 @@ public class PaymentController {
                                 Long mpUserId = Long.parseLong(payment.getPayer().getId());
                                 user = usersRepository.findByMpUserId(mpUserId)
                                         .orElseGet(() -> {
-                                            Users newUser = new Users();
-      newUser.setMpUserId(mpUserId);
-       newUser.setEmail(payment.getPayer().getEmail());
-newUser.setName(payment.getPayer().getFirstName());
-newUser.setUsername(payment.getPayer().getEmail()); // aquí seteás el username
-return usersRepository.save(newUser);
+// Dentro del webhook, cuando creás el usuario nuevo:
+Users user = null;
+if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+    try {
+        Long mpUserId = Long.parseLong(payment.getPayer().getId());
+        user = usersRepository.findByMpUserId(mpUserId)
+                .orElseGet(() -> {
+                    Users newUser = new Users();
+                    newUser.setMpUserId(mpUserId);
+                    newUser.setEmail(payment.getPayer().getEmail());
+                    newUser.setName(payment.getPayer().getFirstName());
 
-                                        });
-                            } catch (NumberFormatException e) {
-                                System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
-                            }
-                        }
+                    //  Aquí nos aseguramos de que username nunca sea null
+                    if (payment.getPayer().getEmail() != null && !payment.getPayer().getEmail().isEmpty()) {
+                        newUser.setUsername(payment.getPayer().getEmail());
+                    } else {
+                        newUser.setUsername("mpuser_" + mpUserId); // fallback
+                    }
+
+                    return usersRepository.save(newUser);
+                });
+    } catch (NumberFormatException e) {
+        System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
+    }
+}
+
 
                         // Crear orden asociada al usuario
                         Orders orders = new Orders();
