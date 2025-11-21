@@ -18,18 +18,25 @@ import java.util.List;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // este es el ID interno de tu sistema
+    private Long id;
 
-    private String name;
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
+
+    @Column(nullable = false, length = 100)
+    private String password;
+
+    @Column(length = 100)
     private String email;
 
     @Column(name = "mp_user_id", unique = true)
-    private Long mpUserId; //  ID del usuario en Mercado Pago
+    private Long mpUserId;
 
+    @Column(length = 255)
+    private String name;
 
-    
-    //  Nuevo campo para mapear la columna 'username' de la tabla
-    private String username;
+    @Column(name = "created_at", updatable = false, insertable = false)
+    private java.sql.Timestamp createdAt;
 
     // Relación inversa opcional (solo si querés navegar desde Users hacia Orders)
    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
