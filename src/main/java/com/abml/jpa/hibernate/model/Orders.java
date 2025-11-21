@@ -14,16 +14,16 @@ public class Orders {
     private BigDecimal amount;
     private String status;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
 
     @Column(name = "total")
-    private BigDecimal total; //  nuevo campo obligatorio en la tabla
+    private BigDecimal total; // nuevo campo obligatorio en la tabla
 
-@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "user_id") // foreign key hacia users.id
     private Users user;
-    
+
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -42,4 +42,8 @@ public class Orders {
 
     public BigDecimal getTotal() { return total; }
     public void setTotal(BigDecimal total) { this.total = total; }
+
+    // 👇 faltaban estos
+    public Users getUser() { return user; }
+    public void setUser(Users user) { this.user = user; }
 }
