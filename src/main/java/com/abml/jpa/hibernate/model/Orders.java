@@ -11,24 +11,32 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String productName;
-    private BigDecimal amount;
-    private String status;
-
-    @Column(name = "total")
-    private BigDecimal total; // nuevo campo obligatorio en la tabla
-
-    @ManyToOne
+    @ManyToOne(optional = false)
     //user_id columna en tabla orders wue se usa 
     //como foreign key
     //hacia el id de la tabla users
     //para generar la relación y poder usar
     //sus metodos desde orders
-    @JoinColumn(name = "user_id") 
+    @JoinColumn(name = "user_id", nullable = false)
+ 
     //se genera la relación con la class 
     //o entidad Users
+    
     private Users user;
 
+    private java.math.BigDecimal total;
+    private java.math.BigDecimal amount;
+
+    @Column(length = 20)
+    private String status;
+
+    @Column(name = "product_name", length = 255)
+    private String productName;
+
+    @Column(name = "created_at", updatable = false, insertable = false)
+    private java.sql.Timestamp createdAt;
+    
+    
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
