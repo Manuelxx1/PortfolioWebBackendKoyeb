@@ -91,12 +91,7 @@ public class PaymentController {
                         Payment payment = paymentClient.get(paymentId);
 
                         // Buscar o crear usuario
-                        Users user = null;
-                        if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                            try {
-                                Long mpUserId = Long.parseLong(payment.getPayer().getId());
-                                user = usersRepository.findByMpUserId(mpUserId)
-                                        .orElseGet(() -> {
+                        
 // Dentro del webhook, cuando creás el usuario nuevo:
 Users user = null;
 if (payment.getPayer() != null && payment.getPayer().getId() != null) {
