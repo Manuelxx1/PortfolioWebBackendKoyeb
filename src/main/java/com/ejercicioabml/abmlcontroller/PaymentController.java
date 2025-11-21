@@ -25,103 +25,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payments")
-    //@CrossOrigin es fundamental para conectar angular con el backend Springboot
-@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
-public class PaymentController {
-
-    private final PaymentClient paymentClient;
-    private final PreferenceClient preferenceClient;
-    
-    // NOTA: Para que el webhook funcione, DEBES inyectar un repository aquí.
-    @Autowired
-    private OrderRepository orderRepository;
-        @Autowired
-    private UserRepository usersRepository;
-   
-    public PaymentController() {
-        // Usá tu Access Token de PRUEBA (sandbox)
-        MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
-        this.paymentClient = new PaymentClient();
-        this.preferenceClient = new PreferenceClient();
-        // this.orderRepository = orderRepository; // Inyectar mediante constructor o @Autowired
-    }
-
-    // Crear preferencia de pago
-    @PostMapping("/create")
-    public ResponseEntity<String> createPreference() {
-        try {
-            // CAMBIO IMPORTANTE AQUÍ: Usamos PreferenceItemRequest
-            PreferenceItemRequest item = PreferenceItemRequest.builder()
-                    .title("Producto de prueba")
-                    .quantity(1)
-                    .unitPrice(new BigDecimal("100"))
-                    .build();
-
-            PreferenceRequest request = PreferenceRequest.builder()
-                    .items(Arrays.asList(item))
-                    .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook") //  Aquí tu webhook público
-                .build();
-                
-
-            Preference preference = preferenceClient.create(request);
-
-            return ResponseEntity.ok(preference.getInitPoint());
-        } catch (Exception e) {
-            System.err.println("Error creando preferencia: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creando preferencia: " + e.getMessage());
-        }
-    }
-
-
-
-// Webhook para recibir notificaciones de pagos
-// Webhook para recibir notificaciones de pagos
-@PostMapping("/webhook")
-public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
-    System.out.println("Payload recibido en webhook: " + payload);
-
-    try {
-        String topic = (String) payload.get("topic");
-        Long paymentId = null;
-
-        if ("payment".equals(topic)) {
-            // Puede venir con data o con resource
-            if (payload.containsKey("data")) {
-                Map<String, Object> data = (Map<String, Object>) payload.get("data");
-                paymentId = Long.parseLong(data.get("id").toString());
-            } else if (payload.containsKey("resource")) {
-                paymentId = Long.parseLong(payload.get("resource").toString());
-            }
-
-            if (paymentId != null) {
-                try {
-                    Payment payment = paymentClient.get(paymentId);
-
-                    // Buscar o crear usuario
-                    Long mpUserId = null;
-                    if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                        try {
-                            mpUserId = Long.parseLong(payment.getPayer().getId());
-                        } catch (NumberFormatException e) {
-                            System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
-                        }
-                    }
-
-                    Users user = null;
-                    if (mpUserId != null) {
-                        user = usersRepository.findByMpUserId(mpUserId)
-                            .orElseGet(() -> {
-                                Users newUser = new Users();
-                                newUser.setMpUserId(mpUserId);
-                                newUser.setEmail(payment.getPayer().getEmail());
-                                newUser.setName(payment.getPayer().getFirstName());
-                                return usersRepository.save(newUser);
-                            });
-                    }
-@RestController
-@RequestMapping("/api/payments")
 @CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
 public class PaymentController {
 
@@ -135,7 +38,6 @@ public class PaymentController {
     private UserRepository usersRepository;
 
     public PaymentController() {
-        // Access Token de prueba
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
         this.paymentClient = new PaymentClient();
         this.preferenceClient = new PreferenceClient();
@@ -158,7 +60,10 @@ public class PaymentController {
 
             Preference preference = preferenceClient.create(request);
             return ResponseEntity.ok(preference.getInitPoint());
+
         } catch (Exception e) {
+            System.err.println("Error creando preferencia: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creando preferencia: " + e.getMessage());
         }
@@ -182,45 +87,52 @@ public class PaymentController {
                 }
 
                 if (paymentId != null) {
-                    Payment payment = paymentClient.get(paymentId);
+                    try {
+                        Payment payment = paymentClient.get(paymentId);
 
-                    // Buscar o crear usuario
-                    Users user = null;
-                    if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                        try {
-                            Long mpUserId = Long.parseLong(payment.getPayer().getId());
-                            user = usersRepository.findByMpUserId(mpUserId)
-                                    .orElseGet(() -> {
-                                        Users newUser = new Users();
-                                        newUser.setMpUserId(mpUserId);
-                                        newUser.setEmail(payment.getPayer().getEmail());
-                                        newUser.setName(payment.getPayer().getFirstName());
-                                        return usersRepository.save(newUser);
-                                    });
-                        } catch (NumberFormatException e) {
-                            System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
+                        // Buscar o crear usuario
+                        Users user = null;
+                        if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+                            try {
+                                Long mpUserId = Long.parseLong(payment.getPayer().getId());
+                                user = usersRepository.findByMpUserId(mpUserId)
+                                        .orElseGet(() -> {
+                                            Users newUser = new Users();
+                                            newUser.setMpUserId(mpUserId);
+                                            newUser.setEmail(payment.getPayer().getEmail());
+                                            newUser.setName(payment.getPayer().getFirstName());
+                                            return usersRepository.save(newUser);
+                                        });
+                            } catch (NumberFormatException e) {
+                                System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
+                            }
                         }
-                    }
 
-                    // Crear orden asociada al usuario
-                    Orders orders = new Orders();
-                    orders.setProductName(payment.getDescription());
-                    orders.setAmount(payment.getTransactionAmount());
-                    orders.setTotal(payment.getTransactionAmount());
-                    orders.setStatus(payment.getStatus());
-                    if (user != null) {
-                        orders.setUser(user); //  relación con la class o entidad Users
-                    }
+                        // Crear orden asociada al usuario
+                        Orders orders = new Orders();
+                        orders.setProductName(payment.getDescription());
+                        orders.setAmount(payment.getTransactionAmount());
+                        orders.setTotal(payment.getTransactionAmount());
+                        orders.setStatus(payment.getStatus());
+                        if (user != null) {
+                            orders.setUser(user);
+                        }
 
-                    orderRepository.save(orders);
-                    System.out.println("Pago guardado en DB: " + orders);
+                        orderRepository.save(orders);
+                        System.out.println("Pago guardado en DB: " + orders);
+
+                    } catch (Exception ex) {
+                        System.err.println("No se encontró el pago con id " + paymentId + ": " + ex.getMessage());
+                    }
                 }
+
             } else if ("merchant_order".equals(topic)) {
                 String resourceUrl = (String) payload.get("resource");
                 System.out.println("Webhook merchant_order recibido: " + resourceUrl);
             }
 
             return ResponseEntity.ok("Webhook recibido");
+
         } catch (Exception e) {
             System.err.println("Error procesando webhook: " + e.getMessage());
             return ResponseEntity.ok("Webhook recibido pero no procesado");
@@ -232,4 +144,4 @@ public class PaymentController {
     public List<Orders> getOrders() {
         return orderRepository.findAll();
     }
-}
+                }
