@@ -100,18 +100,22 @@ if (payment.getPayer() != null && payment.getPayer().getId() != null) {
         user = usersRepository.findByMpUserId(mpUserId)
                 .orElseGet(() -> {
                     Users newUser = new Users();
-                    newUser.setMpUserId(mpUserId);
-                    newUser.setEmail(payment.getPayer().getEmail());
-                    newUser.setName(payment.getPayer().getFirstName());
+newUser.setMpUserId(mpUserId);
+newUser.setEmail(payment.getPayer().getEmail());
+newUser.setName(payment.getPayer().getFirstName());
 
-                    //  Aquí nos aseguramos de que username nunca sea null
-                    if (payment.getPayer().getEmail() != null && !payment.getPayer().getEmail().isEmpty()) {
-                        newUser.setUsername(payment.getPayer().getEmail());
-                    } else {
-                        newUser.setUsername("mpuser_" + mpUserId); // fallback
-                    }
+// username obligatorio
+if (payment.getPayer().getEmail() != null) {
+    newUser.setUsername(payment.getPayer().getEmail());
+} else {
+    newUser.setUsername("mpuser_" + mpUserId);
+}
 
-                    return usersRepository.save(newUser);
+// password obligatorio (puede ser un valor fijo si no usás login)
+newUser.setPassword("mercadopago"); 
+
+return usersRepository.save(newUser);
+
                 });
     } catch (NumberFormatException e) {
         System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
