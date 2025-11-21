@@ -2,7 +2,7 @@ package com.ejercicioabml.abmlcontroller;
 import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.model.Orders;
-import com.abml.jpa.hibernate.model.User;
+import com.abml.jpa.hibernate.model.Users;
 
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
