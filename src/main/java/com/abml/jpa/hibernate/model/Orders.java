@@ -11,6 +11,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
+// Para romper ciclos en JSON
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 import java.util.List;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -27,6 +33,9 @@ public class Orders {
     private Users user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+   //para evitar el loop de datos de json por repercusión de datos en la relación 
+    //cuando se accede al endpoint orders
+    @JsonManagedReference
     private List<OrderItems> items;
 
     private BigDecimal total;
