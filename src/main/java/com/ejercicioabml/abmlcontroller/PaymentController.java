@@ -135,16 +135,26 @@ return usersRepository.save(newUser);
 
 
                         // Crear orden asociada al usuario
-                        Orders orders = new Orders();
-                        orders.setProductName(payment.getDescription());
-                        orders.setAmount(payment.getTransactionAmount());
-                        orders.setTotal(payment.getTransactionAmount());
-                        orders.setStatus(payment.getStatus());
-                        if (user != null) {
-                            orders.setUser(user);
-                        }
+                        Orders order = new Orders();
+order.setUser(user);
+order.setTotal(payment.getTransactionAmount());
+order.setAmount(payment.getTransactionAmount());
+order.setStatus(payment.getStatus());
+order.setProductName("Producto de prueba");
 
-                        orderRepository.save(orders);
+// Crear ítem asociado
+OrderItems item = new OrderItems();
+item.setOrder(order);
+item.setProductName("Producto de prueba");
+item.setAmount(payment.getTransactionAmount());
+item.setQuantity(1);
+
+// Asociar ítem a la orden
+order.setItems(Arrays.asList(item));
+
+// Guardar todo junto
+ordersRepository.save(order);
+
                         System.out.println("Pago guardado en DB: " + orders);
 
                     } catch (Exception ex) {
