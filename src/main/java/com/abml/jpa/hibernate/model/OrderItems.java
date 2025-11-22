@@ -25,12 +25,22 @@ public class OrderItems {
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;
 
-    @Column(name = "product_name", length = 255)
-    private String productName;
+    // Relación con Products: cada ítem referencia un producto
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Products product;
 
+    @Column(nullable = false)
+    private Integer quantity;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(precision = 38, scale = 2)
     private BigDecimal amount;
 
-    private Integer quantity;
+    @Column(name = "product_name", length = 255)
+    private String productName;
 
     // Getters y setters
     public Long getId() { return id; }
@@ -39,12 +49,18 @@ public class OrderItems {
     public Orders getOrder() { return order; }
     public void setOrder(Orders order) { this.order = order; }
 
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
+    public Products getProduct() { return product; }
+    public void setProduct(Products product) { this.product = product; }
+
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
     public BigDecimal getAmount() { return amount; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
 
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
 }
