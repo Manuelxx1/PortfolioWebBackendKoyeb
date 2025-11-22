@@ -143,8 +143,17 @@ public class PaymentController {
                         item.setQuantity(1);
 
                         // Asociar ítem a la orden
+                        //gracias a la relacion Onetomany
+                        //que esta en laclase orders
+                        //se guardan los datos item de la orden 
+                        //a través de su método setItems
+                        //en la class OrderItems  
+                        //que luego se guardan en la tabla OrderItems 
                         order.setItems(Arrays.asList(item));
-
+                        //como se hace desde orders por la relación 
+                        //se usa su 
+                        //repository para guardar los items también 
+   
                         // Guardar todo junto
                         orderRepository.save(order);
 
