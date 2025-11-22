@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import java.math.BigDecimal;
@@ -23,7 +24,11 @@ public class Users {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
+  
     @Column(nullable = false, length = 100)
+   @JsonIgnore   //  esto evita que se muestre el campo en el JSON
+    //cuando se accede al endpoint por url en navegador
+    //y también por frontend en vista ya que es un dato privado del sistema 
     private String password;
 
     @Column(length = 100)
