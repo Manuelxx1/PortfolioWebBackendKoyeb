@@ -21,12 +21,12 @@ public class OrderItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relación con Orders: cada ítem pertenece a una orden
+    // Relación con Orders
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;
 
-    // Relación con Products: cada ítem referencia un producto
+    // Relación con Product (tu clase existente)
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
@@ -64,4 +64,4 @@ public class OrderItems {
 
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
-}
+        }
