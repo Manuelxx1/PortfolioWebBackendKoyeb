@@ -101,18 +101,29 @@ if (payment.getPayer() != null && payment.getPayer().getId() != null) {
                 .orElseGet(() -> {
                     Users newUser = new Users();
 newUser.setMpUserId(mpUserId);
-newUser.setEmail(payment.getPayer().getEmail());
-newUser.setName(payment.getPayer().getFirstName());
 
-// username obligatorio
-if (payment.getPayer().getEmail() != null) {
-    newUser.setUsername(payment.getPayer().getEmail());
+// Email y nombre pueden venir en null si es usuario de prueba
+String email = payment.getPayer().getEmail();
+String firstName = payment.getPayer().getFirstName();
+
+// 👇 username obligatorio
+if (email != null && !email.isEmpty()) {
+    newUser.setUsername(email);
+    newUser.setEmail(email);
 } else {
     newUser.setUsername("mpuser_" + mpUserId);
+    newUser.setEmail(null); // o un valor por defecto si querés
 }
 
-// password obligatorio (puede ser un valor fijo si no usás login)
-newUser.setPassword("mercadopago"); 
+// 👇 name opcional
+if (firstName != null && !firstName.isEmpty()) {
+    newUser.setName(firstName);
+} else {
+    newUser.setName("Desconocido");
+}
+
+// 👇 password obligatorio (valor fijo si no usás login real)
+newUser.setPassword("mercadopago");
 
 return usersRepository.save(newUser);
 
