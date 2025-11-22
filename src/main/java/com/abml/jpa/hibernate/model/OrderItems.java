@@ -1,5 +1,6 @@
 package com.abml.jpa.hibernate.model;
 import jakarta.persistence.Entity;
+import  com.abml.jpa.hibernate.model.Product;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +29,7 @@ public class OrderItems {
     // Relación con Products: cada ítem referencia un producto
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id", nullable = false)
-    private Products product;
+    private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -49,7 +50,7 @@ public class OrderItems {
     public Orders getOrder() { return order; }
     public void setOrder(Orders order) { this.order = order; }
 
-    public Products getProduct() { return product; }
+    public Product getProduct() { return product; }
     public void setProduct(Products product) { this.product = product; }
 
     public Integer getQuantity() { return quantity; }
