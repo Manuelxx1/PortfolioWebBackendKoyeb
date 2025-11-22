@@ -10,6 +10,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 
 
+// Para romper ciclos en JSON
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +30,9 @@ public class OrderItems {
     // Relación con Orders
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id", nullable = false)
+  //para evitar el loop de datos de json por repercusión de datos en la relación 
+    //cuando se accede al endpoint orders
+    @JsonBackReference
     private Orders order;
 
     // Relación con Product (tu clase existente)
