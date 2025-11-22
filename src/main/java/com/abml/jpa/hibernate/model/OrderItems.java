@@ -20,6 +20,7 @@ public class OrderItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Relación con Orders: cada ítem pertenece a una orden
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;
@@ -27,24 +28,23 @@ public class OrderItems {
     @Column(name = "product_name", length = 255)
     private String productName;
 
-    private java.math.BigDecimal amount;
+    private BigDecimal amount;
 
     private Integer quantity;
 
-    
-      // Getters y setters
+    // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getOrder() { return order; }
-    public void setOrder(String order) { this.order = order; }
+    public Orders getOrder() { return order; }
+    public void setOrder(Orders order) { this.order = order; }
 
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
 
-    public Long getAmount() { return amount; }
-    public void setAmount(Long amount) { this.amount = amount; }
-    public String getQuantity() { return quantity; }
-    public void setQuantity(String quantity) { this.quantity = quantity; }
-    
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 }
