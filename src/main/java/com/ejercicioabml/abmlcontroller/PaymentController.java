@@ -3,6 +3,7 @@ package com.ejercicioabml.abmlcontroller;
 import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.model.Orders;
 import com.abml.jpa.hibernate.model.OrderItems;
+import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
