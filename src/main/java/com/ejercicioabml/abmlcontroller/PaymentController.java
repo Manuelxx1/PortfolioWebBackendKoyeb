@@ -121,39 +121,35 @@ public class PaymentController {
                                 });
                     }
 
-                    // Crear orden asociada al usuario
-                    Orders order = new Orders();
-                    order.setUser(user);
-                    order.setTotal(payment.getTransactionAmount());
-                    order.setAmount(payment.getTransactionAmount());
-                    order.setStatus(payment.getStatus());
-                    order.setProductName("Producto de prueba");
+                    // Buscar producto real en la base (ejemplo: el producto que se vendió)
+Product product = productRepository.findById(1L)  // aquí usás el ID real
+        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-                    // Crear ítem asociado
-                    OrderItems item = new OrderItems();
-                    item.setOrder(order);
-                    item.setProductName("Producto de prueba");
-                    item.setAmount(payment.getTransactionAmount());
-                    item.setQuantity(1);
+// Crear orden asociada al usuario
+Orders order = new Orders();
+order.setUser(user);
+order.setTotal(payment.getTransactionAmount());
+order.setAmount(payment.getTransactionAmount());
+order.setStatus(payment.getStatus());
+order.setProductName(product.getName());
 
-                    // Asociar ítem a la orden
-                    // Asociar ítem a la orden
-                        //gracias a la relacion Onetomany
-                        //que esta en laclase orders
-                        //se guardan los datos item de la orden 
-                        //a través de su método setItems
-                        //en la class OrderItems  
-                        //que luego se guardan en la tabla OrderItems 
-                    order.setItems(Arrays.asList(item));
-                           
-                    //como se hace desde orders por la relación 
-                        //se usa su 
-                        //repository para guardar los items también 
+// Crear ítem asociado
+OrderItems item = new OrderItems();
+item.setOrder(order);
+item.setProduct(product); //  obligatorio
+item.setQuantity(1); // cantidad obligatoria
+item.setPrice(product.getPrice()); // precio unitario del producto
+item.setAmount(product.getPrice().multiply(new BigDecimal(item.getQuantity())));
+item.setProductName(product.getName());
 
-                    // Guardar todo junto
-                    orderRepository.save(order);
+// Asociar ítem a la orden
+order.setItems(Arrays.asList(item));
 
-                    System.out.println("Pago guardado en DB: " + order);
+// Guardar todo junto
+orderRepository.save(order);
+
+System.out.println("Pago guardado en DB: " + order);
+
                 }
             } else if ("merchant_order".equals(topic)) {
                 String resourceUrl = (String) payload.get("resource");
