@@ -88,82 +88,73 @@ public class PaymentController {
                 }
 
                 if (paymentId != null) {
-                    try {
-                        Payment payment = paymentClient.get(paymentId);
+                    Payment payment = paymentClient.get(paymentId);
 
-                        // Buscar o crear usuario
-                        Users user = null;
-                        if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                            try {
-                                Long mpUserId = Long.parseLong(payment.getPayer().getId());
-                                user = userRepository.findByMpUserId(mpUserId)
-                                        .orElseGet(() -> {
-                                            Users newUser = new Users();
-                                            newUser.setMpUserId(mpUserId);
+                    // Buscar o crear usuario
+                    Users user = null;
+                    if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+                        Long mpUserId = Long.parseLong(payment.getPayer().getId());
+                        user = userRepository.findByMpUserId(mpUserId)
+                                .orElseGet(() -> {
+                                    Users newUser = new Users();
+                                    newUser.setMpUserId(mpUserId);
 
-                                            String email = payment.getPayer().getEmail();
-                                            String firstName = payment.getPayer().getFirstName();
+                                    String email = payment.getPayer().getEmail();
+                                    String firstName = payment.getPayer().getFirstName();
 
-                                            if (email != null && !email.isEmpty()) {
-                                                newUser.setUsername(email);
-                                                newUser.setEmail(email);
-                                            } else {
-                                                newUser.setUsername("mpuser_" + mpUserId);
-                                                newUser.setEmail(null);
-                                            }
+                                    if (email != null && !email.isEmpty()) {
+                                        newUser.setUsername(email);
+                                        newUser.setEmail(email);
+                                    } else {
+                                        newUser.setUsername("mpuser_" + mpUserId);
+                                        newUser.setEmail(null);
+                                    }
 
-                                            if (firstName != null && !firstName.isEmpty()) {
-                                                newUser.setName(firstName);
-                                            } else {
-                                                newUser.setName("Desconocido");
-                                            }
+                                    if (firstName != null && !firstName.isEmpty()) {
+                                        newUser.setName(firstName);
+                                    } else {
+                                        newUser.setName("Desconocido");
+                                    }
 
-                                            newUser.setPassword("mercadopago");
+                                    newUser.setPassword("mercadopago");
+                                    return userRepository.save(newUser);
+                                });
+                    }
 
-                                            return userRepository.save(newUser);
-                                        });
-                            } catch (NumberFormatException e) {
-                                System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
-                            }
-                        }
+                    // Crear orden asociada al usuario
+                    Orders order = new Orders();
+                    order.setUser(user);
+                    order.setTotal(payment.getTransactionAmount());
+                    order.setAmount(payment.getTransactionAmount());
+                    order.setStatus(payment.getStatus());
+                    order.setProductName("Producto de prueba");
 
-                        // Crear orden asociada al usuario
-                        Orders order = new Orders();
-                        order.setUser(user);
-                        order.setTotal(payment.getTransactionAmount());
-                        order.setAmount(payment.getTransactionAmount());
-                        order.setStatus(payment.getStatus());
-                        order.setProductName("Producto de prueba");
+                    // Crear ítem asociado
+                    OrderItems item = new OrderItems();
+                    item.setOrder(order);
+                    item.setProductName("Producto de prueba");
+                    item.setAmount(payment.getTransactionAmount());
+                    item.setQuantity(1);
 
-                        // Crear ítem asociado
-                        OrderItems item = new OrderItems();
-                        item.setOrder(order);
-                        item.setProductName("Producto de prueba");
-                        item.setAmount(payment.getTransactionAmount());
-                        item.setQuantity(1);
-
-                        // Asociar ítem a la orden
+                    // Asociar ítem a la orden
+                    // Asociar ítem a la orden
                         //gracias a la relacion Onetomany
                         //que esta en laclase orders
                         //se guardan los datos item de la orden 
                         //a través de su método setItems
                         //en la class OrderItems  
                         //que luego se guardan en la tabla OrderItems 
-                        order.setItems(Arrays.asList(item));
-                        //como se hace desde orders por la relación 
+                    order.setItems(Arrays.asList(item));
+                           
+                    //como se hace desde orders por la relación 
                         //se usa su 
                         //repository para guardar los items también 
-   
-                        // Guardar todo junto
-                        orderRepository.save(order);
 
-                        System.out.println("Pago guardado en DB: " + order);
+                    // Guardar todo junto
+                    orderRepository.save(order);
 
-                    } catch (Exception ex) {
-                        System.err.println("No se encontró el pago con id " + paymentId + ": " + ex.getMessage());
-                    }
+                    System.out.println("Pago guardado en DB: " + order);
                 }
-
             } else if ("merchant_order".equals(topic)) {
                 String resourceUrl = (String) payload.get("resource");
                 System.out.println("Webhook merchant_order recibido: " + resourceUrl);
