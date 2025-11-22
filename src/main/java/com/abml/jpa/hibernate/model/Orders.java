@@ -24,6 +24,11 @@ public class Orders {
     
     private Users user;
 
+    //Relación con OrderItems
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<OrderItems> items;
+
+
     private java.math.BigDecimal total;
     private java.math.BigDecimal amount;
 
