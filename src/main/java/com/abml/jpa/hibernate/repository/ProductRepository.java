@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 @Repository 
 @Component
 public interface ProductRepository extends JpaRepository<Product, Long> {
+  // Con JpaRepository ya tenés todos los métodos básicos:
+    // findById, findAll, save, deleteById, etc.
+
+  //método personalizado 
   List<Product> findByNameContainingIgnoreCase(String name);
 
 }
