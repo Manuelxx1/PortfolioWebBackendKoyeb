@@ -150,6 +150,15 @@ item.setProductName(product.getName());
 // Asociar ítem a la orden
 order.setItems(Arrays.asList(item));
 
+              //  Calcular el total dinámicamente
+    BigDecimal total = BigDecimal.ZERO;
+    for (OrderItems i : order.getItems()) {
+        total = total.add(i.getAmount());
+    }
+    order.setTotal(total);
+    order.setAmount(total);
+    order.setProductName(product.getName());
+
 // Guardar todo junto
 orderRepository.save(order);
 
