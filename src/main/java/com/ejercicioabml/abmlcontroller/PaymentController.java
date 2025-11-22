@@ -1,15 +1,16 @@
 package com.ejercicioabml.abmlcontroller;
-import com.abml.jpa.hibernate.repository.OrderRepository;
-import com.abml.jpa.hibernate.repository.UserRepository;
-import com.abml.jpa.hibernate.model.Orders;
+
 import com.abml.jpa.hibernate.model.Users;
+import com.abml.jpa.hibernate.model.Orders;
+import com.abml.jpa.hibernate.model.OrderItems;
+import com.abml.jpa.hibernate.repository.UserRepository;
+import com.abml.jpa.hibernate.repository.OrderRepository;
 
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceRequest;
-// CAMBIO IMPORTANTE AQUÍ: ItemRequest ya no existe
-import com.mercadopago.client.preference.PreferenceItemRequest; 
+import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 
@@ -17,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,7 +36,7 @@ public class PaymentController {
     private OrderRepository orderRepository;
 
     @Autowired
-    private UserRepository usersRepository;
+    private UserRepository userRepository;
 
     public PaymentController() {
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
@@ -91,71 +92,63 @@ public class PaymentController {
                         Payment payment = paymentClient.get(paymentId);
 
                         // Buscar o crear usuario
-                        
-// Dentro del webhook, cuando creás el usuario nuevo:
-Users user = null;
-if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-    try {
-        Long mpUserId = Long.parseLong(payment.getPayer().getId());
-        user = usersRepository.findByMpUserId(mpUserId)
-                .orElseGet(() -> {
-                    Users newUser = new Users();
-newUser.setMpUserId(mpUserId);
+                        Users user = null;
+                        if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+                            try {
+                                Long mpUserId = Long.parseLong(payment.getPayer().getId());
+                                user = userRepository.findByMpUserId(mpUserId)
+                                        .orElseGet(() -> {
+                                            Users newUser = new Users();
+                                            newUser.setMpUserId(mpUserId);
 
-// Email y nombre pueden venir en null si es usuario de prueba
-String email = payment.getPayer().getEmail();
-String firstName = payment.getPayer().getFirstName();
+                                            String email = payment.getPayer().getEmail();
+                                            String firstName = payment.getPayer().getFirstName();
 
-// 👇 username obligatorio
-if (email != null && !email.isEmpty()) {
-    newUser.setUsername(email);
-    newUser.setEmail(email);
-} else {
-    newUser.setUsername("mpuser_" + mpUserId);
-    newUser.setEmail(null); // o un valor por defecto si querés
-}
+                                            if (email != null && !email.isEmpty()) {
+                                                newUser.setUsername(email);
+                                                newUser.setEmail(email);
+                                            } else {
+                                                newUser.setUsername("mpuser_" + mpUserId);
+                                                newUser.setEmail(null);
+                                            }
 
-// 👇 name opcional
-if (firstName != null && !firstName.isEmpty()) {
-    newUser.setName(firstName);
-} else {
-    newUser.setName("Desconocido");
-}
+                                            if (firstName != null && !firstName.isEmpty()) {
+                                                newUser.setName(firstName);
+                                            } else {
+                                                newUser.setName("Desconocido");
+                                            }
 
-// 👇 password obligatorio (valor fijo si no usás login real)
-newUser.setPassword("mercadopago");
+                                            newUser.setPassword("mercadopago");
 
-return usersRepository.save(newUser);
-
-                });
-    } catch (NumberFormatException e) {
-        System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
-    }
-}
-
+                                            return userRepository.save(newUser);
+                                        });
+                            } catch (NumberFormatException e) {
+                                System.err.println("El mpUserId no es numérico: " + payment.getPayer().getId());
+                            }
+                        }
 
                         // Crear orden asociada al usuario
                         Orders order = new Orders();
-order.setUser(user);
-order.setTotal(payment.getTransactionAmount());
-order.setAmount(payment.getTransactionAmount());
-order.setStatus(payment.getStatus());
-order.setProductName("Producto de prueba");
+                        order.setUser(user);
+                        order.setTotal(payment.getTransactionAmount());
+                        order.setAmount(payment.getTransactionAmount());
+                        order.setStatus(payment.getStatus());
+                        order.setProductName("Producto de prueba");
 
-// Crear ítem asociado
-OrderItems item = new OrderItems();
-item.setOrder(order);
-item.setProductName("Producto de prueba");
-item.setAmount(payment.getTransactionAmount());
-item.setQuantity(1);
+                        // Crear ítem asociado
+                        OrderItems item = new OrderItems();
+                        item.setOrder(order);
+                        item.setProductName("Producto de prueba");
+                        item.setAmount(payment.getTransactionAmount());
+                        item.setQuantity(1);
 
-// Asociar ítem a la orden
-order.setItems(Arrays.asList(item));
+                        // Asociar ítem a la orden
+                        order.setItems(Arrays.asList(item));
 
-// Guardar todo junto
-ordersRepository.save(order);
+                        // Guardar todo junto
+                        orderRepository.save(order);
 
-                        System.out.println("Pago guardado en DB: " + orders);
+                        System.out.println("Pago guardado en DB: " + order);
 
                     } catch (Exception ex) {
                         System.err.println("No se encontró el pago con id " + paymentId + ": " + ex.getMessage());
@@ -180,4 +173,4 @@ ordersRepository.save(order);
     public List<Orders> getOrders() {
         return orderRepository.findAll();
     }
-                }
+}
