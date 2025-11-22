@@ -5,6 +5,7 @@ import com.abml.jpa.hibernate.model.Orders;
 import com.abml.jpa.hibernate.model.OrderItems;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.repository.OrderRepository;
+import com.abml.jpa.hibernate.repository.ProductRepository;
 
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
@@ -37,6 +38,9 @@ public class PaymentController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+private ProductRepository productRepository;
 
     public PaymentController() {
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
