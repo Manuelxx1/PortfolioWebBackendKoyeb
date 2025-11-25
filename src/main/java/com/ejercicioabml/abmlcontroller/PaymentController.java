@@ -62,43 +62,34 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                 .unitPrice(product.getPrice())
                 .build();
 
-        // Primero armamos la preferencia SIN metadata
+        // Creamos la orden primero
+        Orders order = new Orders();
+        order.setProductName(product.getName());
+        order.setStatus("pending");
+        order.setUser(guestUser()); // tu lógica para usuario
+        orderRepository.save(order);
+
+        // Creamos la preferencia con external_reference = ID de la orden
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(Arrays.asList(item))
                 .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
+                .externalReference(order.getId().toString()) // 👈 clave
                 .build();
 
         Preference preference = preferenceClient.create(request);
 
-        // Ahora que tenemos el ID real de la preferencia, lo usamos en metadata
-        PreferenceRequest requestConMetadata = PreferenceRequest.builder()
-                .items(Arrays.asList(item))
-                .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-                .metadata(Map.of("preference_id", preference.getId())) //  el mismo que guardamos en la orden
-                .build();
-
-        // Usuario genérico para pruebas
-        Users guest = userRepository.findByUsername("guest")
-                .orElseGet(() -> {
-                    Users newGuest = new Users();
-                    newGuest.setUsername("guest");
-                    newGuest.setEmail("guest@example.com");
-                    newGuest.setName("Usuario Genérico");
-                    newGuest.setPassword("guest");
-                    return userRepository.save(newGuest);
-                });
-
-        // Crear orden inicial con preferenceId real
-        Orders order = new Orders();
-        order.setProductName(product.getName());
-        order.setStatus("pending");
-        order.setPreferenceId(preference.getId()); //coincide con metadata
-        order.setUser(guest);
+        // Guardamos el preferenceId real en la orden
+        order.setPreferenceId(preference.getId());
         orderRepository.save(order);
 
         return ResponseEntity.ok(preference.getInitPoint());
 
     } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error creando preferencia: " + e.getMessage());
+    }
+}
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error creando preferencia: " + e.getMessage());
     }
