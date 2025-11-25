@@ -32,7 +32,7 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    // 👇 Campo para vincular con Mercado Pago
+    //  Campo para vincular con Mercado Pago
     private String preferenceId;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -91,4 +91,8 @@ public class Orders {
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public String getPreferenceId() { return preferenceId; }
+    public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
+    
 }
