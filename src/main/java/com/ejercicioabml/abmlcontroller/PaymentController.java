@@ -141,7 +141,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 Orders order = orderRepository.findById(Long.parseLong(externalRef))
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-                // Actualizar usuario si corresponde
+                // Buscar o crear usuario
                 Users user = null;
                 if (payment.getPayer() != null && payment.getPayer().getId() != null) {
                     Long mpUserId = Long.parseLong(payment.getPayer().getId());
