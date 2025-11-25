@@ -73,7 +73,7 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(Arrays.asList(item))
                 .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-                .externalReference(order.getId().toString()) // 👈 clave
+                .externalReference(order.getId().toString()) // clave
                 .build();
 
         Preference preference = preferenceClient.create(request);
@@ -108,6 +108,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
         Long paymentId = null;
 
         if ("payment".equals(topic)) {
+            // Obtener el paymentId desde el payload
             if (payload.containsKey("data")) {
                 Map<String, Object> data = (Map<String, Object>) payload.get("data");
                 paymentId = Long.parseLong(data.get("id").toString());
@@ -121,17 +122,16 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 // Logs para depuración
                 System.out.println("Payment ID: " + paymentId);
                 System.out.println("Payment status: " + payment.getStatus());
-                System.out.println("Payment metadata: " + payment.getMetadata());
+                System.out.println("Payment externalReference: " + payment.getExternalReference());
 
-                // Obtener preferenceId desde metadata
-                Object prefMeta = payment.getMetadata().get("preference_id");
-                if (prefMeta == null) {
-                    System.err.println("No se encontró preference_id en metadata del pago");
-                    return ResponseEntity.ok("Webhook recibido pero sin preference_id");
+                // Recuperamos el ID de la orden interna desde external_reference
+                String externalRef = payment.getExternalReference();
+                if (externalRef == null) {
+                    System.err.println("No se encontró external_reference en el pago");
+                    return ResponseEntity.ok("Webhook recibido pero sin external_reference");
                 }
-                String preferenceId = prefMeta.toString();
 
-                Orders order = orderRepository.findByPreferenceId(preferenceId)
+                Orders order = orderRepository.findById(Long.parseLong(externalRef))
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
                 // Actualizar usuario si corresponde
@@ -161,7 +161,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
                 // Actualizar orden con usuario y estado del pago
                 order.setUser(user);
-                order.setStatus(payment.getStatus()); // "approved", "rejected", etc.
+                order.setStatus(payment.getStatus()); // "approved", "rejected", "cancelled", etc.
                 order.calculateTotal();
 
                 orderRepository.save(order);
@@ -180,6 +180,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
         return ResponseEntity.ok("Webhook recibido pero con error");
     }
 }
+
 
 
     // Ver los registros de pedidos (orders) en la base de datos
