@@ -50,30 +50,40 @@ private ProductRepository productRepository;
     }
 
     // Crear preferencia de pago
-    @PostMapping("/create")
-    public ResponseEntity<String> createPreference() {
-        try {
-            PreferenceItemRequest item = PreferenceItemRequest.builder()
-                    .title("Producto de prueba")
-                    .quantity(1)
-                    .unitPrice(new BigDecimal("100"))
-                    .build();
+    @PostMapping("/create/{productId}")
+public ResponseEntity<String> createPreference(@PathVariable Long productId) {
+    try {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-            PreferenceRequest request = PreferenceRequest.builder()
-                    .items(Arrays.asList(item))
-                    .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-                    .build();
+        PreferenceItemRequest item = PreferenceItemRequest.builder()
+                .title(product.getName())
+                .quantity(1)
+                .unitPrice(product.getPrice())
+                .build();
 
-            Preference preference = preferenceClient.create(request);
-            return ResponseEntity.ok(preference.getInitPoint());
+        PreferenceRequest request = PreferenceRequest.builder()
+                .items(Arrays.asList(item))
+                .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
+                .build();
 
-        } catch (Exception e) {
-            System.err.println("Error creando preferencia: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creando preferencia: " + e.getMessage());
-        }
+        Preference preference = preferenceClient.create(request);
+
+        // Crear orden inicial con preferenceId
+        Orders order = new Orders();
+        order.setProductName(product.getName());
+        order.setStatus("pending");
+        order.setPreferenceId(preference.getId());
+        orderRepository.save(order);
+
+        return ResponseEntity.ok(preference.getInitPoint());
+
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error creando preferencia: " + e.getMessage());
     }
+}
+
 
     // Webhook para recibir notificaciones de pagos
     @PostMapping("/webhook")
