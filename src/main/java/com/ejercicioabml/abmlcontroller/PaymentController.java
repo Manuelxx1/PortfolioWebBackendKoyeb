@@ -62,14 +62,20 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                 .unitPrice(product.getPrice())
                 .build();
 
-        // Creamos la preferencia con metadata que incluye el preferenceId
+        // Primero armamos la preferencia SIN metadata
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(Arrays.asList(item))
                 .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-                .metadata(Map.of("preference_id", productId.toString())) // clave para el webhook
                 .build();
 
         Preference preference = preferenceClient.create(request);
+
+        // Ahora que tenemos el ID real de la preferencia, lo usamos en metadata
+        PreferenceRequest requestConMetadata = PreferenceRequest.builder()
+                .items(Arrays.asList(item))
+                .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
+                .metadata(Map.of("preference_id", preference.getId())) //  el mismo que guardamos en la orden
+                .build();
 
         // Usuario genérico para pruebas
         Users guest = userRepository.findByUsername("guest")
@@ -82,11 +88,11 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                     return userRepository.save(newGuest);
                 });
 
-        // Crear orden inicial con preferenceId
+        // Crear orden inicial con preferenceId real
         Orders order = new Orders();
         order.setProductName(product.getName());
         order.setStatus("pending");
-        order.setPreferenceId(preference.getId()); // 👈 guardamos el preferenceId real
+        order.setPreferenceId(preference.getId()); //coincide con metadata
         order.setUser(guest);
         orderRepository.save(order);
 
@@ -97,6 +103,7 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                 .body("Error creando preferencia: " + e.getMessage());
     }
 }
+
 
 
 
