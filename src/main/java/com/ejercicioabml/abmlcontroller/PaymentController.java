@@ -118,9 +118,15 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
             if (paymentId != null) {
                 Payment payment = paymentClient.get(paymentId);
+//  Ahora sí: leemos el preference_id desde metadata
+                Object prefMeta = payment.getMetadata().get("preference_id");
+                if (prefMeta == null) {
+                    System.err.println("No se encontró preference_id en metadata del pago");
+                    return ResponseEntity.ok("Webhook recibido pero sin preference_id");
+                }
 
-                // Buscar orden por preferenceId (ya creada en /create)
-                String preferenceId = payment.getMetadata().get("preference_id").toString();
+                String preferenceId = prefMeta.toString();
+                
                 Orders order = orderRepository.findByPreferenceId(preferenceId)
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
