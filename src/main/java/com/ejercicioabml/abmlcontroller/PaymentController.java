@@ -211,4 +211,12 @@ private ProductRepository productRepository;
     public List<Orders> getOrders() {
         return orderRepository.findAll();
     }
+
+    // Endpoint para obtener una orden por ID
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<Orders> getOrderById(@PathVariable Long id) {
+        Orders order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+        return ResponseEntity.ok(order);
+    }
 }
