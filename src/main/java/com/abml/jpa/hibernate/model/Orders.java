@@ -32,6 +32,9 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
+    // 👇 Campo para vincular con Mercado Pago
+    private String preferenceId;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
    //para evitar el loop de datos de json por repercusión de datos en la relación 
     //cuando se accede al endpoint orders
@@ -49,6 +52,20 @@ public class Orders {
 
     @Column(name = "created_at", updatable = false, insertable = false)
     private Timestamp createdAt;
+
+    
+    // Método helper para calcular el total dinámicamente
+//va a ser llamado por el PaymentController 
+    public void calculateTotal() {
+        BigDecimal total = BigDecimal.ZERO;
+        if (items != null) {
+            for (OrderItems i : items) {
+                total = total.add(i.getAmount());
+            }
+        }
+        this.total = total;
+        this.amount = total;
+    }
 
     // Getters y setters
     public Long getId() { return id; }
