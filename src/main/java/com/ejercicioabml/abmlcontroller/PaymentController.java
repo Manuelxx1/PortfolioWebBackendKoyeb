@@ -6,6 +6,7 @@ import com.abml.jpa.hibernate.model.OrderItems;
 import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.repository.OrderRepository;
+import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
 import com.mercadopago.MercadoPagoConfig;
