@@ -50,7 +50,7 @@ private ProductRepository productRepository;
     }
 
     // Crear preferencia de pago
-    @PostMapping("/create/{productId}")
+@PostMapping("/create/{productId}")
 public ResponseEntity<String> createPreference(@PathVariable Long productId) {
     try {
         Product product = productRepository.findById(productId)
@@ -69,11 +69,23 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
 
         Preference preference = preferenceClient.create(request);
 
+        //  Usuario genérico para pruebas
+        Users guest = userRepository.findByUsername("guest")
+                .orElseGet(() -> {
+                    Users newGuest = new Users();
+                    newGuest.setUsername("guest");
+                    newGuest.setEmail("guest@example.com");
+                    newGuest.setName("Usuario Genérico");
+                    newGuest.setPassword("guest");
+                    return userRepository.save(newGuest);
+                });
+
         // Crear orden inicial con preferenceId
         Orders order = new Orders();
         order.setProductName(product.getName());
         order.setStatus("pending");
         order.setPreferenceId(preference.getId());
+        order.setUser(guest); //  asignamos el usuario genérico
         orderRepository.save(order);
 
         return ResponseEntity.ok(preference.getInitPoint());
@@ -83,6 +95,7 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                 .body("Error creando preferencia: " + e.getMessage());
     }
 }
+
 
 
     // Webhook para recibir notificaciones de pagos
