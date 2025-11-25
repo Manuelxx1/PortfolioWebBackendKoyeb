@@ -78,7 +78,18 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
         order.setProductName(product.getName());
         order.setStatus("pending");
         order.setUser(guest);
+        order.setTotal(product.getPrice()); // 👈 total inicial
         orderRepository.save(order);
+
+        // Guardar ítems en la orden
+        OrderItems orderItem = new OrderItems();
+        orderItem.setOrder(order);
+        orderItem.setProduct(product);
+        orderItem.setProductName(product.getName());
+        orderItem.setQuantity(1);
+        orderItem.setPrice(product.getPrice());
+        orderItem.setAmount(product.getPrice());
+        orderItemsRepository.save(orderItem);
 
         // Crear preferencia con external_reference = ID de la orden interna
         PreferenceRequest request = PreferenceRequest.builder()
@@ -101,6 +112,7 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                 .body("Error creando preferencia: " + e.getMessage());
     }
 }
+
 
 
 
