@@ -62,34 +62,41 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                 .unitPrice(product.getPrice())
                 .build();
 
-        // Creamos la orden primero
+        // Usuario genérico para pruebas
+        Users guest = userRepository.findByUsername("guest")
+                .orElseGet(() -> {
+                    Users newGuest = new Users();
+                    newGuest.setUsername("guest");
+                    newGuest.setEmail("guest@example.com");
+                    newGuest.setName("Usuario Genérico");
+                    newGuest.setPassword("guest");
+                    return userRepository.save(newGuest);
+                });
+
+        // Crear orden interna primero
         Orders order = new Orders();
         order.setProductName(product.getName());
         order.setStatus("pending");
-        order.setUser(guestUser()); // tu lógica para usuario
+        order.setUser(guest);
         orderRepository.save(order);
 
-        // Creamos la preferencia con external_reference = ID de la orden
+        // Crear preferencia con external_reference = ID de la orden interna
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(Arrays.asList(item))
                 .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-                .externalReference(order.getId().toString()) // clave
+                .externalReference(order.getId().toString()) // 👈 clave para vincular
                 .build();
 
         Preference preference = preferenceClient.create(request);
 
-        // Guardamos el preferenceId real en la orden
+        // Guardar el preferenceId real en la orden
         order.setPreferenceId(preference.getId());
         orderRepository.save(order);
 
+        // Devolver el link de pago
         return ResponseEntity.ok(preference.getInitPoint());
 
     } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error creando preferencia: " + e.getMessage());
-    }
-}
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error creando preferencia: " + e.getMessage());
     }
