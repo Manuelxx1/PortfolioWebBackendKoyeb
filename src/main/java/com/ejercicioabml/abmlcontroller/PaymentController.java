@@ -122,17 +122,15 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 // Logs para depuración
                 System.out.println("Payment ID: " + paymentId);
                 System.out.println("Payment status: " + payment.getStatus());
-                System.out.println("Payment preferenceId: " + payment.getPreferenceId());
                 System.out.println("Payment metadata: " + payment.getMetadata());
 
-                // Obtener preferenceId desde metadata o como respaldo desde payment
-                String preferenceId;
+                // Obtener preferenceId desde metadata
                 Object prefMeta = payment.getMetadata().get("preference_id");
-                if (prefMeta != null) {
-                    preferenceId = prefMeta.toString();
-                } else {
-                    preferenceId = payment.getPreferenceId();
+                if (prefMeta == null) {
+                    System.err.println("No se encontró preference_id en metadata del pago");
+                    return ResponseEntity.ok("Webhook recibido pero sin preference_id");
                 }
+                String preferenceId = prefMeta.toString();
 
                 Orders order = orderRepository.findByPreferenceId(preferenceId)
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
@@ -183,7 +181,6 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
         return ResponseEntity.ok("Webhook recibido pero con error");
     }
 }
-
 
 
     // Ver los registros de pedidos (orders) en la base de datos
