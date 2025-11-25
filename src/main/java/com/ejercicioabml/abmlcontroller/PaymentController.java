@@ -142,6 +142,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 System.out.println("Payment ID: " + paymentId);
                 System.out.println("Payment status: " + payment.getStatus());
                 System.out.println("Payment externalReference: " + payment.getExternalReference());
+                System.out.println("Payment amount: " + payment.getTransactionAmount());
 
                 // Recuperamos el ID de la orden interna desde external_reference
                 String externalRef = payment.getExternalReference();
@@ -165,14 +166,21 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                                 String email = payment.getPayer().getEmail();
                                 String firstName = payment.getPayer().getFirstName();
 
+                                // Valores por defecto si no vienen datos
                                 if (email != null && !email.isEmpty()) {
                                     newUser.setUsername(email);
                                     newUser.setEmail(email);
                                 } else {
                                     newUser.setUsername("mpuser_" + mpUserId);
+                                    newUser.setEmail("sin-email@mercadopago.com");
                                 }
 
-                                newUser.setName(firstName != null ? firstName : "Desconocido");
+                                if (firstName != null && !firstName.isEmpty()) {
+                                    newUser.setName(firstName);
+                                } else {
+                                    newUser.setName("Cliente Mercado Pago");
+                                }
+
                                 newUser.setPassword("mercadopago");
                                 return userRepository.save(newUser);
                             });
@@ -181,7 +189,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 // Actualizar orden con usuario y estado del pago
                 order.setUser(user);
                 order.setStatus(payment.getStatus()); // "approved", "rejected", "cancelled", etc.
-                order.calculateTotal();
+                order.setTotal(payment.getTransactionAmount()); // monto real del pago
 
                 orderRepository.save(order);
 
@@ -199,7 +207,6 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
         return ResponseEntity.ok("Webhook recibido pero con error");
     }
 }
-
 
 
     // Ver los registros de pedidos (orders) en la base de datos
