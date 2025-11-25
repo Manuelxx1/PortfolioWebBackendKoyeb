@@ -118,19 +118,26 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
             if (paymentId != null) {
                 Payment payment = paymentClient.get(paymentId);
-//  Ahora sí: leemos el preference_id desde metadata
+
+                // Logs para depuración
+                System.out.println("Payment ID: " + paymentId);
+                System.out.println("Payment status: " + payment.getStatus());
+                System.out.println("Payment preferenceId: " + payment.getPreferenceId());
+                System.out.println("Payment metadata: " + payment.getMetadata());
+
+                // Obtener preferenceId desde metadata o como respaldo desde payment
+                String preferenceId;
                 Object prefMeta = payment.getMetadata().get("preference_id");
-                if (prefMeta == null) {
-                    System.err.println("No se encontró preference_id en metadata del pago");
-                    return ResponseEntity.ok("Webhook recibido pero sin preference_id");
+                if (prefMeta != null) {
+                    preferenceId = prefMeta.toString();
+                } else {
+                    preferenceId = payment.getPreferenceId();
                 }
 
-                String preferenceId = prefMeta.toString();
-                
                 Orders order = orderRepository.findByPreferenceId(preferenceId)
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-                // Buscar o crear usuario
+                // Actualizar usuario si corresponde
                 Users user = null;
                 if (payment.getPayer() != null && payment.getPayer().getId() != null) {
                     Long mpUserId = Long.parseLong(payment.getPayer().getId());
@@ -147,15 +154,9 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                                     newUser.setEmail(email);
                                 } else {
                                     newUser.setUsername("mpuser_" + mpUserId);
-                                    newUser.setEmail(null);
                                 }
 
-                                if (firstName != null && !firstName.isEmpty()) {
-                                    newUser.setName(firstName);
-                                } else {
-                                    newUser.setName("Desconocido");
-                                }
-
+                                newUser.setName(firstName != null ? firstName : "Desconocido");
                                 newUser.setPassword("mercadopago");
                                 return userRepository.save(newUser);
                             });
@@ -163,9 +164,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
                 // Actualizar orden con usuario y estado del pago
                 order.setUser(user);
-                order.setStatus(payment.getStatus());
-
-                // Si querés recalcular el total dinámicamente con los ítems
+                order.setStatus(payment.getStatus()); // "approved", "rejected", etc.
                 order.calculateTotal();
 
                 orderRepository.save(order);
@@ -177,13 +176,14 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
             System.out.println("Webhook merchant_order recibido: " + resourceUrl);
         }
 
-        return ResponseEntity.ok("Webhook recibido");
+        return ResponseEntity.ok("Webhook procesado");
 
     } catch (Exception e) {
         System.err.println("Error procesando webhook: " + e.getMessage());
-        return ResponseEntity.ok("Webhook recibido pero no procesado");
+        return ResponseEntity.ok("Webhook recibido pero con error");
     }
 }
+
 
 
     // Ver los registros de pedidos (orders) en la base de datos
