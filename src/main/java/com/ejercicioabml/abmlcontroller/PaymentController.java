@@ -86,107 +86,85 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
 
 
     // Webhook para recibir notificaciones de pagos
-    @PostMapping("/webhook")
-    public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
-        System.out.println("Payload recibido en webhook: " + payload);
+@PostMapping("/webhook")
+public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
+    System.out.println("Payload recibido en webhook: " + payload);
 
-        try {
-            String topic = (String) payload.get("topic");
-            Long paymentId = null;
+    try {
+        String topic = (String) payload.get("topic");
+        Long paymentId = null;
 
-            if ("payment".equals(topic)) {
-                if (payload.containsKey("data")) {
-                    Map<String, Object> data = (Map<String, Object>) payload.get("data");
-                    paymentId = Long.parseLong(data.get("id").toString());
-                } else if (payload.containsKey("resource")) {
-                    paymentId = Long.parseLong(payload.get("resource").toString());
-                }
-
-                if (paymentId != null) {
-                    Payment payment = paymentClient.get(paymentId);
-
-                    // Buscar o crear usuario
-                    Users user = null;
-                    if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                        Long mpUserId = Long.parseLong(payment.getPayer().getId());
-                        user = userRepository.findByMpUserId(mpUserId)
-                                .orElseGet(() -> {
-                                    Users newUser = new Users();
-                                    newUser.setMpUserId(mpUserId);
-
-                                    String email = payment.getPayer().getEmail();
-                                    String firstName = payment.getPayer().getFirstName();
-
-                                    if (email != null && !email.isEmpty()) {
-                                        newUser.setUsername(email);
-                                        newUser.setEmail(email);
-                                    } else {
-                                        newUser.setUsername("mpuser_" + mpUserId);
-                                        newUser.setEmail(null);
-                                    }
-
-                                    if (firstName != null && !firstName.isEmpty()) {
-                                        newUser.setName(firstName);
-                                    } else {
-                                        newUser.setName("Desconocido");
-                                    }
-
-                                    newUser.setPassword("mercadopago");
-                                    return userRepository.save(newUser);
-                                });
-                    }
-
-                    // Buscar producto real en la base (ejemplo: el producto que se vendió)
-Product product = productRepository.findById(1L)  // aquí usás el ID real
-        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-// Crear orden asociada al usuario
-Orders order = new Orders();
-order.setUser(user);
-order.setTotal(payment.getTransactionAmount());
-order.setAmount(payment.getTransactionAmount());
-order.setStatus(payment.getStatus());
-order.setProductName(product.getName());
-
-// Crear ítem asociado
-OrderItems item = new OrderItems();
-item.setOrder(order);
-item.setProduct(product); //  obligatorio
-item.setQuantity(1); // cantidad obligatoria
-item.setPrice(product.getPrice()); // precio unitario del producto
-item.setAmount(product.getPrice().multiply(new BigDecimal(item.getQuantity())));
-item.setProductName(product.getName());
-
-// Asociar ítem a la orden
-order.setItems(Arrays.asList(item));
-
-              //  Calcular el total dinámicamente
-    BigDecimal total = BigDecimal.ZERO;
-    for (OrderItems i : order.getItems()) {
-        total = total.add(i.getAmount());
-    }
-    order.setTotal(total);
-    order.setAmount(total);
-    order.setProductName(product.getName());
-
-// Guardar todo junto
-orderRepository.save(order);
-
-System.out.println("Pago guardado en DB: " + order);
-
-                }
-            } else if ("merchant_order".equals(topic)) {
-                String resourceUrl = (String) payload.get("resource");
-                System.out.println("Webhook merchant_order recibido: " + resourceUrl);
+        if ("payment".equals(topic)) {
+            if (payload.containsKey("data")) {
+                Map<String, Object> data = (Map<String, Object>) payload.get("data");
+                paymentId = Long.parseLong(data.get("id").toString());
+            } else if (payload.containsKey("resource")) {
+                paymentId = Long.parseLong(payload.get("resource").toString());
             }
 
-            return ResponseEntity.ok("Webhook recibido");
+            if (paymentId != null) {
+                Payment payment = paymentClient.get(paymentId);
 
-        } catch (Exception e) {
-            System.err.println("Error procesando webhook: " + e.getMessage());
-            return ResponseEntity.ok("Webhook recibido pero no procesado");
+                // Buscar orden por preferenceId (ya creada en /create)
+                String preferenceId = payment.getMetadata().get("preference_id").toString();
+                Orders order = orderRepository.findByPreferenceId(preferenceId)
+                        .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+                // Buscar o crear usuario
+                Users user = null;
+                if (payment.getPayer() != null && payment.getPayer().getId() != null) {
+                    Long mpUserId = Long.parseLong(payment.getPayer().getId());
+                    user = userRepository.findByMpUserId(mpUserId)
+                            .orElseGet(() -> {
+                                Users newUser = new Users();
+                                newUser.setMpUserId(mpUserId);
+
+                                String email = payment.getPayer().getEmail();
+                                String firstName = payment.getPayer().getFirstName();
+
+                                if (email != null && !email.isEmpty()) {
+                                    newUser.setUsername(email);
+                                    newUser.setEmail(email);
+                                } else {
+                                    newUser.setUsername("mpuser_" + mpUserId);
+                                    newUser.setEmail(null);
+                                }
+
+                                if (firstName != null && !firstName.isEmpty()) {
+                                    newUser.setName(firstName);
+                                } else {
+                                    newUser.setName("Desconocido");
+                                }
+
+                                newUser.setPassword("mercadopago");
+                                return userRepository.save(newUser);
+                            });
+                }
+
+                // Actualizar orden con usuario y estado del pago
+                order.setUser(user);
+                order.setStatus(payment.getStatus());
+
+                // Si querés recalcular el total dinámicamente con los ítems
+                order.calculateTotal();
+
+                orderRepository.save(order);
+
+                System.out.println("Orden actualizada en DB: " + order);
+            }
+        } else if ("merchant_order".equals(topic)) {
+            String resourceUrl = (String) payload.get("resource");
+            System.out.println("Webhook merchant_order recibido: " + resourceUrl);
         }
+
+        return ResponseEntity.ok("Webhook recibido");
+
+    } catch (Exception e) {
+        System.err.println("Error procesando webhook: " + e.getMessage());
+        return ResponseEntity.ok("Webhook recibido pero no procesado");
     }
+}
+
 
     // Ver los registros de pedidos (orders) en la base de datos
     @GetMapping("/orders")
