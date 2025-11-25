@@ -62,15 +62,16 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
                 .unitPrice(product.getPrice())
                 .build();
 
+        // Creamos la preferencia con metadata que incluye el preferenceId
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(Arrays.asList(item))
                 .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-            .metadata(Map.of("preference_id", productId.toString())) 
+                .metadata(Map.of("preference_id", productId.toString())) // clave para el webhook
                 .build();
 
         Preference preference = preferenceClient.create(request);
 
-        //  Usuario genérico para pruebas
+        // Usuario genérico para pruebas
         Users guest = userRepository.findByUsername("guest")
                 .orElseGet(() -> {
                     Users newGuest = new Users();
@@ -85,8 +86,8 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
         Orders order = new Orders();
         order.setProductName(product.getName());
         order.setStatus("pending");
-        order.setPreferenceId(preference.getId());
-        order.setUser(guest); //  asignamos el usuario genérico
+        order.setPreferenceId(preference.getId()); // 👈 guardamos el preferenceId real
+        order.setUser(guest);
         orderRepository.save(order);
 
         return ResponseEntity.ok(preference.getInitPoint());
