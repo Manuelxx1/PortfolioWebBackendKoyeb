@@ -65,7 +65,7 @@ public ResponseEntity<String> createPreference(@PathVariable Long productId) {
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(Arrays.asList(item))
                 .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-            .metadata(Map.of("preference_id", "tuPreferenceId"))   
+            .metadata(Map.of("preference_id", productId.toString())) 
                 .build();
 
         Preference preference = preferenceClient.create(request);
