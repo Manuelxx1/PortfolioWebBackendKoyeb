@@ -686,15 +686,22 @@ public ResponseEntity<?> clearCart() {
 }
 
   //quitar items del carrito 
-@PostMapping("/decrease")
-public ResponseEntity<?> decreaseFromCart(@RequestBody Map<String, Object> body) {
-    Users user = getTestUser(); // tu método auxiliar para el "guest"
+// Botón +
+    @PostMapping("/increase")
+    public ResponseEntity<?> increaseFromCart(@RequestBody Map<String, Object> body) {
+        Users user = getTestUser();
+        Long productId = Long.valueOf(body.get("productId").toString());
+        cartService.increaseFromCart(user, productId);
+        return ResponseEntity.ok("Cantidad aumentada");
+    }
 
-    Long productId = Long.valueOf(body.get("productId").toString());
-
-    cartService.decreaseFromCart(user, productId);
-    return ResponseEntity.ok("Cantidad disminuida");
-}
-
+    // Botón −
+    @PostMapping("/decrease")
+    public ResponseEntity<?> decreaseFromCart(@RequestBody Map<String, Object> body) {
+        Users user = getTestUser();
+        Long productId = Long.valueOf(body.get("productId").toString());
+        cartService.decreaseFromCart(user, productId);
+        return ResponseEntity.ok("Cantidad disminuida");
+          }
 
 }
