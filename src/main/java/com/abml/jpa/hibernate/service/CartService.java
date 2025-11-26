@@ -45,4 +45,10 @@ public class CartService {
 
     cartRepo.delete(item);
   }
+
+  public void clearCart(Users user) {
+    List<CartItem> items = cartRepo.findByUser(user);
+    cartRepo.deleteAll(items);
+}
+
 }
