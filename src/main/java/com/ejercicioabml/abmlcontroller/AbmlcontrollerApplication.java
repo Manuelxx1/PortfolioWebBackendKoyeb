@@ -677,6 +677,12 @@ public ResponseEntity<?> removeFromCart(@PathVariable Long id) {
 }
 
 
+@DeleteMapping("/clear")
+public ResponseEntity<?> clearCart() {
+    Users user = getTestUser(); // o session si ya tenés login
+    cartService.clearCart(user);
+    return ResponseEntity.ok("Carrito vaciado");
+}
 
 
 }
