@@ -35,37 +35,49 @@ public class CartService {
     cartRepo.save(item);
   }
 
-  public void removeFromCart(Users user, Long cartItemId) {
-    CartItem item = cartRepo.findById(cartItemId)
-      .orElseThrow(() -> new RuntimeException("Item no encontrado"));
+  
+  // /increase → botón +
+    public void increaseFromCart(Users user, Long productId) {
+        CartItem item = cartRepo.findByUser(user).stream()
+            .filter(i -> i.getProduct().getId().equals(productId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Item no encontrado"));
 
-    if (!item.getUser().getId().equals(user.getId())) {
-      throw new RuntimeException("No autorizado");
+        item.setQuantity(item.getQuantity() + 1);
+        cartRepo.save(item);
     }
 
-    cartRepo.delete(item);
-  }
+    // /decrease → botón −
+    public void decreaseFromCart(Users user, Long productId) {
+        CartItem item = cartRepo.findByUser(user).stream()
+            .filter(i -> i.getProduct().getId().equals(productId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Item no encontrado"));
 
-  public void clearCart(Users user) {
-    List<CartItem> items = cartRepo.findByUser(user);
-    cartRepo.deleteAll(items);
-}
-
-  public void decreaseFromCart(Users user, Long productId) {
-    // Buscar el item del carrito para ese usuario y producto
-    List<CartItem> items = cartRepo.findByUser(user);
-    CartItem item = items.stream()
-        .filter(i -> i.getProduct().getId().equals(productId))
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("Item no encontrado"));
-
-    if (item.getQuantity() > 1) {
-        item.setQuantity(item.getQuantity() - 1);
-        cartRepo.save(item); // actualiza cantidad
-    } else {
-        cartRepo.delete(item); // elimina si llega a 0
+        if (item.getQuantity() > 1) {
+            item.setQuantity(item.getQuantity() - 1);
+            cartRepo.save(item);
+        } else {
+            cartRepo.delete(item);
+        }
     }
-}
 
+    // /remove/{id}
+    public void removeFromCart(Users user, Long cartItemId) {
+        CartItem item = cartRepo.findById(cartItemId)
+            .orElseThrow(() -> new RuntimeException("Item no encontrado"));
+
+        if (!item.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("No autorizado");
+        }
+
+        cartRepo.delete(item);
+    }
+
+    // /clear
+    public void clearCart(Users user) {
+        List<CartItem> items = cartRepo.findByUser(user);
+        cartRepo.deleteAll(items);
+    }
 
 }
