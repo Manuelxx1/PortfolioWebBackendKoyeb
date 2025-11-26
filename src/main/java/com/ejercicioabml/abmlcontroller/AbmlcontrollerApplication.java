@@ -684,5 +684,16 @@ public ResponseEntity<?> clearCart() {
     return ResponseEntity.ok("Carrito vaciado");
 }
 
+  //quitar items del carrito 
+@PostMapping("/decrease")
+public ResponseEntity<?> decreaseFromCart(@RequestBody Map<String, Object> body) {
+    Users user = getTestUser(); // tu método auxiliar para el "guest"
+
+    Long productId = Long.valueOf(body.get("productId").toString());
+
+    cartService.decreaseFromCart(user, productId);
+    return ResponseEntity.ok("Cantidad disminuida");
+}
+
 
 }
