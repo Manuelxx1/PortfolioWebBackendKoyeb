@@ -22,24 +22,50 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
     private Product product;
 
-    private Integer quantity;
+    private int quantity;
 
-    @Column(name = "added_at")
     private LocalDateTime addedAt;
 
-    // Getters y setters
-    public void setUser(Users user) { this.user = user; }
-    public void setProduct(Product product) { this.product = product; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-    public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
+    // --- Getters y Setters ---
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Users getUser() { return user; }
-  public void getProduct() { return Product; }
+    public Users getUser() {
+        return user;
+    }
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public LocalDateTime getAddedAt() {
+        return addedAt;
+    }
+    public void setAddedAt(LocalDateTime addedAt) {
+        this.addedAt = addedAt;
+    }
 }
+
+
