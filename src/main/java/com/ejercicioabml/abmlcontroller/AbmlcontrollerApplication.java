@@ -650,22 +650,7 @@ private Users getTestUser() {
             return userRepository.save(newUser);
         });
 }
-//para quitar items del carrito 
-  //se activa al llamar a @PostMapping("/decrease")
-  public void decreaseFromCart(Users user, Long productId) {
-    List<CartItem> items = cartRepo.findByUser(user);
-    CartItem item = items.stream()
-        .filter(i -> i.getProduct().getId().equals(productId))
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("Item no encontrado"));
 
-    if (item.getQuantity() > 1) {
-        item.setQuantity(item.getQuantity() - 1);
-        cartRepo.save(item);
-    } else {
-        cartRepo.delete(item);
-    }
-}
 
 
   @GetMapping("/api/cart")
