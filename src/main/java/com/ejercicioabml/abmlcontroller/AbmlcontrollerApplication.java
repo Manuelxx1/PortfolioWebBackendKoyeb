@@ -338,7 +338,7 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
         if (personaOpt.isPresent()) {
             Persona personaEnBD = personaOpt.get();
 
-          // 👇 Logs para depurar en render
+          //Logs para depurar en render
         logger.info("Contraseña enviada: {}", user.getPassword());
 logger.info("Contraseña en BD: {}", personaEnBD.getPassword());
 logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), personaEnBD.getPassword()));
@@ -649,6 +649,22 @@ private Users getTestUser() {
             newUser.setPassword("guest");
             return userRepository.save(newUser);
         });
+}
+//para quitar items del carrito 
+  //se activa al llamar a @PostMapping("/decrease")
+  public void decreaseFromCart(Users user, Long productId) {
+    List<CartItem> items = cartRepo.findByUser(user);
+    CartItem item = items.stream()
+        .filter(i -> i.getProduct().getId().equals(productId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Item no encontrado"));
+
+    if (item.getQuantity() > 1) {
+        item.setQuantity(item.getQuantity() - 1);
+        cartRepo.save(item);
+    } else {
+        cartRepo.delete(item);
+    }
 }
 
 
