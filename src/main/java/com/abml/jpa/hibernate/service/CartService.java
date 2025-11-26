@@ -51,4 +51,21 @@ public class CartService {
     cartRepo.deleteAll(items);
 }
 
+  public void decreaseFromCart(Users user, Long productId) {
+    // Buscar el item del carrito para ese usuario y producto
+    List<CartItem> items = cartRepo.findByUser(user);
+    CartItem item = items.stream()
+        .filter(i -> i.getProduct().getId().equals(productId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Item no encontrado"));
+
+    if (item.getQuantity() > 1) {
+        item.setQuantity(item.getQuantity() - 1);
+        cartRepo.save(item); // actualiza cantidad
+    } else {
+        cartRepo.delete(item); // elimina si llega a 0
+    }
+}
+
+
 }
