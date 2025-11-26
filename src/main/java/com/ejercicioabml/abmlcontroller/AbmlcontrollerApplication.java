@@ -7,6 +7,7 @@ import com.abml.jpa.hibernate.model.Users;
 
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
+import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.service.PersonaService;
 import com.abml.jpa.hibernate.service.ProductService;
 import com.abml.jpa.hibernate.service.CartService;
@@ -594,6 +595,7 @@ public List<Product> searchProducts(@RequestParam String name) {
 
     @Autowired private CartService cartService;
 
+  /* para usar con login
   @GetMapping("/api/cart")
   public List<CartItem> getCart(HttpSession session) {
     Users user = (Users) session.getAttribute("user");
@@ -630,6 +632,50 @@ public ResponseEntity<?> clearCart(HttpSession session) {
     cartService.clearCart(user);
     return ResponseEntity.ok("Carrito vaciado");
 }
+*/
+
+
+  // endpoints de prueba sin login 
+  @Autowired
+private UserRepository userRepository;
+
+private Users getTestUser() {
+    return userRepository.findByUsername("guest")
+        .orElseGet(() -> {
+            Users newUser = new Users();
+            newUser.setUsername("guest");
+            newUser.setEmail("guest@example.com");
+            newUser.setName("Usuario de prueba");
+            newUser.setPassword("guest");
+            return userRepository.save(newUser);
+        });
+}
+
+
+  @GetMapping("/api/cart")
+public List<CartItem> getCart() {
+    Users user = getTestUser(); //  siempre devuelve el "guest"
+    return cartService.getCart(user);
+}
+
+@PostMapping("/add")
+public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
+    Users user = getTestUser();
+
+    Long productId = Long.valueOf(body.get("productId").toString());
+    int quantity = Integer.parseInt(body.get("quantity").toString());
+
+    cartService.addToCart(user, productId, quantity);
+    return ResponseEntity.ok("Producto agregado");
+}
+
+@DeleteMapping("/remove/{id}")
+public ResponseEntity<?> removeFromCart(@PathVariable Long id) {
+    Users user = getTestUser();
+    cartService.removeFromCart(user, id);
+    return ResponseEntity.ok("Producto eliminado");
+}
+
 
 
 
