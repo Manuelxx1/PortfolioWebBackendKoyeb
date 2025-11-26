@@ -688,20 +688,20 @@ public ResponseEntity<?> clearCart() {
   //quitar items del carrito 
 // Botón +
     @PostMapping("/increase")
-    public ResponseEntity<?> increaseFromCart(@RequestBody Map<String, Object> body) {
-        Users user = getTestUser();
-        Long productId = Long.valueOf(body.get("productId").toString());
-        cartService.increaseFromCart(user, productId);
-        return ResponseEntity.ok("Cantidad aumentada");
-    }
-
-    // Botón −
-    @PostMapping("/decrease")
-    public ResponseEntity<?> decreaseFromCart(@RequestBody Map<String, Object> body) {
-        Users user = getTestUser();
-        Long productId = Long.valueOf(body.get("productId").toString());
-        cartService.decreaseFromCart(user, productId);
-        return ResponseEntity.ok("Cantidad disminuida");
-          }
+public ResponseEntity<?> increaseFromCart(@RequestBody Map<String, Object> body) {
+    Users user = getTestUser();
+    Long productId = Long.valueOf(body.get("productId").toString());
+    cartService.increaseFromCart(user, productId);
+    return ResponseEntity.ok("Cantidad aumentada");
+}
+  
+// boton -
+@PostMapping("/decrease")
+public ResponseEntity<?> decreaseFromCart(@RequestBody Map<String, Object> body) {
+    Users user = getTestUser();
+    Long productId = Long.valueOf(body.get("productId").toString());
+    cartService.decreaseFromCart(user, productId);
+    return ResponseEntity.ok("Cantidad disminuida");
+}
 
 }
