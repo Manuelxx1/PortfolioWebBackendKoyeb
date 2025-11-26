@@ -622,7 +622,14 @@ public List<Product> searchProducts(@RequestParam String name) {
     return ResponseEntity.ok("Producto eliminado");
   }
 
-                                     
+         //vaciar carrito                             
+@DeleteMapping("/clear")
+public ResponseEntity<?> clearCart(HttpSession session) {
+    Users user = (Users) session.getAttribute("user");
+    if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+    cartService.clearCart(user);
+    return ResponseEntity.ok("Carrito vaciado");
+}
 
 
 
