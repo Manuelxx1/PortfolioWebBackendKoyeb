@@ -41,4 +41,5 @@ public class CartItem {
     public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
 
     public Users getUser() { return user; }
+  public void getProduct() { return Product; }
 }
