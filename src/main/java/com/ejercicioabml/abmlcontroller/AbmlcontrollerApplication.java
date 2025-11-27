@@ -703,11 +703,16 @@ public ResponseEntity<List<CartItem>> increaseFromCart(@RequestBody Map<String, 
   
 // boton -
 @PostMapping("/decrease")
-public ResponseEntity<?> decreaseFromCart(@RequestBody Map<String, Object> body) {
+public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, Object> body) {
     Users user = getTestUser();
     Long productId = Long.valueOf(body.get("productId").toString());
+
     cartService.decreaseFromCart(user, productId);
-    return ResponseEntity.ok("Cantidad disminuida");
+
+    // devolver carrito actualizado
+    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    return ResponseEntity.ok(updatedCart);
 }
+
 
 }
