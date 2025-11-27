@@ -688,12 +688,16 @@ public ResponseEntity<?> clearCart() {
   //quitar items del carrito 
 // Botón +
     @PostMapping("/increase")
-public ResponseEntity<?> increaseFromCart(@RequestBody Map<String, Object> body) {
+public ResponseEntity<List<CartItem>> increaseFromCart(@RequestBody Map<String, Object> body) {
     Users user = getTestUser();
     Long productId = Long.valueOf(body.get("productId").toString());
     cartService.increaseFromCart(user, productId);
-    return ResponseEntity.ok("Cantidad aumentada");
+
+    // devolver carrito actualizado con el aumento del item
+    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    return ResponseEntity.ok(updatedCart);
 }
+
   
 // boton -
 @PostMapping("/decrease")
