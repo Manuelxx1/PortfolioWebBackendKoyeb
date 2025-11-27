@@ -685,11 +685,15 @@ public ResponseEntity<List<CartItem>> removeFromCart(@PathVariable Long cartItem
 
 
 @DeleteMapping("/clear")
-public ResponseEntity<?> clearCart() {
-    Users user = getTestUser(); // o session si ya tenés login
+public ResponseEntity<List<CartItem>> clearCart() {
+    Users user = getTestUser();
     cartService.clearCart(user);
-    return ResponseEntity.ok("Carrito vaciado");
+
+    // devolver carrito vacío
+    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    return ResponseEntity.ok(updatedCart);
 }
+
 
   //quitar items del carrito 
 // Botón +
