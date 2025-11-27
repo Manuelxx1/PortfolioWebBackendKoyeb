@@ -672,12 +672,16 @@ public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
     return ResponseEntity.ok("Producto agregado");
 }
 
-@DeleteMapping("/remove/{id}")
-public ResponseEntity<?> removeFromCart(@PathVariable Long id) {
+@DeleteMapping("/remove/{cartItemId}")
+public ResponseEntity<List<CartItem>> removeFromCart(@PathVariable Long cartItemId) {
     Users user = getTestUser();
-    cartService.removeFromCart(user, id);
-    return ResponseEntity.ok("Producto eliminado");
+    cartService.removeFromCart(user, cartItemId);
+
+    // devolver carrito actualizado
+    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    return ResponseEntity.ok(updatedCart);
 }
+
 
 
 @DeleteMapping("/clear")
