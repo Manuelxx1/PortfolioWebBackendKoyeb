@@ -8,6 +8,7 @@ import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
 import com.abml.jpa.hibernate.repository.UserRepository;
+import com.abml.jpa.hibernate.repository.CartItemRepository;
 import com.abml.jpa.hibernate.service.PersonaService;
 import com.abml.jpa.hibernate.service.ProductService;
 import com.abml.jpa.hibernate.service.CartService;
@@ -638,6 +639,7 @@ public ResponseEntity<?> clearCart(HttpSession session) {
   // endpoints de prueba sin login 
   @Autowired
 private UserRepository userRepository;
+    @Autowired private CartItemRepository cartRepo;
 
 private Users getTestUser() {
     return userRepository.findByUsername("guest")
