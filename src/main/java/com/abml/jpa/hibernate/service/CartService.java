@@ -56,19 +56,20 @@ public class CartService {
     }
 
     // /decrease → botón −
-    public void decreaseFromCart(Users user, Long productId) {
-        CartItem item = cartRepo.findByUser(user).stream()
-            .filter(i -> i.getProduct().getId().equals(productId))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Item no encontrado"));
+public void decreaseFromCart(Users user, Long productId) {
+    CartItem item = cartRepo.findByUser(user).stream()
+        .filter(i -> i.getProduct().getId().equals(productId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Item no encontrado"));
 
-        if (item.getQuantity() > 1) {
-            item.setQuantity(item.getQuantity() - 1);
-            cartRepo.save(item);
-        } else {
-            cartRepo.delete(item);
-        }
+    if (item.getQuantity() > 1) {
+        item.setQuantity(item.getQuantity() - 1);
+        cartRepo.save(item);
+    } else {
+        // si llega a 0, lo eliminamos del carrito
+        cartRepo.delete(item);
     }
+}
 
     // /remove/{id}
     public void removeFromCart(Users user, Long cartItemId) {
