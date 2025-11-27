@@ -22,16 +22,24 @@ public class CartService {
     return cartRepo.findByUser(user);
   }
 
+  //metod que agrega el producto que nos retorno
+  //la búsqueda en el frontend 
+  //se reciben los datos del método addToCart
+  //del controller provenientes del frontend 
+  //y se le asignan a este metodo 
   public void addToCart(Users user, Long productId, int quantity) {
+    //se busca y se guarda el producto por id 
     Product product = productRepo.findById(productId)
       .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
+    //se envia los datos que deseamos
+    //a los setters del model CartItem 
     CartItem item = new CartItem();
     item.setUser(user);
     item.setProduct(product);
     item.setQuantity(quantity);
     item.setAddedAt(LocalDateTime.now());
-
+//se hace la persistencia a la tabla cart_items
     cartRepo.save(item);
   }
 
