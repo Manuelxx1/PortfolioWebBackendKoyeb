@@ -55,69 +55,79 @@ private ProductRepository productRepository;
 
     // Crear preferencia de pago
 
+// Crear preferencia y orden con cantidad dinámica
+@PostMapping("/create/{productId}")
+public ResponseEntity<String> createPreference(
+        @PathVariable Long productId,
+        @RequestBody(required = false) Map<String, Object> body) {
+    try {
+        // Obtener producto
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-  // Crear preferencia y orden
-    @PostMapping("/create/{productId}")
-    public ResponseEntity<String> createPreference(@PathVariable Long productId) {
-        try {
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-            PreferenceItemRequest item = PreferenceItemRequest.builder()
-                    .title(product.getName())
-                    .quantity(1)
-                    .unitPrice(product.getPrice())
-                    .build();
-
-            // Usuario genérico
-            Users guest = userRepository.findByUsername("guest")
-                    .orElseGet(() -> {
-                        Users newGuest = new Users();
-                        newGuest.setUsername("guest");
-                        newGuest.setEmail("guest@example.com");
-                        newGuest.setName("Usuario Genérico");
-                        newGuest.setPassword("guest");
-                        return userRepository.save(newGuest);
-                    });
-
-            // Crear orden interna
-            Orders order = new Orders();
-            order.setProductName(product.getName());
-            order.setStatus("pending");
-            order.setUser(guest);
-            order.setTotal(product.getPrice());
-            orderRepository.save(order);
-
-            // Guardar ítem vinculado
-            OrderItems orderItem = new OrderItems();
-            orderItem.setOrder(order);
-            orderItem.setProduct(product);
-            orderItem.setProductName(product.getName());
-            orderItem.setQuantity(1);
-            orderItem.setPrice(product.getPrice());
-            orderItem.setAmount(product.getPrice());
-            orderItemsRepository.save(orderItem);
-
-            // Crear preferencia con external_reference = ID de la orden
-            PreferenceRequest request = PreferenceRequest.builder()
-                    .items(Arrays.asList(item))
-                    .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
-                    .externalReference(order.getId().toString())
-                    .build();
-
-            Preference preference = preferenceClient.create(request);
-
-            // Guardar preferenceId real en la orden
-            order.setPreferenceId(preference.getId());
-            orderRepository.save(order);
-
-            return ResponseEntity.ok(preference.getInitPoint());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creando preferencia: " + e.getMessage());
+        // Leer cantidad enviada desde el frontend (default = 1)
+        int quantity = 1;
+        if (body != null && body.containsKey("quantity")) {
+            quantity = Integer.parseInt(body.get("quantity").toString());
         }
+
+        // Crear item para la preferencia de MercadoPago
+        PreferenceItemRequest item = PreferenceItemRequest.builder()
+                .title(product.getName())
+                .quantity(quantity)
+                .unitPrice(product.getPrice())
+                .build();
+
+        // Usuario genérico
+        Users guest = userRepository.findByUsername("guest")
+                .orElseGet(() -> {
+                    Users newGuest = new Users();
+                    newGuest.setUsername("guest");
+                    newGuest.setEmail("guest@example.com");
+                    newGuest.setName("Usuario Genérico");
+                    newGuest.setPassword("guest");
+                    return userRepository.save(newGuest);
+                });
+
+        // Crear orden interna
+        Orders order = new Orders();
+        order.setProductName(product.getName());
+        order.setStatus("pending");
+        order.setUser(guest);
+        order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+        orderRepository.save(order);
+
+        // Guardar ítem vinculado
+        OrderItems orderItem = new OrderItems();
+        orderItem.setOrder(order);
+        orderItem.setProduct(product);
+        orderItem.setProductName(product.getName());
+        orderItem.setQuantity(quantity);
+        orderItem.setPrice(product.getPrice());
+        orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+        orderItemsRepository.save(orderItem);
+
+        // Crear preferencia con external_reference = ID de la orden
+        PreferenceRequest request = PreferenceRequest.builder()
+                .items(Arrays.asList(item))
+                .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
+                .externalReference(order.getId().toString())
+                .build();
+
+        Preference preference = preferenceClient.create(request);
+
+        // Guardar preferenceId real en la orden
+        order.setPreferenceId(preference.getId());
+        orderRepository.save(order);
+
+        return ResponseEntity.ok(preference.getInitPoint());
+
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error creando preferencia: " + e.getMessage());
     }
+}
+
 
     // Webhook de Mercado Pago
     @PostMapping("/webhook")
