@@ -71,6 +71,12 @@ public ResponseEntity<String> createPreference(
             quantity = Integer.parseInt(body.get("quantity").toString());
         }
 
+        //  Validación de stock
+        if (product.getStock() < quantity) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Stock insuficiente. Disponible: " + product.getStock());
+        }
+
         // Crear item para la preferencia de MercadoPago
         PreferenceItemRequest item = PreferenceItemRequest.builder()
                 .title(product.getName())
