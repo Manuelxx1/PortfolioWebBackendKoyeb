@@ -145,7 +145,82 @@ public ResponseEntity<String> createPreference(
 }
 
 
+//compra desde el carrito 
+@PostMapping("/create-cart")
+public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto> cartItems) {
+    try {
+        if (cartItems == null || cartItems.isEmpty()) {
+            return ResponseEntity.badRequest().body("El carrito está vacío");
+        }
 
+        List<PreferenceItemRequest> items = new ArrayList<>();
+        BigDecimal totalCarrito = BigDecimal.ZERO;
+
+        for (CartItemDto ci : cartItems) {
+            Product product = productRepository.findById(ci.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
+
+            if (product.getStock() < ci.getQuantity()) {
+                return ResponseEntity.badRequest()
+                        .body("Stock insuficiente para " + product.getName());
+            }
+
+            BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
+            totalCarrito = totalCarrito.add(itemTotal);
+
+            PreferenceItemRequest item = PreferenceItemRequest.builder()
+                    .title(product.getName() + " (x" + ci.getQuantity() + ")")
+                    .quantity(1)
+                    .unitPrice(itemTotal)
+                    .build();
+
+            items.add(item);
+        }
+
+        // Crear orden general del carrito
+        Orders order = new Orders();
+        order.setProductName("Carrito de compra");
+        order.setStatus("pending");
+        order.setTotal(totalCarrito);
+        orderRepository.save(order);
+
+        // Guardar ítems de la orden
+        for (CartItemDto ci : cartItems) {
+            Product product = productRepository.findById(ci.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
+
+            OrderItems oi = new OrderItems();
+            oi.setOrder(order);
+            oi.setProduct(product);
+            oi.setProductName(product.getName());
+            oi.setQuantity(ci.getQuantity());
+            oi.setPrice(product.getPrice());
+            oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
+            orderItemsRepository.save(oi);
+        }
+
+        // Crear preferencia en MercadoPago
+        PreferenceRequest request = PreferenceRequest.builder()
+                .items(items)
+                .notificationUrl("https://tu-backend/api/payments/webhook")
+                .externalReference(order.getId().toString())
+                .build();
+
+        Preference preference = preferenceClient.create(request);
+
+        order.setPreferenceId(preference.getId());
+        orderRepository.save(order);
+
+        return ResponseEntity.ok(preference.getInitPoint());
+
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error creando preferencia de carrito: " + e.getMessage());
+    }
+}
+
+
+    
     // Webhook de Mercado Pago
     @PostMapping("/webhook")
     public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
