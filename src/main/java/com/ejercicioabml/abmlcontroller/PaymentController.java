@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Map;
 
 @RestController
@@ -82,14 +84,14 @@ public ResponseEntity<String> createPreference(
         //para que muestre el nombre del producto 
         //en elcheckout cuando la cantidad es mayor a 2
         //obsino va a mostrar  Productos en vez del nombre
-        List<PreferenceItemRequest> items = new ArrayList<>();
-        for (int i = 0; i < quantity; i++) {
-            items.add(PreferenceItemRequest.builder()
-                    .title(product.getName())
-                    .quantity(1) // cada ítem cuenta como una unidad
-                    .unitPrice(product.getPrice())
-                    .build());
-            }
+        PreferenceItemRequest item = PreferenceItemRequest.builder()
+        .title(product.getName() + " (x" + quantity + ")")
+        .quantity(1) // lo dejamos en 1
+        .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(quantity)))
+        .build();
+
+List<PreferenceItemRequest> items = Arrays.asList(item);
+
 
         // Usuario genérico
         Users guest = userRepository.findByUsername("guest")
@@ -122,7 +124,7 @@ public ResponseEntity<String> createPreference(
 
         // Crear preferencia con external_reference = ID de la orden
         PreferenceRequest request = PreferenceRequest.builder()
-                .items(Arrays.asList(item))
+                .items(Arrays.asList(items))
                 .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .externalReference(order.getId().toString())
                 .build();
