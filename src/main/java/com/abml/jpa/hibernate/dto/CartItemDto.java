@@ -1,4 +1,4 @@
-package com.abml.jpa.hibernate.dto;
+/*package com.abml.jpa.hibernate.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +20,26 @@ public class CartItemDto {
     }
 
     // Getters y setters
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
+
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+}
+*/
+package com.abml.jpa.hibernate.dto;
+
+public class CartItemDto {
+    private Long productId;
+    private int quantity;
+
+    public CartItemDto() {}
+
+    public CartItemDto(Long productId, int quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
+
     public Long getProductId() { return productId; }
     public void setProductId(Long productId) { this.productId = productId; }
 
