@@ -116,7 +116,7 @@ public ResponseEntity<String> createPreference(
         // Crear preferencia con external_reference = ID de la orden
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(Arrays.asList(item))
-                .notificationUrl("https://portfoliowebbackendkoyeb-1.onrender.com/api/payments/webhook")
+                .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .externalReference(order.getId().toString())
                 .build();
 
