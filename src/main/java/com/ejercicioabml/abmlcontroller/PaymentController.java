@@ -79,19 +79,20 @@ public ResponseEntity<String> createPreference(
                     .body("Stock insuficiente. Disponible: " + product.getStock());
         }
 
+        // Crear un solo ítem con título ajustado y precio total
+      
         // Crear item para la preferencia de MercadoPago
         // Generar lista de ítems separados
         //para que muestre el nombre del producto 
         //en elcheckout cuando la cantidad es mayor a 2
         //obsino va a mostrar  Productos en vez del nombre
         PreferenceItemRequest item = PreferenceItemRequest.builder()
-        .title(product.getName() + " (x" + quantity + ")")
-        .quantity(1) // lo dejamos en 1
-        .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(quantity)))
-        .build();
+                .title(product.getName() + " (x" + quantity + ")")
+                .quantity(1) // dejamos en 1
+                .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(quantity)))
+                .build();
 
-List<PreferenceItemRequest> items = Arrays.asList(item);
-
+        List<PreferenceItemRequest> items = Arrays.asList(item);
 
         // Usuario genérico
         Users guest = userRepository.findByUsername("guest")
@@ -124,7 +125,7 @@ List<PreferenceItemRequest> items = Arrays.asList(item);
 
         // Crear preferencia con external_reference = ID de la orden
         PreferenceRequest request = PreferenceRequest.builder()
-                .items(Arrays.asList(items))
+                .items(items) // lista con un solo ítem
                 .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .externalReference(order.getId().toString())
                 .build();
@@ -142,6 +143,7 @@ List<PreferenceItemRequest> items = Arrays.asList(item);
                 .body("Error creando preferencia: " + e.getMessage());
     }
 }
+
 
 
     // Webhook de Mercado Pago
