@@ -80,6 +80,7 @@ public ResponseEntity<String> createPreference(
         // Crear item para la preferencia de MercadoPago
         PreferenceItemRequest item = PreferenceItemRequest.builder()
                 .title(product.getName())
+            .description("Compra de " + product.getName())
                 .quantity(quantity)
                 .unitPrice(product.getPrice())
                 .build();
