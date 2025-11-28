@@ -78,12 +78,18 @@ public ResponseEntity<String> createPreference(
         }
 
         // Crear item para la preferencia de MercadoPago
-        PreferenceItemRequest item = PreferenceItemRequest.builder()
-                .title(product.getName())
-            .description("Compra de " + product.getName())
-                .quantity(quantity)
-                .unitPrice(product.getPrice())
-                .build();
+        // Generar lista de ítems separados
+        //para que muestre el nombre del producto 
+        //en elcheckout cuando la cantidad es mayor a 2
+        //obsino va a mostrar  Productos en vez del nombre
+        List<PreferenceItemRequest> items = new ArrayList<>();
+        for (int i = 0; i < quantity; i++) {
+            items.add(PreferenceItemRequest.builder()
+                    .title(product.getName())
+                    .quantity(1) // cada ítem cuenta como una unidad
+                    .unitPrice(product.getPrice())
+                    .build());
+            }
 
         // Usuario genérico
         Users guest = userRepository.findByUsername("guest")
