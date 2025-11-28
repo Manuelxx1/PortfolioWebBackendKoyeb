@@ -150,7 +150,9 @@ public ResponseEntity<String> createPreference(
 @PostMapping("/create-cart")
 public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto> cartItems) {
     try {
+        System.out.println("CartItems recibidos: " + cartItems);
         if (cartItems == null || cartItems.isEmpty()) {
+            
             return ResponseEntity.badRequest().body("El carrito está vacío");
         }
 
@@ -158,6 +160,7 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
         BigDecimal totalCarrito = BigDecimal.ZERO;
 
         for (CartItemDto ci : cartItems) {
+            System.out.println("productId=" + ci.getProductId() + ", quantity=" + ci.getQuantity());
             Product product = productRepository.findById(ci.getProductId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
 
