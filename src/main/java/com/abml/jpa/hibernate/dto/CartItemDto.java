@@ -1,3 +1,8 @@
+package com.abml.jpa.hibernate.dto;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 public class CartItemDto {
     @NotNull
     private Long productId;
