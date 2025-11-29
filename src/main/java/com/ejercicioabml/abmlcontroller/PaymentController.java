@@ -181,11 +181,11 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
                    // .unitPrice(product.getPrice())
                   //  .currencyId("ARS") // importante: especificar moneda
                    // .build();
-                .title(product.getName() + " (x" + ci.getQuantity() + ")")
-                .quantity(1) // dejamos en 1
-                .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())))
-                .currencyId("ARS")
-                .build();
+                .title(product.getName()) // Enviar solo el nombre del producto
+    .quantity(ci.getQuantity()) // Enviar la cantidad REAL (ej. 3)
+    .unitPrice(product.getPrice()) // Enviar el precio UNITARIO REAL (ej. $5000)
+    .currencyId("ARS")
+    .build();
 
             items.add(item); // agregar ítem a la lista
       
