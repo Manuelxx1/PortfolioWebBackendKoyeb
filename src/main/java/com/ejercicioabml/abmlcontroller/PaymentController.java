@@ -183,6 +183,10 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
         .unitPrice(product.getPrice()) // precio unitario
         .build();
 
+            //se agrega al list //List<PreferenceItemRequest> items = new ArrayList<>();
+            
+            items.add(item); // agregar a la lista
+            
         }
         
 
