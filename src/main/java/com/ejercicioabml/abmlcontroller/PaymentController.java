@@ -183,6 +183,10 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
                     .build();
 
             items.add(item); // agregar ítem a la lista
+      
+        // 🔎 Loguear cada ítem
+            log.info("Item agregado: title={}, quantity={}, unitPrice={}, currencyId={}",
+                    item.getTitle(), item.getQuantity(), item.getUnitPrice(), item.getCurrencyId());
         }
 
         // Usuario genérico
