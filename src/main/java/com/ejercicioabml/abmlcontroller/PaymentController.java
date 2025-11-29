@@ -178,12 +178,11 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
             totalCarrito = totalCarrito.add(itemTotal);
 
             PreferenceItemRequest item = PreferenceItemRequest.builder()
-                    .title(product.getName() + " (x" + ci.getQuantity() + ")")
-                    .quantity(1)
-                    .unitPrice(itemTotal)
-                    .build();
+        .title(product.getName())
+        .quantity(ci.getQuantity()) //  cantidad real
+        .unitPrice(product.getPrice()) // precio unitario
+        .build();
 
-            items.add(item);
         }
         
 
