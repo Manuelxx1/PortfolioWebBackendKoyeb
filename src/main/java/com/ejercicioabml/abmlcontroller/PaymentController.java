@@ -188,7 +188,7 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
         
 
         //  Buscar usuario genérico por username
-        User guestUser = userRepository.findByUsername("guest")
+        Users guestUser = userRepository.findByUsername("guest")
                 .orElseThrow(() -> new RuntimeException("Usuario genérico no encontrado"));
 
         Orders order = new Orders();
