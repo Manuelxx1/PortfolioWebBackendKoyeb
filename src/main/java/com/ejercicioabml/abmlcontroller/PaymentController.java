@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -37,7 +39,8 @@ public class PaymentController {
 
     private final PaymentClient paymentClient;
     private final PreferenceClient preferenceClient;
-
+private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
+    
     @Autowired
     private OrderRepository orderRepository;
 
@@ -150,6 +153,7 @@ public ResponseEntity<String> createPreference(
 @PostMapping("/create-cart")
 public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto> cartItems) {
     try {
+        log.info("CartItems recibidos: {}", cartItems);
         System.out.println("CartItems recibidos: " + cartItems);
         if (cartItems == null || cartItems.isEmpty()) {
             
@@ -160,6 +164,7 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
         BigDecimal totalCarrito = BigDecimal.ZERO;
 
         for (CartItemDto ci : cartItems) {
+           log.info("productId={}, quantity={}", ci.getProductId(), ci.getQuantity());
             System.out.println("productId=" + ci.getProductId() + ", quantity=" + ci.getQuantity());
             Product product = productRepository.findById(ci.getProductId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
@@ -212,6 +217,11 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
 
         Preference preference = preferenceClient.create(request);
 
+        // Loguear la respuesta completa
+log.info("Respuesta de MercadoPago: {}", preference);
+log.info("Preference ID: {}", preference.getId());
+log.info("InitPoint: {}", preference.getInitPoint());
+log.info("SandboxInitPoint: {}", preference.getSandboxInitPoint());
         order.setPreferenceId(preference.getId());
         orderRepository.save(order);
 
