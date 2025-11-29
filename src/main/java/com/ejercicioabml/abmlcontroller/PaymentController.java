@@ -183,7 +183,7 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
                    // .build();
                 .title(product.getName() + " (x" + ci.getQuantity() + ")")
                 .quantity(1) // dejamos en 1
-                .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity)))
+                .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())))
                 .currencyId("ARS")
                 .build();
 
