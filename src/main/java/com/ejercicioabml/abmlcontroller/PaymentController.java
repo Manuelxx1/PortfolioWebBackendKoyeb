@@ -185,15 +185,21 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
 
             items.add(item);
         }
+        
 
-        // Crear orden general del carrito
+        //  Buscar usuario genérico por username
+        User guestUser = userRepository.findByUsername("guest")
+                .orElseThrow(() -> new RuntimeException("Usuario genérico no encontrado"));
+
         Orders order = new Orders();
         order.setProductName("Carrito de compra");
         order.setStatus("pending");
         order.setTotal(totalCarrito);
+        order.setUser(guestUser); // asignar usuario guest
         orderRepository.save(order);
-
-        // Guardar ítems de la orden
+      
+        
+        
         for (CartItemDto ci : cartItems) {
             Product product = productRepository.findById(ci.getProductId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
