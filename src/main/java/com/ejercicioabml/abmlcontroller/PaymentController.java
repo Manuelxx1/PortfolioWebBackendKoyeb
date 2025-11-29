@@ -154,9 +154,8 @@ public ResponseEntity<String> createPreference(
 public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto> cartItems) {
     try {
         log.info("CartItems recibidos: {}", cartItems);
-        System.out.println("CartItems recibidos: " + cartItems);
+
         if (cartItems == null || cartItems.isEmpty()) {
-            
             return ResponseEntity.badRequest().body("El carrito está vacío");
         }
 
@@ -164,8 +163,6 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
         BigDecimal totalCarrito = BigDecimal.ZERO;
 
         for (CartItemDto ci : cartItems) {
-           log.info("productId={}, quantity={}", ci.getProductId(), ci.getQuantity());
-            System.out.println("productId=" + ci.getProductId() + ", quantity=" + ci.getQuantity());
             Product product = productRepository.findById(ci.getProductId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
 
@@ -177,20 +174,18 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
             BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
             totalCarrito = totalCarrito.add(itemTotal);
 
+            // Cada ítem con cantidad y precio unitario
             PreferenceItemRequest item = PreferenceItemRequest.builder()
-        .title(product.getName())
-        .quantity(ci.getQuantity()) //  cantidad real
-        .unitPrice(product.getPrice()) // precio unitario
-        .build();
+                    .title(product.getName())
+                    .quantity(ci.getQuantity())
+                    .unitPrice(product.getPrice())
+                    .currencyId("ARS") // importante: especificar moneda
+                    .build();
 
-            //se agrega al list //List<PreferenceItemRequest> items = new ArrayList<>();
-            
-            items.add(item); // agregar a la lista
-            
+            items.add(item); // agregar ítem a la lista
         }
-        
 
-        //  Buscar usuario genérico por username
+        // Usuario genérico
         Users guestUser = userRepository.findByUsername("guest")
                 .orElseThrow(() -> new RuntimeException("Usuario genérico no encontrado"));
 
@@ -198,11 +193,10 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
         order.setProductName("Carrito de compra");
         order.setStatus("pending");
         order.setTotal(totalCarrito);
-        order.setUser(guestUser); // asignar usuario guest
+        order.setUser(guestUser);
         orderRepository.save(order);
-      
-        
-        
+
+        // Guardar ítems de la orden
         for (CartItemDto ci : cartItems) {
             Product product = productRepository.findById(ci.getProductId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
@@ -220,17 +214,16 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
         // Crear preferencia en MercadoPago
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(items)
-                .notificationUrl("https://tu-backend/api/payments/webhook")
+                .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .externalReference(order.getId().toString())
                 .build();
 
         Preference preference = preferenceClient.create(request);
 
-        // Loguear la respuesta completa
-log.info("Respuesta de MercadoPago: {}", preference);
-log.info("Preference ID: {}", preference.getId());
-log.info("InitPoint: {}", preference.getInitPoint());
-log.info("SandboxInitPoint: {}", preference.getSandboxInitPoint());
+        log.info("Respuesta de MercadoPago: {}", preference);
+        log.info("Preference ID: {}", preference.getId());
+        log.info("InitPoint: {}", preference.getInitPoint());
+
         order.setPreferenceId(preference.getId());
         orderRepository.save(order);
 
