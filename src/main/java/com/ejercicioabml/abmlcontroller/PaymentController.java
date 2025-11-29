@@ -176,15 +176,20 @@ public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto
 
             // Cada ítem con cantidad y precio unitario
             PreferenceItemRequest item = PreferenceItemRequest.builder()
-                    .title(product.getName())
-                    .quantity(ci.getQuantity())
-                    .unitPrice(product.getPrice())
-                    .currencyId("ARS") // importante: especificar moneda
-                    .build();
+                    //.title(product.getName())
+                   // .quantity(ci.getQuantity())
+                   // .unitPrice(product.getPrice())
+                  //  .currencyId("ARS") // importante: especificar moneda
+                   // .build();
+                .title(product.getName() + " (x" + quantity + ")")
+                .quantity(1) // dejamos en 1
+                .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(quantity)))
+                .currencyId("ARS")
+                .build();
 
             items.add(item); // agregar ítem a la lista
       
-        // 🔎 Loguear cada ítem
+        //  Loguear cada ítem
             log.info("Item agregado: title={}, quantity={}, unitPrice={}, currencyId={}",
                     item.getTitle(), item.getQuantity(), item.getUnitPrice(), item.getCurrencyId());
         }
