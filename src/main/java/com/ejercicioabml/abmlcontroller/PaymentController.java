@@ -65,23 +65,18 @@ private ProductRepository productRepository;
 @PostMapping("/create/{productId}")
 public ResponseEntity<String> createPreference(
         @PathVariable Long productId,
-        @RequestBody(required = false) Map<String, Object> body) {
+        @RequestBody(required = false) CompraRequest body) {
     try {
-        // Obtener producto
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        // Leer cantidad enviada desde el frontend (default = 1)
-        int quantity = 1;
-        if (body != null && body.containsKey("quantity")) {
-            quantity = Integer.parseInt(body.get("quantity").toString());
-        }
+        int quantity = (body != null && body.getQuantity() > 0) ? body.getQuantity() : 1;
 
-        //  Validación de stock
         if (product.getStock() < quantity) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Stock insuficiente. Disponible: " + product.getStock());
         }
+
 
         // Crear un solo ítem con título ajustado y precio total
       
@@ -92,32 +87,37 @@ public ResponseEntity<String> createPreference(
         //obsino va a mostrar  Productos en vez del nombre
         PreferenceItemRequest item = PreferenceItemRequest.builder()
                 .title(product.getName() + " (x" + quantity + ")")
-                .quantity(1) // dejamos en 1
+                .quantity(1)
                 .unitPrice(product.getPrice().multiply(BigDecimal.valueOf(quantity)))
                 .build();
 
         List<PreferenceItemRequest> items = Arrays.asList(item);
 
-        // Usuario genérico
-        Users guest = userRepository.findByUsername("guest")
-                .orElseGet(() -> {
-                    Users newGuest = new Users();
-                    newGuest.setUsername("guest");
-                    newGuest.setEmail("guest@example.com");
-                    newGuest.setName("Usuario Genérico");
-                    newGuest.setPassword("guest");
-                    return userRepository.save(newGuest);
-                });
+        // Buscar usuario
+        Users usuario = null;
+        if (body != null && body.getUsuario() != null) {
+            usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
+        }
 
-        // Crear orden interna
+        if (usuario == null) {
+            usuario = userRepository.findByUsername("guest")
+                    .orElseGet(() -> {
+                        Users newGuest = new Users();
+                        newGuest.setUsername("guest");
+                        newGuest.setEmail("guest@example.com");
+                        newGuest.setName("Usuario Genérico");
+                        newGuest.setPassword("guest");
+                        return userRepository.save(newGuest);
+                    });
+        }
+
         Orders order = new Orders();
         order.setProductName(product.getName());
         order.setStatus("pending");
-        order.setUser(guest);
+        order.setUser(usuario);
         order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         orderRepository.save(order);
 
-        // Guardar ítem vinculado
         OrderItems orderItem = new OrderItems();
         orderItem.setOrder(order);
         orderItem.setProduct(product);
@@ -127,16 +127,18 @@ public ResponseEntity<String> createPreference(
         orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         orderItemsRepository.save(orderItem);
 
-        // Crear preferencia con external_reference = ID de la orden
         PreferenceRequest request = PreferenceRequest.builder()
-                .items(items) // lista con un solo ítem
+                .items(items)
                 .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .externalReference(order.getId().toString())
+                .payer(PreferencePayerRequest.builder()
+                        .name(usuario.getName())
+                        .email(usuario.getEmail())
+                        .build())
                 .build();
 
         Preference preference = preferenceClient.create(request);
 
-        // Guardar preferenceId real en la orden
         order.setPreferenceId(preference.getId());
         orderRepository.save(order);
 
@@ -147,6 +149,7 @@ public ResponseEntity<String> createPreference(
                 .body("Error creando preferencia: " + e.getMessage());
     }
 }
+
 
 
 //compra desde el carrito 
