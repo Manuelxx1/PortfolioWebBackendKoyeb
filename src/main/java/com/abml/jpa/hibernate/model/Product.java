@@ -32,14 +32,19 @@ public class Product {
   private String category;
 
   @Column(name = "created_at")
-
- private LocalDateTime createdAt;
+  private LocalDateTime createdAt;
   
-  //getters 
+  // Getters
   public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public BigDecimal getPrice() { return price; }
-    public Integer getStock() { return stock; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
+  public String getName() { return name; }
+  public String getDescription() { return description; }
+  public BigDecimal getPrice() { return price; }
+  public Integer getStock() { return stock; }
+  public LocalDateTime getCreatedAt() { return createdAt; }
+  public String getImageUrl() { return imageUrl; }
+  public String getCategory() { return category; }
+
+  // Setters (opcional, pero útil si vas a modificar desde el servicio)
+  public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+  public void setCategory(String category) { this.category = category; }
 }
