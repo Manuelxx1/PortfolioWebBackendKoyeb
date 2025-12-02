@@ -18,7 +18,8 @@ import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.payer.Payer;
+
+import com.mercadopago.client.common.PayerRequest;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,14 +81,7 @@ public ResponseEntity<String> createPreference(
                     .body("Stock insuficiente. Disponible: " + product.getStock());
         }
 
-
-        // Crear un solo ítem con título ajustado y precio total
-      
-        // Crear item para la preferencia de MercadoPago
-        // Generar lista de ítems separados
-        //para que muestre el nombre del producto 
-        //en elcheckout cuando la cantidad es mayor a 2
-        //obsino va a mostrar  Productos en vez del nombre
+        // Crear ítem para la preferencia
         PreferenceItemRequest item = PreferenceItemRequest.builder()
                 .title(product.getName() + " (x" + quantity + ")")
                 .quantity(1)
@@ -114,6 +108,7 @@ public ResponseEntity<String> createPreference(
                     });
         }
 
+        // Crear orden interna
         Orders order = new Orders();
         order.setProductName(product.getName());
         order.setStatus("pending");
@@ -121,6 +116,7 @@ public ResponseEntity<String> createPreference(
         order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         orderRepository.save(order);
 
+        // Guardar ítem vinculado
         OrderItems orderItem = new OrderItems();
         orderItem.setOrder(order);
         orderItem.setProduct(product);
@@ -130,11 +126,12 @@ public ResponseEntity<String> createPreference(
         orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         orderItemsRepository.save(orderItem);
 
+        // Crear preferencia con payer correcto
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(items)
                 .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .externalReference(order.getId().toString())
-                .payer(PreferencePayerRequest.builder()
+                .payer(com.mercadopago.client.common.PayerRequest.builder()
                         .name(usuario.getName())
                         .email(usuario.getEmail())
                         .build())
