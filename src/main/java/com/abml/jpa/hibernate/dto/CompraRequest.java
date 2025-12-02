@@ -1,3 +1,6 @@
+
+package com.abml.jpa.hibernate.dto;
+
 // CompraRequest.java
 //este dto reemplaza a Map<String, Object> 
 //en el endpoint create del checkout mp para tener mejor control y acceso
