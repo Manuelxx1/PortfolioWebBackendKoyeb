@@ -11,17 +11,13 @@ import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
-// Importaciones de Mercado Pago (v2.5.0) - VERIFICADAS Y CORREGIDAS
+// Importaciones de Mercado Pago (v2.5.0) - ¡Corregidas a 'client' y 'resources'!
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
-import com.mercadopago.client.preference.PreferenceClient; // Cliente de Preference
-
-// Las clases Request están en el paquete 'client.preference', no en 'resources.preference'
-import com.mercadopago.client.preference.PreferenceRequest; 
-import com.mercadopago.client.preference.PreferenceItemRequest; 
+import com.mercadopago.client.preference.PreferenceClient;
+import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
-
-// Las clases Response (como Preference y Payment) están en 'resources'
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.payment.Payment; 
 
@@ -38,8 +34,6 @@ import java.util.Optional;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-// ... (El resto de tu código, que ya está correcto) ...
 
 @RestController
 @RequestMapping("/api/payments")
@@ -85,7 +79,7 @@ public class PaymentController {
                         .body("Stock insuficiente. Disponible: " + product.getStock());
             }
 
-            // 2. Buscar/Crear usuario (Lógica reordenada)
+            // 2. Buscar/Crear usuario 
             Users usuario = null;
             if (body != null && body.getUsuario() != null) {
                 usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
@@ -102,7 +96,7 @@ public class PaymentController {
                         });
             }
 
-            // 3. Crear orden interna (Lógica reordenada)
+            // 3. Crear orden interna 
             Orders order = new Orders();
             order.setProductName(product.getName());
             order.setStatus("pending");
@@ -116,7 +110,7 @@ public class PaymentController {
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
                 .title(product.getName() + " (x " + quantity + ")")
                 .quantity(quantity)
-                .unitPrice(product.getPrice().doubleValue()) // ¡CORRECCIÓN YA INCLUIDA!
+                .unitPrice(product.getPrice().doubleValue())
                 .build();
 
             // 5. Crear Payer Request usando el Builder
@@ -188,15 +182,15 @@ public class PaymentController {
                 BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
                 totalCarrito = totalCarrito.add(itemTotal);
 
-                // 4. Crear Ítem Request usando el Builder
+                // Cada ítem con cantidad y precio unitario para Mercado Pago (usa double)
                 PreferenceItemRequest item = PreferenceItemRequest.builder()
-                    .title(product.getName()) // Enviar solo el nombre del producto
-                    .quantity(ci.getQuantity()) // Enviar la cantidad REAL
-                    .unitPrice(product.getPrice().doubleValue()) // ✨ CORRECCIÓN CRÍTICA: Convertir BigDecimal a double
+                    .title(product.getName())
+                    .quantity(ci.getQuantity())
+                    .unitPrice(product.getPrice().doubleValue()) 
                     .currencyId("ARS")
                     .build();
 
-                items.add(item); // agregar ítem a la lista
+                items.add(item); 
             }
 
             // Usuario genérico
@@ -221,7 +215,8 @@ public class PaymentController {
                 oi.setProductName(product.getName());
                 oi.setQuantity(ci.getQuantity());
                 oi.setPrice(product.getPrice());
-                oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
+                // LÍNEA 195 CORREGIDA: Asegurar que el monto se guarde como BigDecimal
+                oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()))); 
                 orderItemsRepository.save(oi);
             }
 
@@ -287,8 +282,9 @@ public class PaymentController {
                     // Buscar o crear usuario
                     Users user = null;
                     if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                        Long mpUserId = payment.getPayer().getId(); // Corregido: getId() ya devuelve Long en el SDK v2
-                        // Long mpUserId = Long.parseLong(payment.getPayer().getId()); // Línea anterior
+                        // LÍNEA 290 CORREGIDA: Forzamos la conversión explícita a Long.
+                        Long mpUserId = Long.parseLong(payment.getPayer().getId().toString()); 
+                        
                         user = userRepository.findByMpUserId(mpUserId)
                                 .orElseGet(() -> {
                                     Users newUser = new Users();
@@ -319,7 +315,8 @@ public class PaymentController {
                     // Actualizar orden
                     order.setUser(user);
                     order.setStatus(payment.getStatus());
-                    order.setTotal(payment.getTransactionAmount());
+                    // Conversión a BigDecimal: payment.getTransactionAmount() es un Double
+                    order.setTotal(BigDecimal.valueOf(payment.getTransactionAmount().doubleValue())); 
 
                     orderRepository.save(order);
 
@@ -351,4 +348,4 @@ public class PaymentController {
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
         return ResponseEntity.ok(order);
     }
-}
+                }
