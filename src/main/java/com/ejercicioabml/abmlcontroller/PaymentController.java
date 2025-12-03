@@ -101,7 +101,11 @@ public class PaymentController {
             order.setProductName(product.getName());
             order.setStatus("pending");
             order.setUser(usuario);
-            order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+            
+            // LÍNEA 113 (aproximadamente) - CORRECCIÓN DEFINITIVA DE setTotal
+            BigDecimal quantityBD_total = new BigDecimal(quantity);
+            order.setTotal(product.getPrice().multiply(quantityBD_total));
+            
             orderRepository.save(order);
             
             // --- CONFIGURACIÓN DE MERCADO PAGO (VERSIÓN 2.5.0) ---
@@ -140,9 +144,8 @@ public class PaymentController {
             orderItem.setQuantity(quantity);
             orderItem.setPrice(product.getPrice());
             
-            // LÍNEA 117 - CORRECCIÓN DEFINITIVA: Asegurar que el factor de multiplicación es BigDecimal
-            BigDecimal quantityBD1 = new BigDecimal(quantity);
-            orderItem.setAmount(product.getPrice().multiply(quantityBD1)); 
+            // CORRECCIÓN DEFINITIVA DE setAmount
+            orderItem.setAmount(product.getPrice().multiply(quantityBD_total)); 
             
             orderItemsRepository.save(orderItem);
 
@@ -204,7 +207,7 @@ public class PaymentController {
             Orders order = new Orders();
             order.setProductName("Carrito de compra");
             order.setStatus("pending");
-            order.setTotal(totalCarrito);
+            order.setTotal(totalCarrito); // Aquí ya es BigDecimal
             order.setUser(guestUser);
             orderRepository.save(order);
 
@@ -220,9 +223,9 @@ public class PaymentController {
                 oi.setQuantity(ci.getQuantity());
                 oi.setPrice(product.getPrice());
                 
-                // LÍNEA 194 - CORRECCIÓN DEFINITIVA: Asegurar que el factor de multiplicación es BigDecimal
-                BigDecimal quantityBD2 = new BigDecimal(ci.getQuantity());
-                oi.setAmount(product.getPrice().multiply(quantityBD2));
+                // LÍNEA 194 (aproximadamente) - CORRECCIÓN DEFINITIVA DE setAmount
+                BigDecimal quantityBD_item = new BigDecimal(ci.getQuantity());
+                oi.setAmount(product.getPrice().multiply(quantityBD_item));
                 
                 orderItemsRepository.save(oi);
             }
@@ -355,4 +358,4 @@ public class PaymentController {
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
         return ResponseEntity.ok(order);
     }
-}
+                }
