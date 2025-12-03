@@ -81,10 +81,9 @@ public ResponseEntity<String> createPreference(
                     .body("Stock insuficiente. Disponible: " + product.getStock());
         }
 
-        // Crear ítem
+        // Crear ítem para la preferencia
         Item item = new Item();
-        item.setTitle(product.getName() + " (x" + quantity));
-
+        item.setTitle(product.getName() + " (x" + quantity)");
         item.setQuantity(quantity);
         item.setUnitPrice(product.getPrice().doubleValue());
 
@@ -151,6 +150,8 @@ public ResponseEntity<String> createPreference(
                 .body("Error creando preferencia: " + e.getMessage());
     }
 }
+
+
 
 
 //compra desde el carrito 
