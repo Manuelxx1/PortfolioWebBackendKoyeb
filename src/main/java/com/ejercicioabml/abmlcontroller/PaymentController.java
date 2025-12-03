@@ -102,9 +102,10 @@ public class PaymentController {
             order.setStatus("pending");
             order.setUser(usuario);
             
-            // LÍNEA 116 (Aprox. antes de guardarla) - CORRECCIÓN DEFINITIVA APLICADA
-            BigDecimal orderTotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-            order.setTotal(orderTotal);
+            // CORRECCIÓN PARA EL TOTAL DE LA ORDEN (LÍNEA 117 APROX.)
+            // Aislamiento del cálculo para forzar BigDecimal
+            BigDecimal factorTotal = BigDecimal.valueOf(quantity);
+            order.setTotal(product.getPrice().multiply(factorTotal));
             
             orderRepository.save(order);
             
@@ -225,8 +226,9 @@ public class PaymentController {
                 oi.setPrice(product.getPrice());
                 
                 // LÍNEA 197 (Aprox.) - CORRECCIÓN DEFINITIVA APLICADA
-                BigDecimal itemAmount = product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
-                oi.setAmount(itemAmount);
+                // Aislamiento del cálculo para forzar BigDecimal
+                BigDecimal itemAmountFactor = BigDecimal.valueOf(ci.getQuantity());
+                oi.setAmount(product.getPrice().multiply(itemAmountFactor));
                 
                 orderItemsRepository.save(oi);
             }
@@ -359,4 +361,4 @@ public class PaymentController {
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
         return ResponseEntity.ok(order);
     }
-        }
+    }
