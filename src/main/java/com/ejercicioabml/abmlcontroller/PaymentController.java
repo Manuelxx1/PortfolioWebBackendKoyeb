@@ -11,15 +11,19 @@ import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
-// Importaciones de Mercado Pago (v2.5.0) - VERIFICADAS Y CORRECTAS
+// Importaciones de Mercado Pago (v2.5.0) - VERIFICADAS Y CORREGIDAS
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
-import com.mercadopago.client.preference.PreferenceClient;
+import com.mercadopago.client.preference.PreferenceClient; // Cliente de Preference
+
+// Las clases Request están en el paquete 'client.preference', no en 'resources.preference'
+import com.mercadopago.client.preference.PreferenceRequest; 
+import com.mercadopago.client.preference.PreferenceItemRequest; 
+import com.mercadopago.client.preference.PreferencePayerRequest;
+
+// Las clases Response (como Preference y Payment) están en 'resources'
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.preference.PreferenceRequest;
-import com.mercadopago.resources.preference.PreferenceItemRequest;
-import com.mercadopago.resources.preference.PreferencePayerRequest;
-import com.mercadopago.resources.payment.Payment; // Importación para el Webhook
+import com.mercadopago.resources.payment.Payment; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,8 @@ import java.util.Optional;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+// ... (El resto de tu código, que ya está correcto) ...
 
 @RestController
 @RequestMapping("/api/payments")
