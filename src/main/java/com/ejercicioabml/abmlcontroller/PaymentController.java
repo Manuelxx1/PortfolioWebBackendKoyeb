@@ -102,8 +102,9 @@ public class PaymentController {
             order.setStatus("pending");
             order.setUser(usuario);
             
-            // CORRECCIÓN FINAL: Aseguramos que la multiplicación es entre dos BigDecimal
-            order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+            // LÍNEA 116 (Aprox. antes de guardarla) - CORRECCIÓN DEFINITIVA APLICADA
+            BigDecimal orderTotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+            order.setTotal(orderTotal);
             
             orderRepository.save(order);
             
@@ -143,9 +144,8 @@ public class PaymentController {
             orderItem.setQuantity(quantity);
             orderItem.setPrice(product.getPrice());
             
-            // LÍNEA 117 (aproximadamente) - CORRECCIÓN FINAL: Aseguramos que la multiplicación es entre dos BigDecimal
-            orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity))); 
-            //orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+            // Usamos la variable ya calculada (es BigDecimal)
+            orderItem.setAmount(orderTotal); 
             
             orderItemsRepository.save(orderItem);
 
@@ -186,7 +186,7 @@ public class PaymentController {
                             .body("Stock insuficiente para " + product.getName());
                 }
 
-                // Cálculo intermedio para el total del carrito, ya usa BigDecimal.valueOf(int)
+                // Cálculo intermedio para el total del carrito, usa BigDecimal.valueOf(int)
                 BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
                 totalCarrito = totalCarrito.add(itemTotal);
 
@@ -224,8 +224,9 @@ public class PaymentController {
                 oi.setQuantity(ci.getQuantity());
                 oi.setPrice(product.getPrice());
                 
-                // LÍNEA 196 (aproximadamente) - CORRECCIÓN FINAL: Aseguramos que la multiplicación es entre dos BigDecimal
-                oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
+                // LÍNEA 197 (Aprox.) - CORRECCIÓN DEFINITIVA APLICADA
+                BigDecimal itemAmount = product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
+                oi.setAmount(itemAmount);
                 
                 orderItemsRepository.save(oi);
             }
@@ -358,4 +359,4 @@ public class PaymentController {
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
         return ResponseEntity.ok(order);
     }
-}
+        }
