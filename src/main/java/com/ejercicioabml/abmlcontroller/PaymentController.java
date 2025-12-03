@@ -11,17 +11,13 @@ import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
-// Importaciones de Mercado Pago (v2.5.0) - ¡CORRECTAS!
+// Importaciones de Mercado Pago (v2.5.0) - CORRECTAS
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
-
-// Las clases Request están en el paquete 'client.preference'
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
-
-// Las clases Response (Preference y Payment) están en 'resources'
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.payment.Payment; 
 
@@ -143,8 +139,11 @@ public class PaymentController {
             orderItem.setProductName(product.getName());
             orderItem.setQuantity(quantity);
             orderItem.setPrice(product.getPrice());
-            // LÍNEA 118 (aproximadamente) - CORRECCIÓN FINAL: Usar constructor new BigDecimal(int)
-            orderItem.setAmount(product.getPrice().multiply(new BigDecimal(quantity))); 
+            
+            // LÍNEA 117 - CORRECCIÓN DEFINITIVA: Asegurar que el factor de multiplicación es BigDecimal
+            BigDecimal quantityBD1 = new BigDecimal(quantity);
+            orderItem.setAmount(product.getPrice().multiply(quantityBD1)); 
+            
             orderItemsRepository.save(orderItem);
 
             // 9. Guardar preferenceId en la orden (Actualización)
@@ -220,8 +219,11 @@ public class PaymentController {
                 oi.setProductName(product.getName());
                 oi.setQuantity(ci.getQuantity());
                 oi.setPrice(product.getPrice());
-                // LÍNEA 196 (aproximadamente) - CORRECCIÓN FINAL: Usar constructor new BigDecimal(int)
-                oi.setAmount(product.getPrice().multiply(new BigDecimal(ci.getQuantity()))); 
+                
+                // LÍNEA 194 - CORRECCIÓN DEFINITIVA: Asegurar que el factor de multiplicación es BigDecimal
+                BigDecimal quantityBD2 = new BigDecimal(ci.getQuantity());
+                oi.setAmount(product.getPrice().multiply(quantityBD2));
+                
                 orderItemsRepository.save(oi);
             }
 
@@ -353,4 +355,4 @@ public class PaymentController {
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
         return ResponseEntity.ok(order);
     }
-                }
+}
