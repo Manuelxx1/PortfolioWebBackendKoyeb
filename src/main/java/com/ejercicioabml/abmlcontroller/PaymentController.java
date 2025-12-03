@@ -43,7 +43,7 @@ public class PaymentController {
 
     private final PaymentClient paymentClient;
     private final PreferenceClient preferenceClient;
-private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
+    private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
     
     @Autowired
     private OrderRepository orderRepository;
@@ -52,101 +52,107 @@ private static final Logger log = LoggerFactory.getLogger(PaymentController.clas
     private UserRepository userRepository;
 
     @Autowired
-private ProductRepository productRepository;
+    private ProductRepository productRepository;
 
-@Autowired
-    private OrderItemsRepository orderItemsRepository; // agregado
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
     
     public PaymentController() {
+        // Asegúrate de que MercadoPagoConfig y los clientes estén importados y configurados
+        // Reemplaza el token con una variable de entorno si estás en producción.
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
         this.paymentClient = new PaymentClient();
         this.preferenceClient = new PreferenceClient();
     }
 
-    // Crear preferencia de pago
+    // Crear preferencia y orden con cantidad dinámica
+    @PostMapping("/create/{productId}")
+    public ResponseEntity<String> createPreference(
+            @PathVariable Long productId,
+            @RequestBody(required = false) CompraRequest body) {
+        try {
+            // 1. Buscar producto y verificar stock
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-// Crear preferencia y orden con cantidad dinámica
-@PostMapping("/create/{productId}")
-public ResponseEntity<String> createPreference(
-        @PathVariable Long productId,
-        @RequestBody(required = false) CompraRequest body) {
-    try {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+            int quantity = (body != null && body.getQuantity() > 0) ? body.getQuantity() : 1;
 
-        int quantity = (body != null && body.getQuantity() > 0) ? body.getQuantity() : 1;
+            if (product.getStock() < quantity) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Stock insuficiente. Disponible: " + product.getStock());
+            }
 
-        if (product.getStock() < quantity) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Stock insuficiente. Disponible: " + product.getStock());
+            // 2. Buscar/Crear usuario (DEBE IR ANTES de usar 'usuario')
+            Users usuario = null;
+            if (body != null && body.getUsuario() != null) {
+                usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
+            }
+            if (usuario == null) {
+                usuario = userRepository.findByUsername("guest")
+                        .orElseGet(() -> {
+                            Users newGuest = new Users();
+                            newGuest.setUsername("guest");
+                            newGuest.setEmail("guest@example.com");
+                            newGuest.setName("Usuario Genérico");
+                            newGuest.setPassword("guest");
+                            return userRepository.save(newGuest);
+                        });
+            }
+            
+            // 3. Crear orden interna (DEBE IR ANTES de usar 'order')
+            Orders order = new Orders();
+            order.setProductName(product.getName());
+            order.setStatus("pending");
+            order.setUser(usuario);
+            order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+            orderRepository.save(order);
+            // ¡Importante! La orden se guarda aquí para tener un ID válido (order.getId())
+            
+            // 4. Crear ítem para la preferencia
+            Item item = new Item();
+            item.setTitle(product.getName() + " (x " + quantity + ")");
+            item.setQuantity(quantity);
+            item.setUnitPrice(product.getPrice().doubleValue());
+
+            Preference preference = new Preference();
+            preference.appendItem(item);
+
+            // 5. Configurar Payer y Preference (Ahora 'usuario' y 'order' están definidos)
+            Payer payer = new Payer();
+            payer.setName(usuario.getName());
+            payer.setEmail(usuario.getEmail());
+            preference.setPayer(payer);
+
+            preference.setExternalReference(order.getId().toString()); // Se usa el ID de la orden creada
+            preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook");
+
+            preference.save();
+
+            // 6. Guardar ítem de la orden (OrderItems)
+            OrderItems orderItem = new OrderItems();
+            orderItem.setOrder(order);
+            orderItem.setProduct(product);
+            orderItem.setProductName(product.getName());
+            orderItem.setQuantity(quantity);
+            orderItem.setPrice(product.getPrice());
+            orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+            orderItemsRepository.save(orderItem);
+
+            // 7. Guardar preferenceId en la orden (Actualización)
+            order.setPreferenceId(preference.getId());
+            orderRepository.save(order);
+
+            // 8. Retornar InitPoint
+            return ResponseEntity.ok(preference.getInitPoint());
+
+        } catch (Exception e) {
+            log.error("Error creando preferencia para productId: " + productId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creando preferencia: " + e.getMessage());
         }
-
-        // Crear ítem para la preferencia
-        Item item = new Item();
-item.setTitle(product.getName() + " (x " + quantity));
-item.setQuantity(quantity);
-item.setUnitPrice(product.getPrice().doubleValue());
-
-Preference preference = new Preference();
-preference.appendItem(item);
-
-Payer payer = new Payer();
-payer.setName(usuario.getName());
-payer.setEmail(usuario.getEmail());
-preference.setPayer(payer);
-
-preference.setExternalReference(order.getId().toString());
-preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook");
-
-preference.save();
-
-        // Buscar usuario
-        Users usuario = null;
-        if (body != null && body.getUsuario() != null) {
-            usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
-        }
-        if (usuario == null) {
-            usuario = userRepository.findByUsername("guest")
-                    .orElseGet(() -> {
-                        Users newGuest = new Users();
-                        newGuest.setUsername("guest");
-                        newGuest.setEmail("guest@example.com");
-                        newGuest.setName("Usuario Genérico");
-                        newGuest.setPassword("guest");
-                        return userRepository.save(newGuest);
-                    });
-        }
-
-        // Crear orden interna
-        Orders order = new Orders();
-        order.setProductName(product.getName());
-        order.setStatus("pending");
-        order.setUser(usuario);
-        order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
-        orderRepository.save(order);
-
-        // Guardar ítem vinculado
-        OrderItems orderItem = new OrderItems();
-        orderItem.setOrder(order);
-        orderItem.setProduct(product);
-        orderItem.setProductName(product.getName());
-        orderItem.setQuantity(quantity);
-        orderItem.setPrice(product.getPrice());
-        orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
-        orderItemsRepository.save(orderItem);
-
-        
-
-        // Guardar preferenceId en la orden
-        order.setPreferenceId(preference.getId());
-        orderRepository.save(order);
-
-        return ResponseEntity.ok(preference.getInitPoint());
-
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error creando preferencia: " + e.getMessage());
     }
+    
+    // ... (Asegúrate de tener tus otros métodos aquí, como el webhook) ...
 }
 
 
