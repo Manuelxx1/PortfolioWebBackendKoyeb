@@ -11,17 +11,13 @@ import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
+// Importaciones de Mercado Pago (¡CORREGIDAS PARA EL SDK v2+)
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
-import com.mercadopago.client.preference.PreferenceRequest;
-import com.mercadopago.client.preference.PreferenceItemRequest;
-import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.Preference;
-import com.mercadopago.resources.datastructures.preference.Item;
-import com.mercadopago.resources.datastructures.preference.Payer;
-
+import com.mercadopago.resources.preference.PreferenceItem; // Reemplaza a Item
+import com.mercadopago.resources.preference.PreferencePayer; // Reemplaza a Payer
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +56,6 @@ public class PaymentController {
     private OrderItemsRepository orderItemsRepository;
     
     public PaymentController() {
-        // Asegúrate de que MercadoPagoConfig y los clientes estén importados y configurados
-        // Reemplaza el token con una variable de entorno si estás en producción.
         MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
         this.paymentClient = new PaymentClient();
         this.preferenceClient = new PreferenceClient();
@@ -84,7 +78,7 @@ public class PaymentController {
                         .body("Stock insuficiente. Disponible: " + product.getStock());
             }
 
-            // 2. Buscar/Crear usuario (DEBE IR ANTES de usar 'usuario')
+            // 2. Buscar/Crear usuario (Lógica movida para inicializar 'usuario' ANTES de usarlo)
             Users usuario = null;
             if (body != null && body.getUsuario() != null) {
                 usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
@@ -96,22 +90,22 @@ public class PaymentController {
                             newGuest.setUsername("guest");
                             newGuest.setEmail("guest@example.com");
                             newGuest.setName("Usuario Genérico");
-                            newGuest.setPassword("guest");
+                            newGuest.setPassword("guest"); // Considera usar una contraseña codificada o vacía
                             return userRepository.save(newGuest);
                         });
             }
-            
-            // 3. Crear orden interna (DEBE IR ANTES de usar 'order')
+
+            // 3. Crear orden interna (Lógica movida para inicializar 'order' ANTES de usarlo)
             Orders order = new Orders();
             order.setProductName(product.getName());
             order.setStatus("pending");
             order.setUser(usuario);
             order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
             orderRepository.save(order);
-            // ¡Importante! La orden se guarda aquí para tener un ID válido (order.getId())
-            
-            // 4. Crear ítem para la preferencia
-            Item item = new Item();
+            // ¡La orden debe guardarse aquí para obtener un ID válido!
+
+            // 4. Crear ítem para la preferencia (Usando PreferenceItem)
+            PreferenceItem item = new PreferenceItem(); // Clase Corregida
             item.setTitle(product.getName() + " (x " + quantity + ")");
             item.setQuantity(quantity);
             item.setUnitPrice(product.getPrice().doubleValue());
@@ -119,13 +113,13 @@ public class PaymentController {
             Preference preference = new Preference();
             preference.appendItem(item);
 
-            // 5. Configurar Payer y Preference (Ahora 'usuario' y 'order' están definidos)
-            Payer payer = new Payer();
+            // 5. Configurar Payer y Preference (Usando PreferencePayer y variables inicializadas)
+            PreferencePayer payer = new PreferencePayer(); // Clase Corregida
             payer.setName(usuario.getName());
             payer.setEmail(usuario.getEmail());
             preference.setPayer(payer);
 
-            preference.setExternalReference(order.getId().toString()); // Se usa el ID de la orden creada
+            preference.setExternalReference(order.getId().toString()); // Usa el ID de la orden
             preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook");
 
             preference.save();
@@ -154,9 +148,6 @@ public class PaymentController {
         }
     }
     
-    // ... (Asegúrate de tener tus otros métodos aquí, como el webhook) ...
-
-
 
 
 
