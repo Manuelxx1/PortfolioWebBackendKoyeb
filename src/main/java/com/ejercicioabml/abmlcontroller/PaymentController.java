@@ -145,6 +145,7 @@ public class PaymentController {
             
             // LÍNEA 117 (aproximadamente) - CORRECCIÓN FINAL: Aseguramos que la multiplicación es entre dos BigDecimal
             orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity))); 
+            //orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
             
             orderItemsRepository.save(orderItem);
 
