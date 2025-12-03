@@ -11,14 +11,16 @@ import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
-// Importaciones de Mercado Pago (¡CORREGIDAS PARA EL SDK v2+)
+// Importaciones de Mercado Pago (v2.5.0)
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.preference.PreferenceItem; // Reemplaza a Item
-import com.mercadopago.resources.preference.PreferencePayer; // Reemplaza a Payer
-
+import com.mercadopago.resources.preference.PreferenceRequest; // NECESARIA PARA RESOLVER ERROR DE 'PreferenceRequest'
+import com.mercadopago.resources.preference.PreferenceItemRequest; // NECESARIA PARA RESOLVER ERROR DE 'PreferenceItemRequest'
+import com.mercadopago.resources.preference.PreferencePayerRequest; // NECESARIA PARA RESOLVER ERROR DE 'PreferencePayerRequest'
+import com.mercadopago.resources.payment.Payment;
+// ---- FIN: IMPORTACIONES CORREGIDAS ----
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,9 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections; // <--- ¡ESTA ES LA IMPORTACIÓN DE 'Collections'!
 
+import java.util.Optional;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
