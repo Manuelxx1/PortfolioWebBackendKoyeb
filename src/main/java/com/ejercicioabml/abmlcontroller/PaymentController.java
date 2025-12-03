@@ -78,7 +78,7 @@ public class PaymentController {
                         .body("Stock insuficiente. Disponible: " + product.getStock());
             }
 
-            // 2. Buscar/Crear usuario (Lógica movida para inicializar 'usuario' ANTES de usarlo)
+            // 2. Buscar/Crear usuario (Lógica reordenada)
             Users usuario = null;
             if (body != null && body.getUsuario() != null) {
                 usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
@@ -90,41 +90,48 @@ public class PaymentController {
                             newGuest.setUsername("guest");
                             newGuest.setEmail("guest@example.com");
                             newGuest.setName("Usuario Genérico");
-                            newGuest.setPassword("guest"); // Considera usar una contraseña codificada o vacía
+                            newGuest.setPassword("guest"); 
                             return userRepository.save(newGuest);
                         });
             }
 
-            // 3. Crear orden interna (Lógica movida para inicializar 'order' ANTES de usarlo)
+            // 3. Crear orden interna (Lógica reordenada)
             Orders order = new Orders();
             order.setProductName(product.getName());
             order.setStatus("pending");
             order.setUser(usuario);
             order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
             orderRepository.save(order);
-            // ¡La orden debe guardarse aquí para obtener un ID válido!
+            
+            // --- INICIO DE CONFIGURACIÓN DE MERCADO PAGO (VERSIÓN 2.5.0) ---
+            
+            // 4. Crear Ítem Request usando el Builder
+            PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                .title(product.getName() + " (x " + quantity + ")")
+                .quantity(quantity)
+                .unitPrice(product.getPrice().doubleValue())
+                .build();
 
-            // 4. Crear ítem para la preferencia (Usando PreferenceItem)
-            PreferenceItem item = new PreferenceItem(); // Clase Corregida
-            item.setTitle(product.getName() + " (x " + quantity + ")");
-            item.setQuantity(quantity);
-            item.setUnitPrice(product.getPrice().doubleValue());
+            // 5. Crear Payer Request usando el Builder
+            PreferencePayerRequest payerRequest = PreferencePayerRequest.builder()
+                .name(usuario.getName())
+                .email(usuario.getEmail())
+                .build();
 
-            Preference preference = new Preference();
-            preference.appendItem(item);
+            // 6. Crear la Preference Request usando el Builder
+            PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                .items(Collections.singletonList(itemRequest))
+                .payer(payerRequest)
+                .externalReference(order.getId().toString())
+                .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
+                .build();
 
-            // 5. Configurar Payer y Preference (Usando PreferencePayer y variables inicializadas)
-            PreferencePayer payer = new PreferencePayer(); // Clase Corregida
-            payer.setName(usuario.getName());
-            payer.setEmail(usuario.getEmail());
-            preference.setPayer(payer);
+            // 7. Crear la preferencia usando el Cliente
+            Preference preference = preferenceClient.create(preferenceRequest);
+            
+            // --- FIN DE CONFIGURACIÓN DE MERCADO PAGO ---
 
-            preference.setExternalReference(order.getId().toString()); // Usa el ID de la orden
-            preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook");
-
-            preference.save();
-
-            // 6. Guardar ítem de la orden (OrderItems)
+            // 8. Guardar ítem de la orden (OrderItems)
             OrderItems orderItem = new OrderItems();
             orderItem.setOrder(order);
             orderItem.setProduct(product);
@@ -134,11 +141,11 @@ public class PaymentController {
             orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
             orderItemsRepository.save(orderItem);
 
-            // 7. Guardar preferenceId en la orden (Actualización)
+            // 9. Guardar preferenceId en la orden (Actualización)
             order.setPreferenceId(preference.getId());
             orderRepository.save(order);
 
-            // 8. Retornar InitPoint
+            // 10. Retornar InitPoint
             return ResponseEntity.ok(preference.getInitPoint());
 
         } catch (Exception e) {
@@ -147,8 +154,6 @@ public class PaymentController {
                     .body("Error creando preferencia: " + e.getMessage());
         }
     }
-    
-
 
 
 //compra desde el carrito 
