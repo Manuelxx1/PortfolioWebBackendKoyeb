@@ -83,7 +83,8 @@ public ResponseEntity<String> createPreference(
 
         // Crear ítem para la preferencia
         Item item = new Item();
-        item.setTitle(product.getName() + " (x" + quantity)
+        item.setTitle(product.getName() + " (x" + quantity)");
+
             .setQuantity(quantity)
             .setUnitPrice(product.getPrice().doubleValue());
 
