@@ -18,8 +18,8 @@ import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
+import com.mercadopago.resources.payer.Payer;
 
-import com.mercadopago.client.common.PayerRequest;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,11 +81,11 @@ public ResponseEntity<String> createPreference(
                     .body("Stock insuficiente. Disponible: " + product.getStock());
         }
 
-        // Crear ítem para la preferencia
+        // Crear ítem
         Item item = new Item();
-item.setTitle(product.getName() + "x" + quantity);
-item.setQuantity(quantity);
-item.setUnitPrice(product.getPrice().doubleValue());
+        item.setTitle(product.getName() + " (x" + quantity)");
+        item.setQuantity(quantity);
+        item.setUnitPrice(product.getPrice().doubleValue());
 
         // Crear preferencia
         Preference preference = new Preference();
@@ -96,7 +96,6 @@ item.setUnitPrice(product.getPrice().doubleValue());
         if (body != null && body.getUsuario() != null) {
             usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
         }
-
         if (usuario == null) {
             usuario = userRepository.findByUsername("guest")
                     .orElseGet(() -> {
@@ -127,22 +126,20 @@ item.setUnitPrice(product.getPrice().doubleValue());
         orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         orderItemsRepository.save(orderItem);
 
-        // Configurar payer en la preferencia
+        // Configurar payer
         Payer payer = new Payer();
         payer.setName(usuario.getName());
         payer.setEmail(usuario.getEmail());
         preference.setPayer(payer);
 
-        // External reference = ID de la orden
+        // External reference y webhook
         preference.setExternalReference(order.getId().toString());
-
-        // Notification URL
         preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook");
 
         // Guardar preferencia en MP
         preference.save();
 
-        // Guardar preferenceId real en la orden
+        // Guardar preferenceId en la orden
         order.setPreferenceId(preference.getId());
         orderRepository.save(order);
 
