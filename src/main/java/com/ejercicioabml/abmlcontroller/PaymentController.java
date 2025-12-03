@@ -18,7 +18,9 @@ import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.payer.Payer;
+import com.mercadopago.resources.Preference;
+import com.mercadopago.resources.datastructures.preference.Item;
+import com.mercadopago.resources.datastructures.preference.Payer;
 
 
 
