@@ -83,14 +83,22 @@ public ResponseEntity<String> createPreference(
 
         // Crear ítem para la preferencia
         Item item = new Item();
-        item.setTitle(product.getName() + " (x" + quantity));
+item.setTitle(product.getName() + " (x" + quantity));
+item.setQuantity(quantity);
+item.setUnitPrice(product.getPrice().doubleValue());
 
-        item.setQuantity(quantity);
-        item.setUnitPrice(product.getPrice().doubleValue());
+Preference preference = new Preference();
+preference.appendItem(item);
 
-        // Crear preferencia
-        Preference preference = new Preference();
-        preference.appendItem(item);
+Payer payer = new Payer();
+payer.setName(usuario.getName());
+payer.setEmail(usuario.getEmail());
+preference.setPayer(payer);
+
+preference.setExternalReference(order.getId().toString());
+preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook");
+
+preference.save();
 
         // Buscar usuario
         Users usuario = null;
@@ -127,18 +135,7 @@ public ResponseEntity<String> createPreference(
         orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         orderItemsRepository.save(orderItem);
 
-        // Configurar payer
-        Payer payer = new Payer();
-        payer.setName(usuario.getName());
-        payer.setEmail(usuario.getEmail());
-        preference.setPayer(payer);
-
-        // External reference y webhook
-        preference.setExternalReference(order.getId().toString());
-        preference.setNotificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook");
-
-        // Guardar preferencia en MP
-        preference.save();
+        
 
         // Guardar preferenceId en la orden
         order.setPreferenceId(preference.getId());
