@@ -11,13 +11,17 @@ import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 
-// Importaciones de Mercado Pago (v2.5.0) - ¡Corregidas a 'client' y 'resources'!
+// Importaciones de Mercado Pago (v2.5.0) - CORREGIDAS
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
+
+// Las clases Request están en el paquete 'client.preference'
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
+
+// Las clases Response (Preference y Payment) están en 'resources'
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.payment.Payment; 
 
@@ -110,7 +114,8 @@ public class PaymentController {
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
                 .title(product.getName() + " (x " + quantity + ")")
                 .quantity(quantity)
-                .unitPrice(product.getPrice().doubleValue())
+                // Se usa doubleValue() para Mercado Pago
+                .unitPrice(product.getPrice().doubleValue()) 
                 .build();
 
             // 5. Crear Payer Request usando el Builder
@@ -139,7 +144,8 @@ public class PaymentController {
             orderItem.setProductName(product.getName());
             orderItem.setQuantity(quantity);
             orderItem.setPrice(product.getPrice());
-            orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+            // CORRECCIÓN 1: Asegura BigDecimal para la DB
+            orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity))); 
             orderItemsRepository.save(orderItem);
 
             // 9. Guardar preferenceId en la orden (Actualización)
@@ -186,6 +192,7 @@ public class PaymentController {
                 PreferenceItemRequest item = PreferenceItemRequest.builder()
                     .title(product.getName())
                     .quantity(ci.getQuantity())
+                    // Se usa doubleValue() para Mercado Pago
                     .unitPrice(product.getPrice().doubleValue()) 
                     .currencyId("ARS")
                     .build();
@@ -215,7 +222,7 @@ public class PaymentController {
                 oi.setProductName(product.getName());
                 oi.setQuantity(ci.getQuantity());
                 oi.setPrice(product.getPrice());
-                // LÍNEA 195 CORREGIDA: Asegurar que el monto se guarde como BigDecimal
+                // CORRECCIÓN 2: Asegura BigDecimal para la DB
                 oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()))); 
                 orderItemsRepository.save(oi);
             }
@@ -282,7 +289,7 @@ public class PaymentController {
                     // Buscar o crear usuario
                     Users user = null;
                     if (payment.getPayer() != null && payment.getPayer().getId() != null) {
-                        // LÍNEA 290 CORREGIDA: Forzamos la conversión explícita a Long.
+                        // CORRECCIÓN 3: Conversión de String a Long para mpUserId
                         Long mpUserId = Long.parseLong(payment.getPayer().getId().toString()); 
                         
                         user = userRepository.findByMpUserId(mpUserId)
@@ -315,7 +322,7 @@ public class PaymentController {
                     // Actualizar orden
                     order.setUser(user);
                     order.setStatus(payment.getStatus());
-                    // Conversión a BigDecimal: payment.getTransactionAmount() es un Double
+                    // CORRECCIÓN 4: Convierte Double (MP) a BigDecimal (DB)
                     order.setTotal(BigDecimal.valueOf(payment.getTransactionAmount().doubleValue())); 
 
                     orderRepository.save(order);
