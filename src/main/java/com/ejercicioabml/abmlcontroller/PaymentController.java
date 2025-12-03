@@ -102,10 +102,8 @@ public class PaymentController {
             order.setStatus("pending");
             order.setUser(usuario);
             
-            // CORRECCIÓN PARA EL TOTAL DE LA ORDEN (LÍNEA 117 APROX.)
-            // Aislamiento del cálculo para forzar BigDecimal
-            BigDecimal factorTotal = BigDecimal.valueOf(quantity);
-            order.setTotal(product.getPrice().multiply(factorTotal));
+            // LÍNEA 118 (Aprox.) - CORRECCIÓN: Cálculo directo y seguro
+            order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
             
             orderRepository.save(order);
             
@@ -145,8 +143,8 @@ public class PaymentController {
             orderItem.setQuantity(quantity);
             orderItem.setPrice(product.getPrice());
             
-            // Usamos la variable ya calculada (es BigDecimal)
-            orderItem.setAmount(orderTotal); 
+            // LÍNEA 149 (Aprox.) - CORRECCIÓN: Cálculo directo (esto arregla el 'cannot find symbol')
+            orderItem.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity))); 
             
             orderItemsRepository.save(orderItem);
 
@@ -225,10 +223,8 @@ public class PaymentController {
                 oi.setQuantity(ci.getQuantity());
                 oi.setPrice(product.getPrice());
                 
-                // LÍNEA 197 (Aprox.) - CORRECCIÓN DEFINITIVA APLICADA
-                // Aislamiento del cálculo para forzar BigDecimal
-                BigDecimal itemAmountFactor = BigDecimal.valueOf(ci.getQuantity());
-                oi.setAmount(product.getPrice().multiply(itemAmountFactor));
+                // LÍNEA 198 (Aprox.) - CORRECCIÓN: Cálculo directo y seguro
+                oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
                 
                 orderItemsRepository.save(oi);
             }
@@ -361,4 +357,4 @@ public class PaymentController {
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
         return ResponseEntity.ok(order);
     }
-    }
+        }
