@@ -8,5 +8,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     // método extra para buscar por mpUserId
    Optional<Users> findByMpUserId(Long mpUserId);
 Optional<Users> findByUsername(String username);
+    Optional<Users> findByEmail(String email); //  este faltaba
+
 
 }
