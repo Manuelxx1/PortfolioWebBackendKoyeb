@@ -316,7 +316,7 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
         */
 
 
-  //login sinjwt copilot
+  //login sinjwt copilot para el proyecto buscador y noticias 
 //a pesar que no se usa jwt se usa unas clasess
   //de springsecurity como BCryptPasswordEncoder en securityconfig  para codificar
   //la contraseña que llega del form para insertar 
@@ -368,8 +368,41 @@ logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), personaEnBD
         );
     }
 
+//registro para eshop
+@PostMapping("/register")
+public ResponseEntity<?> register(@RequestBody Users user) {
+    // Codificar la contraseña antes de guardar
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+    return ResponseEntity.ok(userRepository.save(user));
+}
+
+  //login para eshop
+@PostMapping("/loginsinjwt")
+public ResponseEntity<?> login(@RequestBody Users user) {
+    Optional<Users> userOpt = userRepository.findByUsername(user.getUsername());
+
+    if (userOpt.isPresent()) {
+        Users userEnBD = userOpt.get();
+
+        logger.info("Contraseña enviada: {}", user.getPassword());
+        logger.info("Contraseña en BD: {}", userEnBD.getPassword());
+        logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), userEnBD.getPassword()));
+
+        if (passwordEncoder.matches(user.getPassword(), userEnBD.getPassword())) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Login exitoso",
+                "usuario", userEnBD.getUsername()
+            ));
+        }
+    }
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+        Map.of("error", "Nombre o contraseña incorrectos")
+    );
+}
 
 
+  
 
 @Autowired
 private PersonaRepository personaRepository;
