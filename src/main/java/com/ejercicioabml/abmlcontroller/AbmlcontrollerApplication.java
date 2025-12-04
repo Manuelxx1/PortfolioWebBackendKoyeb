@@ -371,8 +371,12 @@ logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), personaEnBD
 //registro para eshop
 @PostMapping("/registereshop")
 public ResponseEntity<?> register(@RequestBody Users user) {
-    // Validar duplicados en username y email
-    if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+    System.out.println("Payload recibido: username=" + user.getUsername() +
+                       ", email=" + user.getEmail() +
+                       ", name=" + user.getName() +
+                       ", password=" + user.getPassword());
+  // Validar duplicados en username y email
+  if (userRepository.findByUsername(user.getUsername()).isPresent()) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(Map.of("error", "Usuario ya existe"));
     }
