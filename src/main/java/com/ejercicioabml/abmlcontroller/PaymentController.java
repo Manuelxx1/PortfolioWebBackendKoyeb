@@ -113,7 +113,8 @@ public class PaymentController {
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
                 .title(product.getName() + " (x " + quantity + ")")
                 .quantity(quantity)
-                .unitPrice(product.getPrice().doubleValue()) 
+                .unitPrice(product.getPrice()) // product.getPrice() ya es BigDecimal
+
                 .build();
 
             // 5. Crear Payer Request usando el Builder
@@ -193,7 +194,7 @@ public class PaymentController {
                 PreferenceItemRequest item = PreferenceItemRequest.builder()
                     .title(product.getName())
                     .quantity(ci.getQuantity())
-                    .unitPrice(product.getPrice().doubleValue()) 
+                    .unitPrice(product.getPrice()) // 
                     .currencyId("ARS")
                     .build();
 
