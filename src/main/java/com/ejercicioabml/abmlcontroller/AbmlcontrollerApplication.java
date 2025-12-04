@@ -376,7 +376,7 @@ public ResponseEntity<?> register(@RequestBody Users user) {
                        ", name=" + user.getName() +
                        ", password=" + user.getPassword());
   // Validar duplicados en username y email
-  if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+ /* if (userRepository.findByUsername(user.getUsername()).isPresent()) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(Map.of("error", "Usuario ya existe"));
     }
@@ -384,6 +384,7 @@ public ResponseEntity<?> register(@RequestBody Users user) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(Map.of("error", "Email ya existe"));
     }
+    */
 
     // Codificar la contraseña antes de guardar
     user.setPassword(passwordEncoder.encode(user.getPassword()));
