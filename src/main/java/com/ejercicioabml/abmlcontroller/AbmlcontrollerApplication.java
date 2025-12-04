@@ -371,10 +371,30 @@ logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), personaEnBD
 //registro para eshop
 @PostMapping("/registereshop")
 public ResponseEntity<?> register(@RequestBody Users user) {
+    // Validar duplicados en username y email
+    if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(Map.of("error", "Usuario ya existe"));
+    }
+    if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(Map.of("error", "Email ya existe"));
+    }
+
     // Codificar la contraseña antes de guardar
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    return ResponseEntity.ok(userRepository.save(user));
+
+    // Guardar el nuevo usuario
+    Users nuevo = userRepository.save(user);
+
+    return ResponseEntity.ok(Map.of(
+        "mensaje", "Registro exitoso",
+        "usuario", nuevo.getUsername(),
+        "email", nuevo.getEmail(),
+        "name", nuevo.getName()
+    ));
 }
+
 
   //login para eshop
 @PostMapping("/loginsinjwteshop")
