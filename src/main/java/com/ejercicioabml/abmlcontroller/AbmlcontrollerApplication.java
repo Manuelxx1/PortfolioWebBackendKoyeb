@@ -321,7 +321,7 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
   //de springsecurity como BCryptPasswordEncoder en securityconfig  para codificar
   //la contraseña que llega del form para insertar 
   //eso en base de datos y no quede expuesto el dato
-@PostMapping("/register")
+@PostMapping("/registereshop")
     public ResponseEntity<?> register(@RequestBody Persona user) {
         return ResponseEntity.ok(interPersona.save(user));
     }
@@ -331,7 +331,7 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/loginsinjwt")
+    @PostMapping("/loginsinjwteshop")
     public ResponseEntity<?> login(@RequestBody Persona user) {
         Optional<Persona> personaOpt = personaRepository.findByNombre(user.getNombre());
 //se verifica si el usuario existe y se guarda
