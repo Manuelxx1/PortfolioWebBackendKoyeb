@@ -322,10 +322,11 @@ public class PaymentController {
                     }
 
                     // Actualizar orden
-                    order.setUser(user);
-                    order.setStatus(payment.getStatus());
-                    // Corrección de BigDecimal: Convierte Double (MP) a BigDecimal (DB)
-                    order.setTotal(BigDecimal.valueOf(payment.getTransactionAmount().doubleValue())); 
+order.setUser(user);
+order.setStatus(payment.getStatus());
+
+// En SDK 2.5.0, getTransactionAmount() devuelve BigDecimal → úsalo directo
+order.setTotal(payment.getTransactionAmount());
 
                     orderRepository.save(order);
 
