@@ -8,4 +8,6 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
 //Agrega un método custom
     // Buscar orden por preferenceId
     Optional<Orders> findByPreferenceId(String preferenceId);
+    List<Orders> findByLoginUsername(String loginUsername);
+
 }
