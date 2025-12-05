@@ -364,7 +364,7 @@ order.setTotal(payment.getTransactionAmount());
 
 //ver orders de usuarios en session login
     @GetMapping("/orders/byLogin/{loginUsername}")
-public List<Order> getOrdersByLogin(@PathVariable String loginUsername) {
+public List<Orders> getOrdersByLogin(@PathVariable String loginUsername) {
     return orderRepository.findByLoginUsername(loginUsername);
 }
 
