@@ -26,7 +26,7 @@ public class Users {
 
   
     @Column(nullable = false, length = 100)
-   //@JsonIgnore   //  esto evita que se muestre el campo en el JSON
+   @JsonIgnore   //  esto evita que se muestre el campo en el JSON
     //cuando se accede al endpoint por url en navegador
     //y también por frontend en vista ya que es un dato privado del sistema 
     private String password;
