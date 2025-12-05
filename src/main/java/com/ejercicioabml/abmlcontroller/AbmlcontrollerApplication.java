@@ -4,8 +4,8 @@ package com.ejercicioabml.abmlcontroller;
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.model.Users;
-import com.abml.jpa.hibernate.model.dto.UserDTO;
-import com.abml.jpa.hibernate.model.dto.LoginDTO;
+import com.abml.jpa.hibernate.dto.UserDTO;
+import com.abml.jpa.hibernate.dto.LoginDTO;
 
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
