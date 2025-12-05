@@ -32,6 +32,10 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
+    //  Este es el dato que te falta: tu usuario del login
+    private String loginUsername;  
+    private String loginEmail;     
+
     //  Campo para vincular con Mercado Pago
     private String preferenceId;
 
@@ -94,5 +98,11 @@ public class Orders {
 
     public String getPreferenceId() { return preferenceId; }
     public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
+
+public String getLoginUsername() { return loginUsername; }
+    public void setLoginUsername(String loginUsername ) { this.loginUsername = loginUsername; }
+
+    public String getLoginEmail() { return loginEmail; }
+    public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
     
 }
