@@ -361,4 +361,11 @@ order.setTotal(payment.getTransactionAmount());
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
         return ResponseEntity.ok(order);
     }
+
+//ver orders de usuarios en session login
+    @GetMapping("/orders/byLogin/{loginUsername}")
+public List<Order> getOrdersByLogin(@PathVariable String loginUsername) {
+    return orderRepository.findByLoginUsername(loginUsername);
+}
+
         }
