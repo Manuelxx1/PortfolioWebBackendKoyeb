@@ -99,6 +99,8 @@ public class PaymentController {
             // 3. Crear orden interna 
             Orders order = new Orders();
             order.setProductName(product.getName());
+            order.setLoginUsername(body.getUsuario()); // el que viene de tu login
+order.setLoginEmail(body.getEmail()); // si lo mandás en CompraRequest
             order.setStatus("pending");
             order.setUser(usuario);
             
