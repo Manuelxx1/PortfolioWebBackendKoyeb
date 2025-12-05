@@ -370,63 +370,57 @@ logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), personaEnBD
 
 //registro para eshop
 @PostMapping("/registereshop")
-public ResponseEntity<?> register(@RequestBody Users user) {
-    try {
-        // Validar duplicados en username y email
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "Usuario ya existe"));
-        }
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "Email ya existe"));
-        }
-
-        // Codificar la contraseña antes de guardar
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // Guardar el nuevo usuario
-        Users nuevo = userRepository.save(user);
-
-        return ResponseEntity.ok(Map.of(
-            "mensaje", "Registro exitoso",
-            "usuario", nuevo.getUsername(),
-            "email", nuevo.getEmail(),
-            "name", nuevo.getName()
-        ));
-    } catch (Exception e) {
-        // Captura cualquier excepción y devuelve un mensaje más claro
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(Map.of("error", "Error interno: " + e.getMessage()));
+public ResponseEntity<?> register(@RequestBody UserDTO dto) {
+    if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(Map.of("error", "Usuario ya existe"));
     }
+    if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(Map.of("error", "Email ya existe"));
+    }
+
+    Users user = new Users();
+    user.setUsername(dto.getUsername());
+    user.setEmail(dto.getEmail());
+    user.setName(dto.getName());
+    user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+    Users nuevo = userRepository.save(user);
+
+    return ResponseEntity.ok(Map.of(
+        "mensaje", "Registro exitoso",
+        "usuario", nuevo.getUsername(),
+        "email", nuevo.getEmail(),
+        "name", nuevo.getName()
+    ));
 }
+
 
 
   //login para eshop
 @PostMapping("/loginsinjwteshop")
-public ResponseEntity<?> login(@RequestBody Users user) {
-    Optional<Users> userOpt = userRepository.findByUsername(user.getUsername());
-
-    if (userOpt.isPresent()) {
-        Users userEnBD = userOpt.get();
-
-        logger.info("Contraseña enviada: {}", user.getPassword());
-        logger.info("Contraseña en BD: {}", userEnBD.getPassword());
-        logger.info("Match: {}", passwordEncoder.matches(user.getPassword(), userEnBD.getPassword()));
-
-        if (passwordEncoder.matches(user.getPassword(), userEnBD.getPassword())) {
-            return ResponseEntity.ok(Map.of(
-                "mensaje", "Login exitoso",
-                "usuario", userEnBD.getUsername()
-            ));
-        }
+public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
+    Optional<Users> userOpt = userRepository.findByUsername(dto.getUsername());
+    if (userOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("error", "Nombre o contraseña incorrectos"));
     }
 
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-        Map.of("error", "Nombre o contraseña incorrectos")
-    );
+    Users user = userOpt.get();
+    if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("error", "Nombre o contraseña incorrectos"));
+    }
+
+    return ResponseEntity.ok(Map.of(
+        "mensaje", "Login exitoso",
+        "usuario", user.getUsername(),
+        "email", user.getEmail(),
+        "name", user.getName()
+    ));
 }
+
 
 
   
