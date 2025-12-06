@@ -415,7 +415,18 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
             .body(Map.of("error", "Nombre o contraseña incorrectos"));
     }
 
-    return ResponseEntity.ok(Map.of(
+
+
+  //LoginDTO es dolo para obtener datos de entrada al endpoint 
+  // acá se retorna la respuesta al frontend 
+  //par acceder desde frontend en el subscribe 
+  //se usan las claves del map
+  //res.usuario,res.mensaje etc
+  // Guardar sesión en localStorage en frontend 
+  //localStorage.setItem('usuario', res.usuario);
+//sino quiero usar map debería armar un DTO de salida 
+  
+  return ResponseEntity.ok(Map.of(
         "mensaje", "Login exitoso",
         "usuario", user.getUsername(),
         "email", user.getEmail(),
