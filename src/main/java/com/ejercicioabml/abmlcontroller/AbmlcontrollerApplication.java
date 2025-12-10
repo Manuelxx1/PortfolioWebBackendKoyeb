@@ -430,7 +430,8 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
         "mensaje", "Login exitoso",
         "usuario", user.getUsername(),
         "email", user.getEmail(),
-        "name", user.getName()
+        "name", user.getName(),
+    "createdAt", user.getcreatedAt()
     ));
 }
 
