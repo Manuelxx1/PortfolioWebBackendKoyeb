@@ -803,5 +803,8 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
     return ResponseEntity.ok(updatedCart);
 }
 
-
+@GetMapping("/users")
+    public List<Users> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
