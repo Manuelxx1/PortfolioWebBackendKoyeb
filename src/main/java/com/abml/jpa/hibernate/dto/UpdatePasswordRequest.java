@@ -1,3 +1,5 @@
+package com.abml.jpa.hibernate.dto;
+
 public class UpdatePasswordRequest {
     private String usuario;
     private String nuevaPassword;
