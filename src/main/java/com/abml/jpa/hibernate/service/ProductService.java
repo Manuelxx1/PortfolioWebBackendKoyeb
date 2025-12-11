@@ -26,7 +26,7 @@ public class ProductService {
 
   
 public void updatePassword(String usuario, String nuevaPassword) {
-        Users user = userRepository.findByUsuario(usuario)
+        Users user = userRepository.findByUsername(usuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         user.setPassword(nuevaPassword); // acá deberías encriptar la contraseña
