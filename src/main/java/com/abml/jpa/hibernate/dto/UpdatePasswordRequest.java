@@ -12,10 +12,10 @@ public class UpdatePasswordRequest {
         this.usuario = usuario;
     }
 
-    public String getnuevaPassword() {
+    public String getNuevaPassword() {
         return nuevaPassword;
     }
-    public void setnuevaPassword(String nuevaPassword) {
+    public void setNuevaPassword(String nuevaPassword) {
         this.nuevaPassword = nuevaPassword;
     }
 }
