@@ -436,6 +436,18 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
 }
 
 
+//endpoint para cambiar contraseña dashboard 
+  
+  @PutMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequest request) {
+        try {
+            productService.updatePassword(request.getUsuario(), request.getNuevaPassword());
+            return ResponseEntity.ok().body(Map.of("success", true));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 
   
 
