@@ -450,6 +450,17 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
         }
     }
 
+  @PutMapping("/update-Username")
+    public ResponseEntity<?>updateUsername(@RequestBody UpdateUsernameRequest request) {
+        try {
+            productService.updateUsername(request.getUsuario(), request.getNuevoUsername());
+            return ResponseEntity.ok().body(Map.of("success", true,"mensaje","SE CAMBIO EL NOMBRE DE USUARIO  EXITOSAMENTE"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
   
 
 @Autowired
