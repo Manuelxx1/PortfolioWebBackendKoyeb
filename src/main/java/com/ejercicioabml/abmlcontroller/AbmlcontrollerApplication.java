@@ -7,6 +7,7 @@ import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.dto.UserDTO;
 import com.abml.jpa.hibernate.dto.LoginDTO;
 import com.abml.jpa.hibernate.dto.UpdatePasswordRequest;
+import com.abml.jpa.hibernate.dto.UpdateUsernameRequest;
 
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
