@@ -443,7 +443,7 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequest request) {
         try {
             productService.updatePassword(request.getUsuario(), request.getNuevaPassword());
-            return ResponseEntity.ok().body(Map.of("success", true));
+            return ResponseEntity.ok().body(Map.of("success", true,"mensaje","SE CAMBIO LA CONTRASEÑA EXITOSAMENTE"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(Map.of("success", false, "error", e.getMessage()));
