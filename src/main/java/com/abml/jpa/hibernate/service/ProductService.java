@@ -5,6 +5,7 @@ import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.model.Users;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -24,7 +25,9 @@ public class ProductService {
       .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
   }
 
-  
+ 
+  @Autowired
+    private PasswordEncoder passwordEncoder;
 public void updatePassword(String usuario, String nuevaPassword) {
         Users user = userRepository.findByUsername(usuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
