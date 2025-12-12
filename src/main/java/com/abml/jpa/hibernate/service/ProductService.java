@@ -29,7 +29,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
         Users user = userRepository.findByUsername(usuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        user.setPassword(nuevaPassword); // acá deberías encriptar la contraseña
+        user.setPassword(passwordEncoder.encode(nuevaPassword));// acá deberías encriptar la contraseña
         userRepository.save(user);
 }
   
