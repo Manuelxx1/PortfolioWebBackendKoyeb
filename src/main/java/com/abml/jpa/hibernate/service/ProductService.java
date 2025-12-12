@@ -35,5 +35,13 @@ public void updatePassword(String usuario, String nuevaPassword) {
         user.setPassword(passwordEncoder.encode(nuevaPassword));// acá deberías encriptar la contraseña
         userRepository.save(user);
 }
+
+  public void updateUsername(String usuario, String nuevoUsername) {
+        Users user = userRepository.findByUsername(usuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        user.setNuevoUsername(nuevoUsername);// acá deberías encriptar la contraseña
+        userRepository.save(user);
+  }
   
 }
