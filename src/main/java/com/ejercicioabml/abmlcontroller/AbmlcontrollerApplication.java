@@ -456,18 +456,24 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
     }
 
       @PutMapping("/update-username")
-    public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
-        if (dto.getUsername() == null || dto.getUsername().isEmpty()) {
-            return ResponseEntity.badRequest().body("El username es obligatorio");
-        }
-        try {
-            productService.updateUsername(dto.getUsername(), dto.getUsername());
-            return ResponseEntity.ok().body(Map.of("success", true,"mensaje","SE CAMBIO EL NOMBRE DE USUARIO  EXITOSAMENTE"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(Map.of("success", false, "error", e.getMessage()));
-        }
+public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
+    if (dto.getUsername() == null || dto.getUsername().isEmpty()) {
+        return ResponseEntity.badRequest().body("El username es obligatorio");
     }
+
+    try {
+        // Llamamos al service con el nuevo username
+        userService.updateUsername(dto.getUsername());
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "mensaje", "SE CAMBIÓ EL USERNAME EXITOSAMENTE"
+        ));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body(Map.of("success", false, "error", e.getMessage()));
+    }
+}
+
 
   @PutMapping("/update-email")
     public ResponseEntity<?> updateEmail(@RequestBody UsersDTO dto) {
