@@ -36,18 +36,21 @@ public void updatePassword(String usuario, String nuevaPassword) {
         userRepository.save(user);
 }
 
-  public void updateUsername(String usuario, String nuevoUsername) {
-        Users user = userRepository.findByUsername(usuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+  public void updateUsername(String usuarioActual, String nuevoUsername) {
+    Users user = userRepository.findByUsername(usuarioActual)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-    // Validar que el nuevo username no esté ya en uso
-        if (userRepository.findByUsername(nuevoUsername).isPresent()) {
-            throw new RuntimeException("El nuevo username ya está en uso");
-        }
-    
-        user.setUsername(nuevoUsername);
-        userRepository.save(user);
-  }
+    // Validar que no exista otro con el mismo nuevo username
+    if (userRepository.findByUsername(nuevoUsername).isPresent()) {
+        throw new RuntimeException("El nuevo username ya está en uso");
+    }
+
+    user.setUsername(nuevoUsername);
+    userRepository.save(user);
+}
+
+
+  
   public void updateEmail(String usuario, String nuevoEmail) {
         Users user = userRepository.findByUsername(usuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
