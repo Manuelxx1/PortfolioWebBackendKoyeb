@@ -4,10 +4,10 @@ package com.ejercicioabml.abmlcontroller;
 import com.abml.jpa.hibernate.model.Persona;
 import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.model.Users;
+//dto de registro UserDTO
 import com.abml.jpa.hibernate.dto.UserDTO;
 import com.abml.jpa.hibernate.dto.LoginDTO;
-import com.abml.jpa.hibernate.dto.UpdatePasswordRequest;
-import com.abml.jpa.hibernate.dto.UpdateUsernameRequest;
+import com.abml.jpa.hibernate.dto.UsersDTO;
 
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.repository.PersonaRepository;
@@ -438,29 +438,52 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
 }
 
 
-//endpoint para cambiar contraseña dashboard 
+//endpoints para cambiar el perfil dashboard 
   
-  @PutMapping("/update-password")
-    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequest request) {
+      @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody UsersDTO dto) {
+        if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
+            return ResponseEntity.badRequest().body("La contraseña es obligatoria");
+        }
         try {
-            productService.updatePassword(request.getUsuario(), request.getNuevaPassword());
+            productService.updatePassword(dto.getUsername(), dto.getPassword());
             return ResponseEntity.ok().body(Map.of("success", true,"mensaje","SE CAMBIO LA CONTRASEÑA EXITOSAMENTE"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(Map.of("success", false, "error", e.getMessage()));
         }
+        
     }
 
-  @PutMapping("/update-Username")
-    public ResponseEntity<?>updateUsername(@RequestBody UpdateUsernameRequest request) {
+      @PutMapping("/update-username")
+    public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
+        if (dto.getUsername() == null || dto.getUsername().isEmpty()) {
+            return ResponseEntity.badRequest().body("El username es obligatorio");
+        }
         try {
-            productService.updateUsername(request.getUsuario(), request.getNuevoUsername());
+            productService.updateUsername(dto.getUsername(), dto.getUsername());
             return ResponseEntity.ok().body(Map.of("success", true,"mensaje","SE CAMBIO EL NOMBRE DE USUARIO  EXITOSAMENTE"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+  @PutMapping("/update-email")
+    public ResponseEntity<?> updateEmail(@RequestBody UsersDTO dto) {
+        if (dto.getEmail() == null || dto.getEmail().isEmpty()) {
+            return ResponseEntity.badRequest().body("El email es obligatorio");
+        }
+        try {
+            productService.updateEmail(dto.getUsername(), dto.getEmail());
+            return ResponseEntity.ok().body(Map.of("success", true,"mensaje","SE CAMBIO EL  EMAIL EXITOSAMENTE"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("success", false, "error", e.getMessage()));
+        }
+        
+    }
+
 
   
 
