@@ -462,7 +462,7 @@ public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
     }
 
     try {
-        userService.updateUsername(dto.getUsername(), dto.getNewUsername());
+        productService.updateUsername(dto.getUsername(), dto.getNewUsername());
         return ResponseEntity.ok(Map.of("success", true, "mensaje", "Username actualizado"));
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
