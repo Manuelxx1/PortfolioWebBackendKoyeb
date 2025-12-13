@@ -1,3 +1,5 @@
+package com.abml.jpa.hibernate.dto;
+
 public class UsersDTO {
 
     private Long id;
