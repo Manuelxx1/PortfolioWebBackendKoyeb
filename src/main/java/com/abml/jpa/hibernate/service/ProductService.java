@@ -40,6 +40,11 @@ public void updatePassword(String usuario, String nuevaPassword) {
         Users user = userRepository.findByUsername(usuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+    // Validar que el nuevo username no esté ya en uso
+        if (userRepository.findByUsername(nuevoUsername).isPresent()) {
+            throw new RuntimeException("El nuevo username ya está en uso");
+        }
+    
         user.setUsername(nuevoUsername);
         userRepository.save(user);
   }
