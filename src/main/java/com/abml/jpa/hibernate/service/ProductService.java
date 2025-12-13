@@ -43,5 +43,12 @@ public void updatePassword(String usuario, String nuevaPassword) {
         user.setUsername(nuevoUsername);
         userRepository.save(user);
   }
+  public void updateEmail(String usuario, String nuevoEmail) {
+        Users user = userRepository.findByUsername(usuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        user.setEmail(nuevoEmail);
+        userRepository.save(user);
+  }
   
 }
