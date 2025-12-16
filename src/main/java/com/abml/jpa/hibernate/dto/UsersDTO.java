@@ -2,7 +2,7 @@ package com.abml.jpa.hibernate.dto;
 
 public class UsersDTO {
 
-    private Long id;
+    private Long id;           // referencia estable
     private String username;
     private String newUsername;  
     private String password;
