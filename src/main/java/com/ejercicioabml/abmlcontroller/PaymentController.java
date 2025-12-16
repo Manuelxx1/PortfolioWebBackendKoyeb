@@ -363,7 +363,7 @@ order.setTotal(payment.getTransactionAmount());
     }
 
 //ver orders de usuarios en session login
-    @GetMapping("/orders/byLogin/{loginUsername}")
+    @GetMapping("orders/byLogin/{idUsuario}")
 public List<Orders> getOrdersByLogin(@PathVariable Long id) {
     return orderRepository.findByUserId(id);
 }
