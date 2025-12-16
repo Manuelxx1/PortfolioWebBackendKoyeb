@@ -69,45 +69,42 @@ public class PaymentController {
             @RequestBody(required = false) CompraRequest body) {
         try {
             // 1. Buscar producto y verificar stock
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-            int quantity = (body != null && body.getQuantity() > 0) ? body.getQuantity() : 1;
+        int quantity = (body != null && body.getQuantity() > 0) ? body.getQuantity() : 1;
 
-            if (product.getStock() < quantity) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Stock insuficiente. Disponible: " + product.getStock());
-            }
+        if (product.getStock() < quantity) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Stock insuficiente. Disponible: " + product.getStock());
+        }
 
-            // 2. Buscar/Crear usuario 
-            Users usuario = null;
-            if (body != null && body.getUsuario() != null) {
-                usuario = userRepository.findByUsername(body.getUsuario()).orElse(null);
-            }
-            if (usuario == null) {
-                usuario = userRepository.findByUsername("guest")
-                        .orElseGet(() -> {
-                            Users newGuest = new Users();
-                            newGuest.setUsername("guest");
-                            newGuest.setEmail("guest@example.com");
-                            newGuest.setName("Usuario Genérico");
-                            newGuest.setPassword("guest"); 
-                            return userRepository.save(newGuest);
-                        });
-            }
+        // 2. Buscar usuario por idUsuario
+        Users usuario = null;
+        if (body != null && body.getIdUsuario() != null) {
+            usuario = userRepository.findById(body.getIdUsuario()).orElse(null);
+        }
 
-            // 3. Crear orden interna 
-            Orders order = new Orders();
-            order.setProductName(product.getName());
-            order.setLoginUsername(body.getUsuario()); // el que viene de tu login
-//order.setLoginEmail(body.getEmail()); // si lo mandás en CompraRequest
-            order.setStatus("pending");
-            order.setUser(usuario);
-            
-            // LÍNEA 118 (Aprox.) - CORRECCIÓN: Cálculo directo y seguro
-            order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
-            
-            orderRepository.save(order);
+        if (usuario == null) {
+            usuario = userRepository.findByUsername("guest")
+                    .orElseGet(() -> {
+                        Users newGuest = new Users();
+                        newGuest.setUsername("guest");
+                        newGuest.setEmail("guest@example.com");
+                        newGuest.setName("Usuario Genérico");
+                        newGuest.setPassword("guest");
+                        return userRepository.save(newGuest);
+                    });
+        }
+
+        // 3. Crear orden interna
+        Orders order = new Orders();
+        order.setProductName(product.getName());
+        order.setStatus("pending");
+        order.setUser(usuario);
+        order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+
+        orderRepository.save(order);
             
             // --- CONFIGURACIÓN DE MERCADO PAGO (VERSIÓN 2.5.0) ---
             
