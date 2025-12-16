@@ -36,8 +36,8 @@ public void updatePassword(String usuario, String nuevaPassword) {
         userRepository.save(user);
 }
 
-  public void updateUsername(String usuarioActual, String nuevoUsername) {
-    Users user = userRepository.findByUsername(usuarioActual)
+  public void updateUsername(String Long id, String nuevoUsername) {
+    Users user = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
     // Validar que no exista otro con el mismo nuevo username
