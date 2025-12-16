@@ -429,6 +429,7 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
 //sino quiero usar map debería armar un DTO de salida 
   
   return ResponseEntity.ok(Map.of(
+    "id",user.getId(),
         "mensaje", "Login exitoso",
         "usuario", user.getUsername(),
         "email", user.getEmail(),
