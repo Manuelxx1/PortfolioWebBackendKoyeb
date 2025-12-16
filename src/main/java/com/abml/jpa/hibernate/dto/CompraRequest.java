@@ -7,6 +7,7 @@ package com.abml.jpa.hibernate.dto;
 //de los datos que llegan al endpoint 
 public class CompraRequest {
     private int quantity;
+    private Long idUsuario; // <-- nuevo campo
     private String usuario;
 
     // Getters y setters
@@ -23,4 +24,7 @@ public class CompraRequest {
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
+
+    public Long getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
 }
