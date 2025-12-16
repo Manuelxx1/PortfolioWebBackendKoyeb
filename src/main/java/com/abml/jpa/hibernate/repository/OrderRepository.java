@@ -18,5 +18,5 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     List<Orders> findByUserId(Long userId);
 
     // Alternativa: si Orders tiene una relación ManyToOne con Users
-    List<Orders> findByUser(Users user);
+   // List<Orders> findByUser(Users user);
 }
