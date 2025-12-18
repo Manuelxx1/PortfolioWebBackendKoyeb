@@ -66,13 +66,13 @@ public class PaymentController {
     @PostMapping("/create/{productId}")
     public ResponseEntity<String> createPreference(
             @PathVariable Long productId,
-            @RequestBody(required = false) CompraRequest body) {
+            @RequestBody(required = false) CompraRequest compraRequestDTO) {
         try {
             // 1. Buscar producto y verificar stock
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        int quantity = (body != null && body.getQuantity() > 0) ? body.getQuantity() : 1;
+        int quantity = (compraRequestDTO != null && compraRequestDTO.getQuantity() > 0) ? compraRequestDTO.getQuantity() : 1;
 
         if (product.getStock() < quantity) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -81,9 +81,10 @@ public class PaymentController {
 
         // 2. Buscar usuario por idUsuario
         Users usuario = null;
-        if (body != null && body.getIdUsuario() != null) {
-            usuario = userRepository.findById(body.getIdUsuario()).orElse(null);
-        }
+        if (compraRequestDTO != null && compraRequestDTO.getIdUsuario() != null) {
+            usuario = userRepository.findById(compraRequestDTO.getIdUsuario()).orElse(null);
+            alert("Usuario encontrado por el userRepository" + usuario  )     
+                }
 
         if (usuario == null) {
             usuario = userRepository.findByUsername("guest")
