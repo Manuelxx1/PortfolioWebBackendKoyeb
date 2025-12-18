@@ -27,4 +27,15 @@ public class CompraRequest {
 
     public Long getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
+
+
+
+        @Override
+    public String toString() {
+        return "CompraRequest{" +
+                "quantity=" + quantity +
+                ", idUsuario'" + idUsuario + '\'' +
+                '}';
+    }
+
 }
