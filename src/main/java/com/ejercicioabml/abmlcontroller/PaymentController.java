@@ -290,8 +290,8 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
                 // Guardar datos del payer de Mercado Pago en campos auxiliares
                 if (payment.getPayer() != null) {
-                    order.setLoginUsername(payment.getPayer().getFirstName());
-                    order.setLoginEmail(payment.getPayer().getEmail());
+                    order.setMpPayerName(payment.getPayer().getFirstName());
+                    order.setMpPayerEmail(payment.getPayer().getEmail());
                 }
 
                 orderRepository.save(order);
