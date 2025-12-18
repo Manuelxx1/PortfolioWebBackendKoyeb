@@ -83,14 +83,11 @@ public class PaymentController {
         }
 
         // 2. Buscar usuario por idUsuario
-        Users usuario = null;
-        if (compraRequestDTO != null && compraRequestDTO.getIdUsuario() != null) {
-            usuario = userRepository.findById(compraRequestDTO.getIdUsuario()).orElse(null);
-            System.out.println(usuario);
-                }
+Users usuario = userRepository.findById(compraRequestDTO.getIdUsuario())
+        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        Users usuario = userRepository.findById(compraRequestDTO.getIdUsuario())
-    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+System.out.println("Usuario encontrado: " + usuario);
+
 
 
         // 3. Crear orden interna
