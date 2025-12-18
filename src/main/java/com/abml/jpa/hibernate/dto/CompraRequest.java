@@ -34,8 +34,7 @@ public class CompraRequest {
     public String toString() {
         return "CompraRequest{" +
                 "quantity=" + quantity +
-                ", idUsuario'" + idUsuario + '\'' +
+                ", idUsuario='" + idUsuario + '\'' +
                 '}';
     }
-
 }
