@@ -83,7 +83,7 @@ public class PaymentController {
         Users usuario = null;
         if (compraRequestDTO != null && compraRequestDTO.getIdUsuario() != null) {
             usuario = userRepository.findById(compraRequestDTO.getIdUsuario()).orElse(null);
-            
+            System.out.println(usuario);
                 }
 
         if (usuario == null) {
@@ -154,7 +154,7 @@ public class PaymentController {
             orderRepository.save(order);
 
             // 10. Retornar InitPoint
-            return ResponseEntity.ok(usuario + preference.getInitPoint());
+            return ResponseEntity.ok(preference.getInitPoint());
 
         } catch (Exception e) {
             log.error("Error creando preferencia para productId: " + productId, e);
