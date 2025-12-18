@@ -68,6 +68,9 @@ public class PaymentController {
             @PathVariable Long productId,
             @RequestBody(required = false) CompraRequest compraRequestDTO) {
         try {
+
+            // Mostrar lo que llega al DTO
+        System.out.println("CompraRequest recibido: " + compraRequestDTO);
             // 1. Buscar producto y verificar stock
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
