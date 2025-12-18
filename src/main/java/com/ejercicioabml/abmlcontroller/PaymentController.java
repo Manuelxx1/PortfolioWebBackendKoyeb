@@ -246,8 +246,7 @@ System.out.println("Usuario encontrado: " + usuario);
         }
     }
 
-
-    // Webhook de Mercado Pago
+// Webhook de Mercado Pago
 @PostMapping("/webhook")
 public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
     System.out.println("Payload recibido en webhook: " + payload);
@@ -281,17 +280,23 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 Orders order = orderRepository.findById(Long.parseLong(externalRef))
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-                //  IMPORTANTE: NO volver a setear order.setUser(...)
+                // ⚠️ IMPORTANTE: NO volver a setear order.setUser(...)
                 // El usuario ya quedó vinculado en create/{productId} por idUsuario
 
                 // Actualizar estado y monto
                 order.setStatus(payment.getStatus());
                 order.setTotal(payment.getTransactionAmount());
 
-                // Guardar datos del payer de Mercado Pago en campos auxiliares
+                // Guardar datos del payer de Mercado Pago
                 if (payment.getPayer() != null) {
                     order.setMpPayerName(payment.getPayer().getFirstName());
                     order.setMpPayerEmail(payment.getPayer().getEmail());
+                }
+
+                // Guardar datos del usuario logueado de tu sistema
+                if (order.getUser() != null) {
+                    order.setLoginUsername(order.getUser().getUsername());
+                    order.setLoginEmail(order.getUser().getEmail());
                 }
 
                 orderRepository.save(order);
