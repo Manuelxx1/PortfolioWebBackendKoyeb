@@ -32,9 +32,9 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    //  Este es el dato que te falta: tu usuario del login
-    private String loginUsername;  
-    private String loginEmail;     
+// Datos del payer de Mercado Pago
+    private String mpPayerName;
+    private String mpPayerEmail;
 
     //  Campo para vincular con Mercado Pago
     private String preferenceId;
