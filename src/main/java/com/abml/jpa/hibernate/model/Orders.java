@@ -32,12 +32,18 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
+// Datos auxiliares del login (para guardar info del usuario en sesión)
+    private String loginUsername;
+    private String loginEmail;
+    
 // Datos del payer de Mercado Pago
     private String mpPayerName;
     private String mpPayerEmail;
 
     //  Campo para vincular con Mercado Pago
     private String preferenceId;
+
+    
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
    //para evitar el loop de datos de json por repercusión de datos en la relación 
@@ -99,6 +105,13 @@ public class Orders {
     public String getPreferenceId() { return preferenceId; }
     public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
 
+public String getLoginUsername() { return loginUsername; }
+    public void setLoginUsername(String loginUsername) { this.loginUsername = loginUsername; }
+
+    public String getLoginEmail() { return loginEmail; }
+    public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
+
+    
 public String getMpPayerName() { return mpPayerName; }
     public void setMpPayerName(String mpPayerName ) { this.mpPayerName = mpPayerName; }
 
