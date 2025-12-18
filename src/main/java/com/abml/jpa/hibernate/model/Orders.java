@@ -99,10 +99,10 @@ public class Orders {
     public String getPreferenceId() { return preferenceId; }
     public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
 
-public String getLoginUsername() { return loginUsername; }
-    public void setLoginUsername(String loginUsername ) { this.loginUsername = loginUsername; }
+public String getMpPayerName() { return mpPayerName; }
+    public void setMpPayerName(String mpPayerName ) { this.mpPayerName = mpPayerName; }
 
-    public String getLoginEmail() { return loginEmail; }
-    public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
+    public String getMpPayerEmail() { return mpPayerEmail; }
+    public void setMpPayerEmail(String mpPayerEmail) { this.mpPayerEmail = mpPayerEmail; }
     
 }
