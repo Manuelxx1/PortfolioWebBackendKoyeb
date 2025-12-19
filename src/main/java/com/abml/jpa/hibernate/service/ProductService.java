@@ -46,7 +46,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
     }
 
     user.setUsername(nuevoUsername);
-    userRepository.save(user);
+   return userRepository.save(user);
 }
 
 
