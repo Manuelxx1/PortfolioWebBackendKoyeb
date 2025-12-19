@@ -59,7 +59,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
     }
 
         user.setEmail(nuevoEmail);
-        userRepository.save(user);
+       return userRepository.save(user);
   }
   
 }
