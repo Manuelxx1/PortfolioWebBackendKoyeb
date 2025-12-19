@@ -448,7 +448,7 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
         }
         try {
             productService.updatePassword(dto.getUsername(), dto.getPassword());
-            return ResponseEntity.ok().body(Map.of("success", true,"mensaje","SE CAMBIO LA CONTRASEÑA EXITOSAMENTE"));
+            return ResponseEntity.ok().body(Map.of("success", true,"mensajecontraseña","SE CAMBIO LA CONTRASEÑA EXITOSAMENTE"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(Map.of("success", false, "error", e.getMessage()));
@@ -464,7 +464,7 @@ public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
 
     try {
     Users updatedUser =productService.updateUsername(dto.getId(), dto.getNewUsername());
-        return ResponseEntity.ok(Map.of("success", true, "mensaje", "Username actualizado","usernameActualizado", updatedUser.getUsername()));
+        return ResponseEntity.ok(Map.of("success", true, "mensajeusername", "Username actualizado","usernameActualizado", updatedUser.getUsername()));
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                              .body(Map.of("success", false, "error", e.getMessage()));
