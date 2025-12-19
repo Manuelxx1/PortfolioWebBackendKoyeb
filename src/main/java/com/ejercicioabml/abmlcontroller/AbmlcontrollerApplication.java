@@ -464,7 +464,7 @@ public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
 
     try {
     Users updatedUser =productService.updateUsername(dto.getId(), dto.getNewUsername());
-        return ResponseEntity.ok(Map.of("success", true, "mensaje", "Username actualizado","username", updatedUser.getUsername()));
+        return ResponseEntity.ok(Map.of("success", true, "mensaje", "Username actualizado","usernameActualizado", updatedUser.getUsername()));
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                              .body(Map.of("success", false, "error", e.getMessage()));
