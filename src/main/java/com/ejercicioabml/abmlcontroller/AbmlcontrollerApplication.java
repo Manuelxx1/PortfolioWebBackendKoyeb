@@ -479,8 +479,8 @@ public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
             return ResponseEntity.badRequest().body("El email es obligatorio");
         }
         try {
-            productService.updateEmail(dto.getId(), dto.getEmail());
-            return ResponseEntity.ok().body(Map.of("success", true,"mensajemail","SE CAMBIO EL  EMAIL EXITOSAMENTE"));
+           Users updatedEmail = productService.updateEmail(dto.getId(), dto.getEmail());
+            return ResponseEntity.ok().body(Map.of("success", true,"mensajemail","SE CAMBIO EL  EMAIL EXITOSAMENTE","emailactualizado",updatedEmail.getEmail()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(Map.of("success", false, "error", e.getMessage()));
