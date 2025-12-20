@@ -1,3 +1,5 @@
+package com.ejercicioabml.abmlcontroller.config;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
