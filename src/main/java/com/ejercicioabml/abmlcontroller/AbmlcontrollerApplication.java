@@ -849,9 +849,11 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
 
 
   //Notifications mediante websocket 
+  
   @Autowired
     private SimpMessagingTemplate messagingTemplate;
-
+/* Con esto, cada vez que se llame a /notify, 
+  se enviará un mensaje a todos los clientes conectados al canal /topic/notificaciones*/
     @PostMapping("/notify")
     public void sendNotification(@RequestBody String mensaje) {
         messagingTemplate.convertAndSend("/topic/notificaciones", mensaje);
