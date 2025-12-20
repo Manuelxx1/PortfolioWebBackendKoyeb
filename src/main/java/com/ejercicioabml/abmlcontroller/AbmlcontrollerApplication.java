@@ -45,6 +45,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
+//Notifications mediante websocket stomp
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 
 
@@ -848,7 +850,7 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
     }
 
 
-  //Notifications mediante websocket 
+  //Notifications mediante websocket stomp
   
   @Autowired
     private SimpMessagingTemplate messagingTemplate;
