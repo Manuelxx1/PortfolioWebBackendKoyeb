@@ -846,4 +846,14 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
     public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
+
+
+  //Notifications mediante websocket 
+  @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @PostMapping("/notify")
+    public void sendNotification(@RequestBody String mensaje) {
+        messagingTemplate.convertAndSend("/topic/notificaciones", mensaje);
+    }
 }
