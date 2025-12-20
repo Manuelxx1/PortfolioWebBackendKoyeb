@@ -856,6 +856,7 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
   se enviará un mensaje a todos los clientes conectados al canal /topic/notificaciones*/
     @PostMapping("/notify")
     public void sendNotification(@RequestBody String mensaje) {
+        // Envía el mensaje a todos los suscritos en /topic/notificaciones
         messagingTemplate.convertAndSend("/topic/notificaciones", mensaje);
     }
 }
