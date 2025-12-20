@@ -28,7 +28,14 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
+           
+    <!-- Starter básico de Spring Boot -->
     <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+   
+           <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
@@ -37,6 +44,18 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <scope>runtime</scope>
+    </dependency>
+
+           <!-- Starter para WebSocket y STOMP messaging -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+
+    <!-- Starter para mensajería (SimpMessagingTemplate, MessageBroker, etc.) -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-messaging</artifactId>
     </dependency>
 
     <!-- MySQL connector -->
