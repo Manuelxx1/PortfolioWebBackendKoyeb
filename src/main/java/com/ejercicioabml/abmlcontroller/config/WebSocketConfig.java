@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Endpoint al que se conecta Angular
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev").withSockJS();
     }
 
     @Override
