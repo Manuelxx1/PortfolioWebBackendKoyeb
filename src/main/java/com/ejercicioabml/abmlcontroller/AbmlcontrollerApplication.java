@@ -48,7 +48,9 @@ import java.util.stream.Collectors;
 //Notifications mediante websocket stomp
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-
+//notificaciones desde Angular 
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 
 
 //luego de haber creado la table ya es posibles realizar el ABML en la base de datos usando los endpoints
@@ -851,14 +853,27 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
 
 
   //Notifications mediante websocket stomp
-  
+  /*
   @Autowired
     private SimpMessagingTemplate messagingTemplate;
 /* Con esto, cada vez que se llame a /notify, 
   se enviará un mensaje a todos los clientes conectados al canal /topic/notificaciones*/
-    @PostMapping("/notify")
+  
+  /* @PostMapping("/notify")
     public void sendNotification(@RequestBody String mensaje) {
         // Envía el mensaje a todos los suscritos en /topic/notificaciones
         messagingTemplate.convertAndSend("/topic/notificaciones", mensaje);
     }
+  */
+
+  // El cliente Angular publica en /app/notify
+  @MessageMapping("/notify") 
+  // El servidor reenvía a todos los suscritos en /topic/notificaciones 
+  @SendTo("/topic/notificaciones") 
+  public String enviar(String mensaje) { 
+    // Podés transformar el mensaje si querés, 
+    //aquí lo devolvemos tal cual
+    return mensaje; 
+  }
+  
 }
