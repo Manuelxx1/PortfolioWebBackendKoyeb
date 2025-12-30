@@ -15,7 +15,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
     "com.abml.jpa.hibernate.service",
     "com.abml.jpa.hibernate.model",
     "com.ejercicioabml.abmlcontroller",
-    "com.abml.jpa.hibernate.repository"
+    "com.abml.jpa.hibernate.repository",
+    "com.abml.jpa.hibernate.scheduler"
+    
 })
 public class AbmlApplication {
 
