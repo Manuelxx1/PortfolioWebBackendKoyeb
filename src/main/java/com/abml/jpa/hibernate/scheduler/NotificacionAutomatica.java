@@ -12,10 +12,21 @@ public class NotificacionAutomatica {
     private SimpMessagingTemplate template;
 
     // Enviar cada 10 segundos
+
     @Scheduled(fixedRate = 10000)
     public void enviarAutomatico() {
-        String mensaje = "🔔 Notificación automática desde el servidor: " + System.currentTimeMillis();
-       System.out.println("Enviando notificación automática: " + mensaje); 
-        template.convertAndSend("/topic/notificaciones", mensaje);
+        try {
+            String mensaje = "🔔 Sync: " + System.currentTimeMillis();
+            System.out.println("Intentando enviar a /topic/notificaciones...");
+            
+            // Forzamos el envío
+            template.convertAndSend("/topic/notificaciones", mensaje);
+            
+            System.out.println("¡Envío completado sin errores!");
+        } catch (Exception e) {
+            System.err.println("Error al enviar websocket: " + e.getMessage());
+        }
     }
+
 }
+
