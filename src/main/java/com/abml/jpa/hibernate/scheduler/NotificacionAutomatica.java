@@ -15,6 +15,7 @@ public class NotificacionAutomatica {
     @Scheduled(fixedRate = 10000)
     public void enviarAutomatico() {
         String mensaje = "🔔 Notificación automática desde el servidor: " + System.currentTimeMillis();
+       System.out.println("Enviando notificación automática: " + mensaje); 
         template.convertAndSend("/topic/notificaciones", mensaje);
     }
 }
