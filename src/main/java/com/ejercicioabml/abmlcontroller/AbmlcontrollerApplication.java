@@ -875,5 +875,13 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
     //aquí lo devolvemos tal cual
     return mensaje; 
   }
+
+
+  //Ejemplo de chat básico con WebSocket 
+  @MessageMapping("/chat") //  los clientes envían aquí 
+  @SendTo("/topic/mensajes") //  el servidor reenvía a todos
+  public String enviarMensaje(String mensaje) {
+    return mensaje; // lo devuelve tal cual 
+  }
   
 }
