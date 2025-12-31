@@ -13,19 +13,11 @@ public class NotificacionAutomatica {
 
     // Enviar cada 10 segundos
 
-    @Scheduled(fixedRate = 10000)
+@Scheduled(fixedRate = 10000) // 10 segundos
     public void enviarAutomatico() {
-        try {
-            String mensaje = "🔔 Sync: " + System.currentTimeMillis();
-            System.out.println("Intentando enviar a /topic/notificaciones...");
-            
-            // Forzamos el envío
-            template.convertAndSend("/topic/notificaciones", mensaje);
-            
-            System.out.println("¡Envío completado sin errores!");
-        } catch (Exception e) {
-            System.err.println("Error al enviar websocket: " + e.getMessage());
-        }
+        String mensaje = "HOLA DESDE SPRING " + System.currentTimeMillis();
+        System.out.println(">>> EJECUTANDO SCHEDULER: " + mensaje);
+        this.template.convertAndSend("/topic/notificaciones", mensaje);
     }
 
 }
