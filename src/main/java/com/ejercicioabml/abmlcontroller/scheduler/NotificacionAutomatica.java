@@ -1,4 +1,4 @@
-package com.abml.jpa.hibernate.service;
+package com.ejercicioabml.abmlcontroller.scheduler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
