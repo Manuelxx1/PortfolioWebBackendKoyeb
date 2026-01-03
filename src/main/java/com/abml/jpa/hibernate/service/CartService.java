@@ -101,7 +101,7 @@ public void decreaseFromCart(Users user, Long productId) {
   // @Scheduled(fixedRate = 10000) 
   public void enviarRecordatorios() { 
     // Carritos con items agregados hace más de 24 horas
-  //  LocalDateTime limite = LocalDateTime.now().minusHours(24);
+    LocalDateTime limite = LocalDateTime.now().minusHours(24);
    // LocalDateTime limite = LocalDateTime.now().minusMinutes(1);
     //pruebas inmediatas
     //LocalDateTime limite = LocalDateTime.now().minusSeconds(30);
