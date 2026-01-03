@@ -89,4 +89,19 @@ public void decreaseFromCart(Users user, Long productId) {
         cartRepo.deleteAll(items);
     }
 
+
+  @Autowired private SimpMessagingTemplate template;
+  // Se ejecuta cada hora 
+ // @Scheduled(fixedRate = 3600000) 
+   @Scheduled(fixedRate = 10000) 
+  public void enviarRecordatorios() { 
+    // Carritos con items agregados hace más de 24 horas
+    LocalDateTime limite = LocalDateTime.now().minusHours(24);
+    List<CartItem> abandonados = cartRepo.findAbandonedCarts(limite); 
+    for (CartItem item : abandonados) { 
+      String mensaje = "⏰ Recordatorio: aún tienes " + item.getProduct().getNombre() + " en tu carrito";
+      template.convertAndSend("/topic/notificaciones", mensaje); 
+    }
+  }
+
 }
