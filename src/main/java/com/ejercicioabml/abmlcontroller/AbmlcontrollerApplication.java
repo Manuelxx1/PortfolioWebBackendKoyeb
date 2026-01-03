@@ -786,7 +786,7 @@ public List<CartItem> getCart() {
 }
 
 
-  //@Autowired private SimpMessagingTemplate template; // inyección del WebSocket
+  @Autowired private SimpMessagingTemplate template; // inyección del WebSocket
 @PostMapping("/add")
 public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
     Users user = getTestUser();
@@ -796,7 +796,9 @@ public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
 
     cartService.addToCart(user, productId, quantity);
 
-  
+  String mensaje = "HOLA DESDE SPRING PRODUCTO AGREGADO AL CARRITO" + System.currentTimeMillis();
+        System.out.println(">>> Producto agregado al carrito: " + mensaje);
+        this.template.convertAndSend("/topic/notificaciones", mensaje);
     return ResponseEntity.ok("Producto agregado");
 }
 
