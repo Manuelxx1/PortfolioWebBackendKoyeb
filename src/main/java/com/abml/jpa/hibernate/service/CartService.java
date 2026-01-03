@@ -107,6 +107,7 @@ public void decreaseFromCart(Users user, Long productId) {
 
     List<CartItem> abandonados = cartRepo.findByAddedAtBefore(limite); 
     for (CartItem item : abandonados) { 
+      //item.getProduct().getName() llamado desde CartItem por relación entre entidad  CartItem  y product     
       String mensaje = "⏰ Recordatorio: aún tienes " + item.getQuantity() + " unidad(es) de '" + item.getProduct().getName() + "' en tu carrito";
       template.convertAndSend("/topic/notificaciones", mensaje); 
     }
