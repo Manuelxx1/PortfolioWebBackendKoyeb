@@ -34,7 +34,8 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
 
   // Busca carritos con items agregados antes de cierta fecha 
-//findByAddedAt es el campo en tabla Before es el método 
+//findByAddedAt es el campo en tabla y Before es el método 
+  //Con esto, Spring Data entiende que querés todos los CartItem cuya fecha addedAt sea anterior al parámetro limite.
   List<CartItem> findByAddedAtBefore(LocalDateTime limite);
 
 }
