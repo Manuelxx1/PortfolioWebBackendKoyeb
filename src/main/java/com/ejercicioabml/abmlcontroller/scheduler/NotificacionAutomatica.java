@@ -13,7 +13,7 @@ public class NotificacionAutomatica {
 
     // Enviar cada 10 segundos
 
-@Scheduled(fixedRate = 10000) // 10 segundos
+//@Scheduled(fixedRate = 10000) // 10 segundos
     public void enviarAutomatico() {
         String mensaje = "HOLA DESDE SPRING " + System.currentTimeMillis();
         System.out.println(">>> EJECUTANDO SCHEDULER: " + mensaje);
