@@ -97,7 +97,7 @@ public void decreaseFromCart(Users user, Long productId) {
   public void enviarRecordatorios() { 
     // Carritos con items agregados hace más de 24 horas
     LocalDateTime limite = LocalDateTime.now().minusHours(24);
-    List<CartItem> abandonados = cartRepo.findAbandonedCarts(limite); 
+    List<CartItem> abandonados = cartRepo.findByAddedAtBefore(limite); 
     for (CartItem item : abandonados) { 
       String mensaje = "⏰ Recordatorio: aún tienes " + item.getProduct().getName() + " en tu carrito";
       template.convertAndSend("/topic/notificaciones", mensaje); 
