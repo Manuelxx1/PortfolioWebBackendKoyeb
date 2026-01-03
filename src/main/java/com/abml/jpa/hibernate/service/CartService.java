@@ -5,7 +5,9 @@ import com.abml.jpa.hibernate.repository.CartItemRepository;
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.model.Product;
-
+//Notifications mediante websocket stomp
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+//Enviar mensajes programados
 import org.springframework.scheduling.annotation.Scheduled;
 
 import org.springframework.stereotype.Service;
