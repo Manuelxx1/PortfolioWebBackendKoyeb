@@ -99,7 +99,7 @@ public void decreaseFromCart(Users user, Long productId) {
     LocalDateTime limite = LocalDateTime.now().minusHours(24);
     List<CartItem> abandonados = cartRepo.findAbandonedCarts(limite); 
     for (CartItem item : abandonados) { 
-      String mensaje = "⏰ Recordatorio: aún tienes " + item.getProduct().getNombre() + " en tu carrito";
+      String mensaje = "⏰ Recordatorio: aún tienes " + item.getProduct().getName() + " en tu carrito";
       template.convertAndSend("/topic/notificaciones", mensaje); 
     }
   }
