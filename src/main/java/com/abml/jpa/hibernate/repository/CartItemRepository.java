@@ -31,4 +31,9 @@ import org.springframework.stereotype.Repository;
 @Component
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
   List<CartItem> findByUser(Users user);
+
+
+  // Busca carritos con items agregados antes de cierta fecha 
+  @Query("SELECT c FROM CartItem c WHERE c.addedAt < :limite")
+  List<CartItem> findAbandonedCarts(@Param("limite") LocalDateTime limite);
 }
