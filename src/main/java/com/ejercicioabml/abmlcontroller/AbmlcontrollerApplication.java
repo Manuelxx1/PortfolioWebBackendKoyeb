@@ -786,7 +786,7 @@ public List<CartItem> getCart() {
 }
 
 
-  @Autowired private SimpMessagingTemplate template; // 👈 inyección del WebSocket
+  //@Autowired private SimpMessagingTemplate template; // inyección del WebSocket
 @PostMapping("/add")
 public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
     Users user = getTestUser();
@@ -796,9 +796,7 @@ public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
 
     cartService.addToCart(user, productId, quantity);
 
-  // aquí enviamos la notificación por WebSocket
-  String mensaje = "🛒 " + user.getUsername() + " agregó producto " + productId + " (x" + quantity + ")"; 
-  template.convertAndSend("/topic/carrito", mensaje);
+  
     return ResponseEntity.ok("Producto agregado");
 }
 
