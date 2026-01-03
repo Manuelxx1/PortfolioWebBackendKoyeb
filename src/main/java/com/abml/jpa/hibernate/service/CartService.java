@@ -97,11 +97,12 @@ public void decreaseFromCart(Users user, Long productId) {
   @Autowired private SimpMessagingTemplate template;
   // Se ejecuta cada hora 
  // @Scheduled(fixedRate = 3600000) 
-   @Scheduled(fixedRate = 10000) 
+  //se ejecuta cada 10 segundos para probar
+  // @Scheduled(fixedRate = 10000) 
   public void enviarRecordatorios() { 
     // Carritos con items agregados hace más de 24 horas
   //  LocalDateTime limite = LocalDateTime.now().minusHours(24);
-    LocalDateTime limite = LocalDateTime.now().minusMinutes(1);
+   // LocalDateTime limite = LocalDateTime.now().minusMinutes(1);
     //pruebas inmediatas
     //LocalDateTime limite = LocalDateTime.now().minusSeconds(30);
 
