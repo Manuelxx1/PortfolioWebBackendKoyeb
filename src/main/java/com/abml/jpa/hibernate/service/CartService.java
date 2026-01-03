@@ -6,6 +6,8 @@ import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.model.Product;
 
+import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
