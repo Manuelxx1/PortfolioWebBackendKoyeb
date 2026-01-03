@@ -860,7 +860,7 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
 
   //Notifications mediante websocket stomp
   // El cliente Angular publica en /app/notify
-  @MessageMapping("/notify") 
+ /* @MessageMapping("/notify") 
   // El servidor reenvía a todos los suscritos en /topic/notificaciones 
   @SendTo("/topic/notificaciones") 
   public String enviar(String mensaje) { 
@@ -869,7 +869,7 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
     return mensaje; 
   }
 
-
+*/
   //Ejemplo de chat básico con WebSocket 
   @MessageMapping("/chat") //  los clientes envían aquí 
   @SendTo("/topic/mensajes") //  el servidor reenvía a todos
