@@ -424,7 +424,7 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto,HttpSession session ) {
 //usuario para el api/cart y /add
   //se usa session para mantener el dato en memoria 
   //y usarlo fuera del loginsinjwteshop 
-Users user = userOpt.get(); 
+
   session.setAttribute("user", user); 
 
   //LoginDTO es dolo para obtener datos de entrada al endpoint 
