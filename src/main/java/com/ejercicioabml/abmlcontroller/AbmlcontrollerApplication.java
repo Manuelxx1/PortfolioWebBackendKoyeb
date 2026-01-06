@@ -408,7 +408,7 @@ public ResponseEntity<?> register(@RequestBody UserDTO dto) {
 
   //login para eshop
 @PostMapping("/loginsinjwteshop")
-public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
+public ResponseEntity<?> login(@RequestBody LoginDTO dto,HttpSession session ) {
     Optional<Users> userOpt = userRepository.findByUsername(dto.getUsername());
     if (userOpt.isEmpty()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -420,8 +420,11 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("error", "Nombre o contraseña incorrectos"));
     }
-
-
+//usuario para el api/cart y /add
+  //se usa session para mantener el dato en memoria 
+  //y usarlo fuera del loginsinjwteshop 
+Users user = userOpt.get(); 
+  session.setAttribute("user", user); 
 
   //LoginDTO es dolo para obtener datos de entrada al endpoint 
   // acá se retorna la respuesta al frontend 
@@ -780,16 +783,23 @@ private Users getTestUser() {
 
 
   @GetMapping("/api/cart")
-public List<CartItem> getCart() {
-    Users user = getTestUser(); //  siempre devuelve el "guest"
+public List<CartItem> getCart(HttpSession session) {
+    Users user = (Users) session.getAttribute("user");
+    if (user == null) {
+        throw new RuntimeException("No hay usuario logueado");
+    }
     return cartService.getCart(user);
 }
 
 
+
   @Autowired private SimpMessagingTemplate template; // inyección del WebSocket
 @PostMapping("/add")
-public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
-    Users user = getTestUser();
+public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body, HttpSession session) {
+    Users user = (Users) session.getAttribute("user"); 
+  if (user == null) { 
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No logueado");
+   }
 
     Long productId = Long.valueOf(body.get("productId").toString());
     int quantity = Integer.parseInt(body.get("quantity").toString());
