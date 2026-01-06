@@ -796,8 +796,8 @@ public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
 
     cartService.addToCart(user, productId, quantity);
 
-  String mensaje = "HOLA DESDE SPRING PRODUCTO AGREGADO AL CARRITO" + System.currentTimeMillis();
-        System.out.println(">>> Producto agregado al carrito: " + mensaje);
+  String mensaje = "HOLA DESDE SPRING" + quantity + "PRODUCTOS AGREGADO AL CARRITO" + System.currentTimeMillis();
+        System.out.println(mensaje);
         this.template.convertAndSend("/topic/notificaciones", mensaje);
     return ResponseEntity.ok("Producto agregado");
 }
