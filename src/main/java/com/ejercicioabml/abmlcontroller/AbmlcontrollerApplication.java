@@ -781,9 +781,19 @@ private Users getTestUser() {
 
 
   @GetMapping("/api/cart")
-public List<CartItem> getCart(@RequestParam Long idUsuario) {
-  Users user = userRepository.findById(idUsuario) .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-  return cartService.getCart(user);
+public List<Map<String, Object>> getCart(@RequestParam Long idUsuario) {
+    Users user = userRepository.findById(idUsuario)
+        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    return cartService.getCart(user).stream().map(item -> Map.of(
+        "productId", item.getProduct().getId(),
+        "productName", item.getProduct().getName(),
+        "price", item.getProduct().getPrice(),
+        "quantity", item.getQuantity(),
+        "addedAt", item.getAddedAt()
+    )).toList();
+}
+
 }
 
 
