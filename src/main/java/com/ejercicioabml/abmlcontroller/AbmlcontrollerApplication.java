@@ -786,16 +786,13 @@ public List<Map<String, Object>> getCart(@RequestParam Long idUsuario) {
         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
     return cartService.getCart(user).stream().map(item -> Map.of(
-        "productId", item.getProduct().getId(),
-        "productName", item.getProduct().getName(),
-        "price", item.getProduct().getPrice(),
-        "quantity", item.getQuantity(),
-        "addedAt", item.getAddedAt()
+        "productId", (Object) item.getProduct().getId(),
+        "productName", (Object) item.getProduct().getName(),
+        "price", (Object) item.getProduct().getPrice(),
+        "quantity", (Object) item.getQuantity(),
+        "addedAt", (Object) item.getAddedAt()
     )).toList();
 }
-
-
-
 
 
   @Autowired private SimpMessagingTemplate template; // inyección del WebSocket
