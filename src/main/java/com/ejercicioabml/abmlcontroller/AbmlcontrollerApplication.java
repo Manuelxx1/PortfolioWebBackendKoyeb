@@ -781,18 +781,13 @@ private Users getTestUser() {
 
 
   @GetMapping("/api/cart")
-public List<Map<String, Object>> getCart(@RequestParam Long idUsuario) {
+public List<CartItem> getCart(@RequestParam Long idUsuario) {
     Users user = userRepository.findById(idUsuario)
         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-    return cartService.getCart(user).stream().map(item -> Map.of(
-        "productId", (Object) item.getProduct().getId(),
-        "productName", (Object) item.getProduct().getName(),
-        "price", (Object) item.getProduct().getPrice(),
-        "quantity", (Object) item.getQuantity(),
-        "addedAt", (Object) item.getAddedAt()
-    )).toList();
+    return cartService.getCart(user);
 }
+
 
 
   @Autowired private SimpMessagingTemplate template; // inyección del WebSocket
