@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 @Component
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
   List<CartItem> findByUser(Users user);
+  List<CartItem> findById(Users user);
 
 
   // Busca carritos con items agregados antes de cierta fecha 
