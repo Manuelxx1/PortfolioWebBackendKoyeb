@@ -23,7 +23,8 @@ public class CartService {
   @Autowired private ProductRepository productRepo;
 
   public List<CartItem> getCart(Users user) {
-    return cartRepo.findByUser(user);
+    //return cartRepo.findByUser(user);
+    return cartRepo.findById(user);
   }
 
   //metod que agrega el producto que nos retorno
