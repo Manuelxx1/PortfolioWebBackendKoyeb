@@ -101,7 +101,8 @@ public void decreaseFromCart(Users user, Long productId) {
   //para recordarle al usuario que tiene productos en su carrito
 // @Scheduled(fixedRate = 3600000) 
   //se ejecuta cada 10 segundos para probar
-  @Scheduled(fixedRate = 10000) 
+ // @Scheduled(fixedRate = 10000) 
+  @Scheduled(fixedRate = 60000)
   public void enviarRecordatorios() { 
     // Carritos con items agregados hace más de 24 horas
    // LocalDateTime limite = LocalDateTime.now().minusHours(24);
