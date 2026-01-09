@@ -20,8 +20,8 @@ import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.payment.Payment; 
-import com.mercadopago.resources.preference.PreferenceBackUrlsRequest;
-
+import com.mercadopago.resources.preference.PreferenceBackUrlsResponse; // Opcional para lectura
+import com.mercadopago.client.preference.PreferenceBackUrlsRequest;    // <--- ESTA ES LA IMPORTANTE
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
