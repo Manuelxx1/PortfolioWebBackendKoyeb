@@ -123,13 +123,12 @@ PreferenceRequest preferenceRequest = PreferenceRequest.builder()
     .payer(payerRequest)
     .externalReference(order.getId().toString())
     .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
-    .backUrls(PreferenceBackUrlsRequest.builder()
-        .success("https://tusitio.com/compra-exitosa")
-        .failure("https://tusitio.com/compra-fallida")
-        .pending("https://tusitio.com/compra-pendiente")
-        .build()
-    )
-    .autoReturn("approved") // vuelve automáticamente si el pago se aprueba
+    .backUrls(Map.of(
+        "success", "https://tusitio.com/compra-exitosa",
+        "failure", "https://tusitio.com/compra-fallida",
+        "pending", "https://tusitio.com/compra-pendiente"
+    ))
+    .autoReturn("approved")
     .build();
 
 
