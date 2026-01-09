@@ -20,7 +20,7 @@ import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.payment.Payment; 
-import com.mercadopago.resources.preference.PreferenceBackUrlsResponse; // Opcional para lectura
+
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;    // <--- ESTA ES LA IMPORTANTE
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,16 +118,20 @@ System.out.println("Usuario encontrado: " + usuario);
                 .build();
 
             // 6. Crear la Preference Request usando el Builder
+// 1. Crear el objeto de Back URLs por separado
+PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+    .success("https://tusitio.com/compra-exitosa")
+    .failure("https://tusitio.com/compra-fallida")
+    .pending("https://tusitio.com/compra-pendiente")
+    .build();
+
+// 2. Usarlo en la PreferenceRequest
 PreferenceRequest preferenceRequest = PreferenceRequest.builder()
     .items(Collections.singletonList(itemRequest))
     .payer(payerRequest)
     .externalReference(order.getId().toString())
     .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
-    .backUrls(Map.of(
-        "success", "https://tusitio.com/compra-exitosa",
-        "failure", "https://tusitio.com/compra-fallida",
-        "pending", "https://tusitio.com/compra-pendiente"
-    ))
+    .backUrls(backUrls) // <-- Aquí pasas el objeto ya construido
     .autoReturn("approved")
     .build();
 
