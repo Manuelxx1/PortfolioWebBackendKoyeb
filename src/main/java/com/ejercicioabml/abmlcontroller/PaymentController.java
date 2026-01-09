@@ -116,12 +116,20 @@ System.out.println("Usuario encontrado: " + usuario);
                 .build();
 
             // 6. Crear la Preference Request usando el Builder
-            PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                .items(Collections.singletonList(itemRequest))
-                .payer(payerRequest)
-                .externalReference(order.getId().toString())
-                .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
-                .build();
+PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+    .items(Collections.singletonList(itemRequest))
+    .payer(payerRequest)
+    .externalReference(order.getId().toString())
+    .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
+    .backUrls(PreferenceBackUrlsRequest.builder()
+        .success("https://tusitio.com/compra-exitosa")
+        .failure("https://tusitio.com/compra-fallida")
+        .pending("https://tusitio.com/compra-pendiente")
+        .build()
+    )
+    .autoReturn("approved") // vuelve automáticamente si el pago se aprueba
+    .build();
+
 
             // 7. Crear la preferencia usando el Cliente
             Preference preference = preferenceClient.create(preferenceRequest);
