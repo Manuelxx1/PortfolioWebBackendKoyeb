@@ -16,6 +16,7 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
 //ver orders de usuarios en session login
     //@GetMapping("orders/byLogin/{idUsuario}")
     List<Orders> findByUserId(Long userId);
+    Optional<Orders> findByPreferenceId(String preferenceId);
 
     // Alternativa: si Orders tiene una relación ManyToOne con Users
    // List<Orders> findByUser(Users user);
