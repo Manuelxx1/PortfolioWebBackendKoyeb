@@ -25,6 +25,10 @@ public class ProductService {
       .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
   }
 
+
+  public Orders findByPreferenceId(String preferenceId) { 
+    return productRepo.findByPreferenceId(preferenceId).orElse(null); 
+  }
  
   @Autowired
     private PasswordEncoder passwordEncoder;
