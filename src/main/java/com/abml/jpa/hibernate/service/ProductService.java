@@ -26,9 +26,7 @@ public class ProductService {
   }
 
 
-  public Orders findByPreferenceId(String preferenceId) { 
-    return productRepo.findByPreferenceId(preferenceId).orElse(null); 
-  }
+  
  
   @Autowired
     private PasswordEncoder passwordEncoder;
