@@ -11,7 +11,8 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     // Buscar orden por preferenceId
     Optional<Orders> findByPreferenceId(String preferenceId);
     List<Orders> findByLoginUsername(String loginUsername);
-
+// NUEVO: buscar orders por externalReference para compra  exitosa 
+    Optional<Orders> findByExternalReference(String externalReference);
 
 //ver orders de usuarios en session login
     //@GetMapping("orders/byLogin/{idUsuario}")
