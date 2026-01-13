@@ -99,7 +99,10 @@ System.out.println("Usuario encontrado: " + usuario);
         order.setUser(usuario);
         order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
 
-        orderRepository.save(order);
+        // Primero guardamos para que tenga un id 
+            orderRepository.save(order); // Ahora seteamos el campo  externalReference con ese id 
+            order.setExternalReference(order.getId().toString()); 
+            orderRepository.save(order);
             
             // --- CONFIGURACIÓN DE MERCADO PAGO (VERSIÓN 2.5.0) ---
             
@@ -129,7 +132,7 @@ PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
 PreferenceRequest preferenceRequest = PreferenceRequest.builder()
     .items(Collections.singletonList(itemRequest))
     .payer(payerRequest)
-    .externalReference(order.getId().toString())
+    .externalReference(order.getExternalReference()) // ahora usa el valor guardado
     .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
     .backUrls(backUrls) // <-- Aquí pasas el objeto ya construido
     .autoReturn("approved")
