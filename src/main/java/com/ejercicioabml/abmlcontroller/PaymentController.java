@@ -100,7 +100,8 @@ System.out.println("Usuario encontrado: " + usuario);
         order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
 
         // Primero guardamos para que tenga un id 
-            orderRepository.save(order); // Ahora seteamos el campo  externalReference con ese id 
+            orderRepository.save(order); 
+            // Ahora seteamos el campo  externalReference con ese id 
             order.setExternalReference(order.getId().toString()); 
             orderRepository.save(order);
             
