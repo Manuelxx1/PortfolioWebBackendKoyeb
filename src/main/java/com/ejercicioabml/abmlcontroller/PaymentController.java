@@ -124,9 +124,9 @@ System.out.println("Usuario encontrado: " + usuario);
             // 6. Crear la Preference Request usando el Builder
 // 1. Crear el objeto de Back URLs por separado
 PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-    .success("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/compra-exitosa")
-    .failure("https://tusitio.com/compra-fallida")
-    .pending("https://tusitio.com/compra-pendiente")
+    .success("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
+    .failure("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
+    .pending("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
     .build();
 
 // 2. Usarlo en la PreferenceRequest
