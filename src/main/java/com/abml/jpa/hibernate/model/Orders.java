@@ -42,7 +42,7 @@ public class Orders {
 
     //  Campo para vincular con Mercado Pago
     private String preferenceId;
-
+    private String externalReference; // <-- NUEVO campo para compra exitosa 
     
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -105,6 +105,13 @@ public class Orders {
     public String getPreferenceId() { return preferenceId; }
     public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
 
+public String getExternalReference() { 
+    return externalReference; 
+}
+    public void setExternalReference(String externalReference) {
+        this.externalReference = externalReference;
+    }
+    
 public String getLoginUsername() { return loginUsername; }
     public void setLoginUsername(String loginUsername) { this.loginUsername = loginUsername; }
 
