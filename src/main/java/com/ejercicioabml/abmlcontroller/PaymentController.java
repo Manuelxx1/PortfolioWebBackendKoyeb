@@ -357,7 +357,7 @@ public List<Orders> getOrdersByLogin(@PathVariable("idUsuario") Long idUsuario) 
 
     //busqyeda de la orden de la compra exitosa
 //usando el preferenceId 
-    @GetMapping("/orders/compraexitosa/{externalReference}")
+    @GetMapping("/orders/estado/{externalReference}")
 public ResponseEntity<Orders> getOrderByExternalReference(@PathVariable String externalReference) {
     return orderRepository.findByExternalReference(externalReference)
             .map(ResponseEntity::ok)
