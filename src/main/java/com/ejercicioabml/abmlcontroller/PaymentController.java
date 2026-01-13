@@ -353,12 +353,13 @@ public List<Orders> getOrdersByLogin(@PathVariable("idUsuario") Long idUsuario) 
 
     //busqyeda de la orden de la compra exitosa
 //usando el preferenceId 
-    @GetMapping("/orders/compraexitosa/{preferenceId}")
-public ResponseEntity<Orders> getOrderCompraExitosa(@PathVariable String preferenceId) {
-    return orderRepository.findByPreferenceId(preferenceId)
+    @GetMapping("/orders/compraexitosa/{externalReference}")
+public ResponseEntity<Orders> getOrderByExternalReference(@PathVariable String externalReference) {
+    return orderRepository.findByExternalReference(externalReference)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
 }
+
 
 
         }
