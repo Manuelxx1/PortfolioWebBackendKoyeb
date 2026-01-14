@@ -6,6 +6,7 @@ import com.abml.jpa.hibernate.model.OrderItems;
 import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.dto.CartItemDto;
 import com.abml.jpa.hibernate.dto.CompraRequest;
+import com.abml.jpa.hibernate.service.EmailService;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.repository.OrderRepository;
 import com.abml.jpa.hibernate.repository.OrderItemsRepository;
@@ -36,6 +37,7 @@ import java.util.Optional;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 @RestController
 @RequestMapping("/api/payments")
@@ -336,7 +338,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 }
 */
 
-    
+    @Autowired private EmailService emailService;
     // Webhook de Mercado Pago usando DTO
 @PostMapping("/webhook")
 public ResponseEntity<String> webhook(@RequestBody PagoDTO pago) {
@@ -344,8 +346,11 @@ public ResponseEntity<String> webhook(@RequestBody PagoDTO pago) {
         System.out.println("Webhook recibido: " + pago);
 
         // Accedés directo a los campos del JSON
+        // Extraer datos del pago
         String estado = pago.getStatus();
         String externalRef = pago.getExternalReference();
+        String producto = pago.getProductName(); 
+        String destinatario = pago.getUser().getEmail();
         Double monto = pago.getAmount();
 
         System.out.println("Estado: " + estado);
@@ -378,6 +383,8 @@ public ResponseEntity<String> webhook(@RequestBody PagoDTO pago) {
         }
 
         orderRepository.save(order);
+        //  Notificación por email 
+        emailService.enviarNotificacion(destinatario, estado, producto);
 
         System.out.println("Orden actualizada en DB: " + order);
 
