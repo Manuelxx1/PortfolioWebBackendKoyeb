@@ -95,7 +95,7 @@ System.out.println("Usuario encontrado: " + usuario);
         // 3. Crear orden interna
         Orders order = new Orders();
         order.setProductName(product.getName());
-        order.setStatus("pending");
+        order.setStatus("rejected");
         order.setUser(usuario);
         order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
 
