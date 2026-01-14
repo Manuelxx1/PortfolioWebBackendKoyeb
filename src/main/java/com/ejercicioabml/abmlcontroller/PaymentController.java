@@ -136,7 +136,6 @@ PreferenceRequest preferenceRequest = PreferenceRequest.builder()
     .externalReference(order.getExternalReference()) // ahora usa el valor guardado
     .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
     .backUrls(backUrls) // <-- Aquí pasas el objeto ya construido
-    .returnUrl("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
     .autoReturn("all")
     .build();
 
