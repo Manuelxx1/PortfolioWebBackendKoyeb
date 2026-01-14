@@ -1,0 +1,154 @@
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class PagoDTO {
+    private Long id;
+    private UserDTO user;
+    private String loginUsername;
+    private String loginEmail;
+    private String mpPayerName;
+    private String mpPayerEmail;
+    private String preferenceId;
+    private String externalReference;
+    private List<ItemDTO> items;
+    private Double total;
+    private Double amount;
+    private String status;
+    private String productName;
+    private LocalDateTime createdAt;
+
+    // Getters y Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public UserDTO getUser() { return user; }
+    public void setUser(UserDTO user) { this.user = user; }
+
+    public String getLoginUsername() { return loginUsername; }
+    public void setLoginUsername(String loginUsername) { this.loginUsername = loginUsername; }
+
+    public String getLoginEmail() { return loginEmail; }
+    public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
+
+    public String getMpPayerName() { return mpPayerName; }
+    public void setMpPayerName(String mpPayerName) { this.mpPayerName = mpPayerName; }
+
+    public String getMpPayerEmail() { return mpPayerEmail; }
+    public void setMpPayerEmail(String mpPayerEmail) { this.mpPayerEmail = mpPayerEmail; }
+
+    public String getPreferenceId() { return preferenceId; }
+    public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
+
+    public String getExternalReference() { return externalReference; }
+    public void setExternalReference(String externalReference) { this.externalReference = externalReference; }
+
+    public List<ItemDTO> getItems() { return items; }
+    public void setItems(List<ItemDTO> items) { this.items = items; }
+
+    public Double getTotal() { return total; }
+    public void setTotal(Double total) { this.total = total; }
+
+    public Double getAmount() { return amount; }
+    public void setAmount(Double amount) { this.amount = amount; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    // ------------------ UserDTO ------------------
+    public static class UserDTO {
+        private Long id;
+        private String username;
+        private String email;
+        private Long mpUserId;
+        private String name;
+        private LocalDateTime createdAt;
+
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+
+        public String getUsername() { return username; }
+        public void setUsername(String username) { this.username = username; }
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+
+        public Long getMpUserId() { return mpUserId; }
+        public void setMpUserId(Long mpUserId) { this.mpUserId = mpUserId; }
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        public LocalDateTime getCreatedAt() { return createdAt; }
+        public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    }
+
+    // ------------------ ItemDTO ------------------
+    public static class ItemDTO {
+        private Long id;
+        private ProductDTO product;
+        private Integer quantity;
+        private Double price;
+        private Double amount;
+        private String productName;
+
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+
+        public ProductDTO getProduct() { return product; }
+        public void setProduct(ProductDTO product) { this.product = product; }
+
+        public Integer getQuantity() { return quantity; }
+        public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+        public Double getPrice() { return price; }
+        public void setPrice(Double price) { this.price = price; }
+
+        public Double getAmount() { return amount; }
+        public void setAmount(Double amount) { this.amount = amount; }
+
+        public String getProductName() { return productName; }
+        public void setProductName(String productName) { this.productName = productName; }
+    }
+
+    // ------------------ ProductDTO ------------------
+    public static class ProductDTO {
+        private Long id;
+        private String name;
+        private String description;
+        private Double price;
+        private Integer stock;
+        private String imageUrl;
+        private String category;
+        private LocalDateTime createdAt;
+
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+
+        public Double getPrice() { return price; }
+        public void setPrice(Double price) { this.price = price; }
+
+        public Integer getStock() { return stock; }
+        public void setStock(Integer stock) { this.stock = stock; }
+
+        public String getImageUrl() { return imageUrl; }
+        public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+        public String getCategory() { return category; }
+        public void setCategory(String category) { this.category = category; }
+
+        public LocalDateTime getCreatedAt() { return createdAt; }
+        public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    }
+}
