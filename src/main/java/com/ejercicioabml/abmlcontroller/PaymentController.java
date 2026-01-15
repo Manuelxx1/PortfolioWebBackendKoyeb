@@ -343,8 +343,9 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
     // Webhook de Mercado Pago usando DTO 
     @PostMapping("/webhook") 
     public ResponseEntity<String> webhook(@RequestBody PagoDTO pago) { 
-        try { S
-            ystem.out.println("Webhook recibido: " + pago); 
+        try 
+            { 
+            System.out.println("Webhook recibido: " + pago); 
              // Extraer datos del pago 
              String estado = pago.getStatus(); 
              String externalRef = pago.getExternalReference(); 
