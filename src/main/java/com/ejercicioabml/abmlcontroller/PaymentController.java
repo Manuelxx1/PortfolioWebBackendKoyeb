@@ -352,7 +352,7 @@ public ResponseEntity<String> webhook(@RequestBody PagoDTO pago) {
         String externalRef = pago.getExternalReference();
         String producto = pago.getProductName(); 
         String destinatario = pago.getUser().getEmail();
-        Double monto = pago.getAmount();
+        BigDecimal monto = pago.getAmount();
 
         System.out.println("Estado: " + estado);
         System.out.println("External Reference: " + externalRef);
