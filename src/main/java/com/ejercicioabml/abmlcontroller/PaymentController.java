@@ -6,6 +6,7 @@ import com.abml.jpa.hibernate.model.OrderItems;
 import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.dto.CartItemDto;
 import com.abml.jpa.hibernate.dto.CompraRequest;
+import com.abml.jpa.hibernate.dto.PagoDTO;
 import com.abml.jpa.hibernate.service.EmailService;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.repository.OrderRepository;
