@@ -6,8 +6,11 @@ import java.math.BigDecimal;
 public class PagoDTO {
     private Long id;
     private UserDTO user;
-    private String loginUsername;
-    private String loginEmail;
+   // los datos de loginUsername y loginEmail
+    //no vienen en el webhook de mp
+    //por eso no están aquí 
+    //esos datos se toman desde order.getUser()
+    //porque es un dato interno del sistema eshop   
     private String mpPayerName;
     private String mpPayerEmail;
     private String preferenceId;
