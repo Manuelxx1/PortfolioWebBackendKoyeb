@@ -339,63 +339,54 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 }
 */
 
-    @Autowired private EmailService emailService;
-    // Webhook de Mercado Pago usando DTO
-@PostMapping("/webhook")
-public ResponseEntity<String> webhook(@RequestBody PagoDTO pago) {
-    try {
-        System.out.println("Webhook recibido: " + pago);
-
-        // Accedés directo a los campos del JSON
-        // Extraer datos del pago
-        String estado = pago.getStatus();
-        String externalRef = pago.getExternalReference();
-        String producto = pago.getProductName(); 
-        String destinatario = pago.getUser().getEmail();
-        BigDecimal monto = pago.getAmount();
-
-        System.out.println("Estado: " + estado);
-        System.out.println("External Reference: " + externalRef);
-        System.out.println("Monto: " + monto);
-
-        if (externalRef == null) {
-            System.err.println("No se encontró external_reference en el pago");
-            return ResponseEntity.ok("Webhook recibido pero sin external_reference");
-        }
-
-        // Buscar la orden en tu DB
-        Orders order = orderRepository.findById(Long.parseLong(externalRef))
-                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
-
-        // Actualizar estado y monto
-        order.setStatus(estado);
-        order.setTotal(monto);
-
-        // Guardar datos del payer de Mercado Pago
-        if (pago.getMpPayerName() != null) {
-            order.setMpPayerName(pago.getMpPayerName());
-            order.setMpPayerEmail(pago.getMpPayerEmail());
-        }
-
-        // Guardar datos del usuario logueado de tu sistema
-        if (order.getUser() != null) {
-            order.setLoginUsername(order.getUser().getUsername());
-            order.setLoginEmail(order.getUser().getEmail());
-        }
-
-        orderRepository.save(order);
-        //  Notificación por email 
-        emailService.enviarNotificacion(destinatario, estado, producto);
-
-        System.out.println("Orden actualizada en DB: " + order);
-
-        return ResponseEntity.ok("Webhook procesado");
-
-    } catch (Exception e) {
-        System.err.println("Error procesando webhook: " + e.getMessage());
-        return ResponseEntity.ok("Webhook recibido pero con error");
+@Autowired private EmailService emailService; 
+    // Webhook de Mercado Pago usando DTO 
+    @PostMapping("/webhook") 
+    public ResponseEntity<String> webhook(@RequestBody PagoDTO pago) { 
+        try { S
+            ystem.out.println("Webhook recibido: " + pago); 
+             // Extraer datos del pago 
+             String estado = pago.getStatus(); 
+             String externalRef = pago.getExternalReference(); 
+             String producto = pago.getProductName(); 
+             BigDecimal monto = pago.getAmount();
+             System.out.println("Estado: " + estado);
+             System.out.println("External Reference: " + externalRef);
+             System.out.println("Monto: " + monto);
+             if (externalRef == null) {
+                 System.err.println("No se encontró external_reference en el pago"); 
+                 return ResponseEntity.ok("Webhook recibido pero sin external_reference");
+             } 
+             // Buscar la orden en tu DB Orders 
+             order = orderRepository.findById(Long.parseLong(externalRef)) .orElseThrow(() -> new RuntimeException("Orden no encontrada")); 
+             // Actualizar estado y monto
+             order.setStatus(estado);
+             order.setTotal(monto); 
+             // Guardar datos del payer de Mercado Pago 
+             if (pago.getMpPayerName() != null) {
+                 order.setMpPayerName(pago.getMpPayerName());
+                 order.setMpPayerEmail(pago.getMpPayerEmail()); 
+             } 
+             // Guardar datos del usuario logueado de tu sistema
+             String destinatario = null; 
+             if (order.getUser() != null) { 
+                 order.setLoginUsername(order.getUser().getUsername());
+                 order.setLoginEmail(order.getUser().getEmail()); 
+                 destinatario = order.getUser().getEmail(); // usar este para el envío del email 
+             } 
+             orderRepository.save(order); 
+             // Notificación por email 
+             if (destinatario != null) { 
+                 emailService.enviarNotificacion(destinatario, estado, producto); 
+             } 
+             System.out.println("Orden actualizada en DB y notificación enviada: " + order); 
+             return ResponseEntity.ok("Webhook procesado"); 
+            } 
+        catch (Exception e) { 
+            System.err.println("Error procesando webhook: " + e.getMessage()); 
+            return ResponseEntity.ok("Webhook recibido pero con error"); 
+        } 
     }
-}
 
     // Ver los registros de pedidos (orders) en la base de datos
     @GetMapping("/orders")
