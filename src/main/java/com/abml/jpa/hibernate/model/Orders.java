@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+
 
 // Para romper ciclos en JSON
 import com.fasterxml.jackson.annotation.JsonManagedReference;
