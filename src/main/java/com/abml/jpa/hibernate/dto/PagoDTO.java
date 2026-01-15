@@ -12,8 +12,10 @@ public class PagoDTO {
     private String preferenceId;
     private String externalReference;
     private List<ItemDTO> items;
-    private Double total;
-    private Double amount;
+    private BigDecimal total;
+
+    private BigDecimal amount;
+
     private String status;
     private String productName;
     private LocalDateTime createdAt;
@@ -46,11 +48,11 @@ public class PagoDTO {
     public List<ItemDTO> getItems() { return items; }
     public void setItems(List<ItemDTO> items) { this.items = items; }
 
-    public Double getTotal() { return total; }
-    public void setTotal(Double total) { this.total = total; }
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
