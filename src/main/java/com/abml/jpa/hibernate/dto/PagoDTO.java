@@ -1,6 +1,7 @@
 package com.abml.jpa.hibernate.dto;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.math.BigDecimal;
 
 public class PagoDTO {
     private Long id;
