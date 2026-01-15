@@ -31,12 +31,9 @@ public class PagoDTO {
     public UserDTO getUser() { return user; }
     public void setUser(UserDTO user) { this.user = user; }
 
-    public String getLoginUsername() { return loginUsername; }
-    public void setLoginUsername(String loginUsername) { this.loginUsername = loginUsername; }
+    
 
-    public String getLoginEmail() { return loginEmail; }
-    public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
-
+    
     public String getMpPayerName() { return mpPayerName; }
     public void setMpPayerName(String mpPayerName) { this.mpPayerName = mpPayerName; }
 
