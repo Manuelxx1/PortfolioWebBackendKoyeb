@@ -1,27 +1,45 @@
 package com.abml.jpa.hibernate.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.math.BigDecimal;
 
 public class PagoDTO {
     private Long id;
+
+    @JsonProperty("user")
     private UserDTO user;
-   // los datos de loginUsername y loginEmail
-    //no vienen en el webhook de mp
-    //por eso no están aquí 
-    //esos datos se toman desde order.getUser()
-    //porque es un dato interno del sistema eshop   
+
+    // Datos del payer de Mercado Pago
+    @JsonProperty("mp_payer_name")
     private String mpPayerName;
+
+    @JsonProperty("mp_payer_email")
     private String mpPayerEmail;
+
+    @JsonProperty("preference_id")
     private String preferenceId;
+
+    @JsonProperty("external_reference")
     private String externalReference;
+
+    @JsonProperty("items")
     private List<ItemDTO> items;
+
+    @JsonProperty("total")
     private BigDecimal total;
 
+    @JsonProperty("amount")
     private BigDecimal amount;
 
+    @JsonProperty("status")
     private String status;
+
+    @JsonProperty("product_name")
     private String productName;
+
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
     // Getters y Setters
@@ -31,9 +49,6 @@ public class PagoDTO {
     public UserDTO getUser() { return user; }
     public void setUser(UserDTO user) { this.user = user; }
 
-    
-
-    
     public String getMpPayerName() { return mpPayerName; }
     public void setMpPayerName(String mpPayerName) { this.mpPayerName = mpPayerName; }
 
@@ -69,8 +84,13 @@ public class PagoDTO {
         private Long id;
         private String username;
         private String email;
+
+        @JsonProperty("mp_user_id")
         private Long mpUserId;
+
         private String name;
+
+        @JsonProperty("created_at")
         private LocalDateTime createdAt;
 
         public Long getId() { return id; }
@@ -97,8 +117,11 @@ public class PagoDTO {
         private Long id;
         private ProductDTO product;
         private Integer quantity;
-        private Double price;
-        private Double amount;
+
+        private BigDecimal price;
+        private BigDecimal amount;
+
+        @JsonProperty("product_name")
         private String productName;
 
         public Long getId() { return id; }
@@ -110,11 +133,11 @@ public class PagoDTO {
         public Integer getQuantity() { return quantity; }
         public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
-        public Double getPrice() { return price; }
-        public void setPrice(Double price) { this.price = price; }
+        public BigDecimal getPrice() { return price; }
+        public void setPrice(BigDecimal price) { this.price = price; }
 
-        public Double getAmount() { return amount; }
-        public void setAmount(Double amount) { this.amount = amount; }
+        public BigDecimal getAmount() { return amount; }
+        public void setAmount(BigDecimal amount) { this.amount = amount; }
 
         public String getProductName() { return productName; }
         public void setProductName(String productName) { this.productName = productName; }
@@ -125,10 +148,16 @@ public class PagoDTO {
         private Long id;
         private String name;
         private String description;
-        private Double price;
+
+        private BigDecimal price;
         private Integer stock;
+
+        @JsonProperty("image_url")
         private String imageUrl;
+
         private String category;
+
+        @JsonProperty("created_at")
         private LocalDateTime createdAt;
 
         public Long getId() { return id; }
@@ -140,8 +169,8 @@ public class PagoDTO {
         public String getDescription() { return description; }
         public void setDescription(String description) { this.description = description; }
 
-        public Double getPrice() { return price; }
-        public void setPrice(Double price) { this.price = price; }
+        public BigDecimal getPrice() { return price; }
+        public void setPrice(BigDecimal price) { this.price = price; }
 
         public Integer getStock() { return stock; }
         public void setStock(Integer stock) { this.stock = stock; }
