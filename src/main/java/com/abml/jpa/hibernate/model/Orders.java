@@ -21,33 +21,42 @@ import java.util.List;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+
 @Entity
 @Table(name = "orders")
 public class Orders {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    // Relación con Users: siempre cargada (EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-// Datos auxiliares del login (para guardar info del usuario en sesión)
+    // Datos auxiliares del login
+    @Column(name = "login_username", length = 100)
     private String loginUsername;
+
+    @Column(name = "login_email", length = 150)
     private String loginEmail;
-    
-// Datos del payer de Mercado Pago
+
+    // Datos del payer de Mercado Pago
+    @Column(name = "mp_payer_name", length = 255)
     private String mpPayerName;
+
+    @Column(name = "mp_payer_email", length = 255)
     private String mpPayerEmail;
 
-    //  Campo para vincular con Mercado Pago
+    // Campo para vincular con Mercado Pago
+    @Column(name = "preference_id", length = 255)
     private String preferenceId;
-    private String externalReference; // <-- NUEVO campo para compra exitosa 
-    
+
+    @Column(name = "external_reference", length = 255)
+    private String externalReference;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-   //para evitar el loop de datos de json por repercusión de datos en la relación 
-    //cuando se accede al endpoint orders
     @JsonManagedReference
     private List<OrderItems> items;
 
@@ -63,9 +72,7 @@ public class Orders {
     @Column(name = "created_at", updatable = false, insertable = false)
     private Timestamp createdAt;
 
-    
     // Método helper para calcular el total dinámicamente
-//va a ser llamado por el PaymentController 
     public void calculateTotal() {
         BigDecimal total = BigDecimal.ZERO;
         if (items != null) {
@@ -83,6 +90,24 @@ public class Orders {
 
     public Users getUser() { return user; }
     public void setUser(Users user) { this.user = user; }
+
+    public String getLoginUsername() { return loginUsername; }
+    public void setLoginUsername(String loginUsername) { this.loginUsername = loginUsername; }
+
+    public String getLoginEmail() { return loginEmail; }
+    public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
+
+    public String getMpPayerName() { return mpPayerName; }
+    public void setMpPayerName(String mpPayerName) { this.mpPayerName = mpPayerName; }
+
+    public String getMpPayerEmail() { return mpPayerEmail; }
+    public void setMpPayerEmail(String mpPayerEmail) { this.mpPayerEmail = mpPayerEmail; }
+
+    public String getPreferenceId() { return preferenceId; }
+    public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
+
+    public String getExternalReference() { return externalReference; }
+    public void setExternalReference(String externalReference) { this.externalReference = externalReference; }
 
     public List<OrderItems> getItems() { return items; }
     public void setItems(List<OrderItems> items) { this.items = items; }
@@ -102,27 +127,5 @@ public class Orders {
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public String getPreferenceId() { return preferenceId; }
-    public void setPreferenceId(String preferenceId) { this.preferenceId = preferenceId; }
 
-public String getExternalReference() { 
-    return externalReference; 
-}
-    public void setExternalReference(String externalReference) {
-        this.externalReference = externalReference;
-    }
-    
-public String getLoginUsername() { return loginUsername; }
-    public void setLoginUsername(String loginUsername) { this.loginUsername = loginUsername; }
-
-    public String getLoginEmail() { return loginEmail; }
-    public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
-
-    
-public String getMpPayerName() { return mpPayerName; }
-    public void setMpPayerName(String mpPayerName ) { this.mpPayerName = mpPayerName; }
-
-    public String getMpPayerEmail() { return mpPayerEmail; }
-    public void setMpPayerEmail(String mpPayerEmail) { this.mpPayerEmail = mpPayerEmail; }
-    
 }
