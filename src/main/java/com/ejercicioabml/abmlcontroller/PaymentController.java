@@ -380,7 +380,8 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 // Actualizar estado y monto
                 order.setStatus(payment.getStatus());
                 order.setTotal(payment.getTransactionAmount());
-
+                order.setAmount(payment.getTransactionAmount()); 
+                
                 // Guardar datos del payer de Mercado Pago
                 if (payment.getPayer() != null) {
                     order.setMpPayerName(payment.getPayer().getFirstName());
