@@ -351,15 +351,17 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
              String externalRef = pago.getExternalReference(); 
              String producto = pago.getProductName(); 
              BigDecimal monto = pago.getAmount();
-             System.out.println("Estado: " + estado);
+             
+                System.out.println("Estado: " + estado);
              System.out.println("External Reference: " + externalRef);
              System.out.println("Monto: " + monto);
-             if (externalRef == null) {
+             
+                if (externalRef == null) {
                  System.err.println("No se encontró external_reference en el pago"); 
                  return ResponseEntity.ok("Webhook recibido pero sin external_reference");
              } 
              // Buscar la orden en tu DB Orders 
-             order = orderRepository.findById(Long.parseLong(externalRef)) .orElseThrow(() -> new RuntimeException("Orden no encontrada")); 
+            Orders order = orderRepository.findById(Long.parseLong(externalRef)) .orElseThrow(() -> new RuntimeException("Orden no encontrada")); 
              // Actualizar estado y monto
              order.setStatus(estado);
              order.setTotal(monto); 
