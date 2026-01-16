@@ -1,5 +1,7 @@
+package com.ejercicioabml.abmlcontroller;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import com.abml.jpa.hibernate.service.EmailService;
 
 @Component
 public class EmailTestRunner implements CommandLineRunner {
@@ -13,7 +15,7 @@ public class EmailTestRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Cambiá el destinatario por tu correo real
-        String destinatario = "tuemail@dominio.com";
+        String destinatario = "manuelbaidoxx6@gmail.com";
         String estado = "approved";
         String producto = "Notebook Lenovo";
 
