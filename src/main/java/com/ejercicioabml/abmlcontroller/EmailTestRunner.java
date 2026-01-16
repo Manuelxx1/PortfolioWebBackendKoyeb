@@ -14,6 +14,7 @@ public class EmailTestRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.setProperty("javax.net.debug", "ssl,handshake");
         // Cambiá el destinatario por tu correo real
         String destinatario = "manuelbaidoxx6@gmail.com";
         String estado = "approved";
