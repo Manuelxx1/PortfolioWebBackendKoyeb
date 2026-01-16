@@ -1,0 +1,22 @@
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EmailTestRunner implements CommandLineRunner {
+
+    private final EmailService emailService;
+
+    public EmailTestRunner(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        // Cambiá el destinatario por tu correo real
+        String destinatario = "tuemail@dominio.com";
+        String estado = "approved";
+        String producto = "Notebook Lenovo";
+
+        emailService.enviarNotificacion(destinatario, estado, producto);
+    }
+}
