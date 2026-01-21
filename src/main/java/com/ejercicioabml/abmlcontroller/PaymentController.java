@@ -30,6 +30,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.client.RestTemplate;
+import java.util.HashMap;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -339,7 +342,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 }
 */
 
-@Autowired private EmailService emailService; 
+ 
  /*   
 @PostMapping("/webhook")
 public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
@@ -424,9 +427,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 }*/
 
     //para termux
-    
-
-    @PostMapping("/webhook")
+@PostMapping("/webhook")
 public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) {
     System.out.println("Payload recibido en webhook: " + payload);
 
@@ -444,16 +445,22 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 
             if (paymentId != null) {
                 Payment payment = paymentClient.get(paymentId);
-                String externalRef = payment.getExternalReference();
 
+                System.out.println("Payment ID: " + paymentId);
+                System.out.println("Payment status: " + payment.getStatus());
+                System.out.println("Payment externalReference: " + payment.getExternalReference());
+                System.out.println("Payment amount: " + payment.getTransactionAmount());
+
+                String externalRef = payment.getExternalReference();
                 if (externalRef == null) {
+                    System.err.println("No se encontró external_reference en el pago");
                     return ResponseEntity.ok("Webhook recibido pero sin external_reference");
                 }
 
-                // 1. LÓGICA DE BASE DE DATOS (Se mantiene igual)
                 Orders order = orderRepository.findById(Long.parseLong(externalRef))
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
+                // Actualizar estado y monto
                 order.setStatus(payment.getStatus());
                 order.setTotal(payment.getTransactionAmount());
                 order.setAmount(payment.getTransactionAmount()); 
@@ -471,18 +478,32 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 }
 
                 orderRepository.save(order);
-                System.out.println("Orden actualizada en DB Render");
+                System.out.println("Orden actualizada en DB: " + order);
 
-                // 2. REENVÍO A TERMUX (La parte nueva)
+                // --- ESTA ES LA PARTE QUE CONECTA CON TU CELULAR ---
                 if (destinatario != null) {
-                    enviarPeticionEmailATermux(destinatario, payment.getStatus(), order.getProductName());
+                    try {
+                        RestTemplate restTemplate = new RestTemplate();
+                        // ⚠️ CAMBIA ESTA URL POR LA DE TU TUNEL CADA VEZ
+                        String urlTermux = "https://9de234e2f58b22.lhr.life/api/enviar-email";
+
+                        Map<String, String> emailData = new HashMap<>();
+                        emailData.put("correo", destinatario);
+                        emailData.put("estado", payment.getStatus());
+                        emailData.put("producto", order.getProductName());
+
+                        restTemplate.postForEntity(urlTermux, emailData, String.class);
+                        System.out.println("Petición de email reenviada a Termux exitosamente");
+                    } catch (Exception e) {
+                        System.err.println("No se pudo conectar con el celular (Termux): " + e.getMessage());
+                    }
                 }
             }
-        }else if ("merchant_order".equals(topic)) {
+        } else if ("merchant_order".equals(topic)) {
+            // RESTAURADO: Tu lógica original para merchant_order
             String resourceUrl = (String) payload.get("resource");
             System.out.println("Webhook merchant_order recibido: " + resourceUrl);
         }
-
 
         return ResponseEntity.ok("Webhook procesado");
 
@@ -492,27 +513,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
     }
 }
 
-// Método auxiliar para no ensuciar el webhook principal
-private void enviarPeticionEmailATermux(String email, String estado, String producto) {
-    try {
-        RestTemplate restTemplate = new RestTemplate();
-        
-        // REEMPLAZA ESTA URL por la que te dé localhost.run en Termux
-        String termuxUrl = "https://TU-SUBDOMINIO.lhr.life/api/send-email";
 
-        Map<String, String> body = new HashMap<>();
-        body.put("destinatario", email);
-        body.put("status", estado);
-        body.put("productName", producto);
-
-        restTemplate.postForEntity(termuxUrl, body, String.class);
-        System.out.println("✅ Notificación enviada a Termux exitosamente");
-        
-    } catch (Exception e) {
-        // Importante: Solo logueamos el error para que MP no piense que el webhook falló
-        System.err.println("❌ Falló la conexión con Termux: " + e.getMessage());
-    }
-}
 /*
     // Webhook de Mercado Pago usando DTO
     @PostMapping("/webhook")
