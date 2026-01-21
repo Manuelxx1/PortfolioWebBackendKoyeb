@@ -484,8 +484,9 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 if (destinatario != null) {
                     try {
                         RestTemplate restTemplate = new RestTemplate();
-                        // ⚠️ CAMBIA ESTA URL POR LA DE TU TUNEL CADA VEZ
-                        String urlTermux = "https://9de234e2f58b22.lhr.life/api/enviar-email";
+                        // Esto busca la URL en la configuración de Render
+        String urlBase = System.getenv("TERMUX_URL"); 
+        String urlTermux = urlBase + "/api/enviar-email";
 
                         Map<String, String> emailData = new HashMap<>();
                         emailData.put("correo", destinatario);
