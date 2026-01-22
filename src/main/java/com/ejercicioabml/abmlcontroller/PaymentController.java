@@ -504,23 +504,26 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                         Map<String, String> emailData = new HashMap<>();
                         emailData.put("correo", destinatario);
                         
-                        // Armamos el cuerpo del mensaje siguiendo tu formato solicitado
-                        String mensajeCompleto = String.format(
-                            "Resultado de la compra\n" +
-                            "Status: %s\n\n" +
-                            "Payment ID: %s\n" +
-                            "External Reference: %s\n\n" +
-                            "Detalles de la orden\n" +
-                            "Comprador: %s\n" +
-                            "Total: ARS %s\n\n" +
-                            "%s",
-                            payment.getStatus(),
-                            payment.getId(),
-                            externalRef,
-                            payment.getPayer().getEmail(),
-                            payment.getTransactionAmount(),
-                            detallesDeCompra.toString()
-                        );
+                        // Armamos el cuerpo del mensaje con el agradecimiento al final
+String mensajeCompleto = String.format(
+    "Resultado de la compra\n" +
+    "Status: %s\n\n" +
+    "Payment ID: %s\n" +
+    "External Reference: %s\n\n" +
+    "Detalles de la orden\n" +
+    "Comprador: %s\n" +
+    "Total: ARS %s\n\n" +
+    "%s\n" + // Aquí van los productos
+    "------------------------------------------\n" +
+    "¡Gracias por confiar en nosotros! 😊\n" +
+    "Si tienes alguna duda, contáctanos.",
+    payment.getStatus(),
+    payment.getId(),
+    externalRef,
+    payment.getPayer().getEmail(),
+    payment.getTransactionAmount(),
+    detallesDeCompra.toString()
+);
 
                         emailData.put("mensaje", mensajeCompleto);
                         // Mantengo estos por si tu script de Termux los usa por separado
