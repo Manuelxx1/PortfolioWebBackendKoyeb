@@ -440,27 +440,26 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 Map<String, Object> data = (Map<String, Object>) payload.get("data");
                 paymentId = Long.parseLong(data.get("id").toString());
             } else if (payload.containsKey("resource")) {
-                paymentId = Long.parseLong(payload.get("resource").toString());
+                String resource = payload.get("resource").toString();
+                // A veces el resource es una URL completa, extraemos solo el ID
+                paymentId = Long.parseLong(resource.replaceAll("[^0-9]", ""));
             }
 
             if (paymentId != null) {
+                // Obtener el pago desde Mercado Pago
                 Payment payment = paymentClient.get(paymentId);
-
-                System.out.println("Payment ID: " + paymentId);
-                System.out.println("Payment status: " + payment.getStatus());
-                System.out.println("Payment externalReference: " + payment.getExternalReference());
-                System.out.println("Payment amount: " + payment.getTransactionAmount());
-
                 String externalRef = payment.getExternalReference();
+
                 if (externalRef == null) {
                     System.err.println("No se encontró external_reference en el pago");
                     return ResponseEntity.ok("Webhook recibido pero sin external_reference");
                 }
 
+                // Buscar la orden en nuestra base de datos
                 Orders order = orderRepository.findById(Long.parseLong(externalRef))
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-                // Actualizar estado y monto
+                // 1. Actualizar estado y datos del pagador en la DB
                 order.setStatus(payment.getStatus());
                 order.setTotal(payment.getTransactionAmount());
                 order.setAmount(payment.getTransactionAmount()); 
@@ -478,39 +477,73 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 }
 
                 orderRepository.save(order);
-                System.out.println("Orden actualizada en DB: " + order);
 
-                // --- ESTA ES LA PARTE QUE CONECTA CON TU CELULAR ---
+                // 2. Construir el detalle de productos (Iterando los items de MP)
+                StringBuilder detallesDeCompra = new StringBuilder();
+                if (payment.getAdditionalInfo() != null && payment.getAdditionalInfo().getItems() != null) {
+                    payment.getAdditionalInfo().getItems().forEach(item -> {
+                        detallesDeCompra.append(item.getTitle())
+                                       .append(" - Cantidad: ").append(item.getQuantity())
+                                       .append(" - Precio: ARS ").append(item.getUnitPrice())
+                                       .append("\n");
+                    });
+                } else {
+                    // Si MP no envía info adicional, usamos los datos locales de la orden
+                    detallesDeCompra.append(order.getProductName())
+                                   .append(" - Cantidad: 1 - Precio: ARS ")
+                                   .append(order.getTotal());
+                }
+
+                // 3. Enviar datos formateados a Termux
                 if (destinatario != null) {
                     try {
                         RestTemplate restTemplate = new RestTemplate();
-                        // Esto busca la URL en la configuración de Render
-        String urlBase = System.getenv("TERMUX_URL"); 
-        String urlTermux = urlBase + "/api/enviar-email";
+                        String urlBase = System.getenv("TERMUX_URL"); 
+                        String urlTermux = urlBase + "/api/enviar-email";
 
                         Map<String, String> emailData = new HashMap<>();
                         emailData.put("correo", destinatario);
+                        
+                        // Armamos el cuerpo del mensaje siguiendo tu formato solicitado
+                        String mensajeCompleto = String.format(
+                            "Resultado de la compra\n" +
+                            "Status: %s\n\n" +
+                            "Payment ID: %s\n" +
+                            "External Reference: %s\n\n" +
+                            "Detalles de la orden\n" +
+                            "Comprador: %s\n" +
+                            "Total: ARS %s\n\n" +
+                            "%s",
+                            payment.getStatus(),
+                            payment.getId(),
+                            externalRef,
+                            payment.getPayer().getEmail(),
+                            payment.getTransactionAmount(),
+                            detallesDeCompra.toString()
+                        );
+
+                        emailData.put("mensaje", mensajeCompleto);
+                        // Mantengo estos por si tu script de Termux los usa por separado
                         emailData.put("estado", payment.getStatus());
                         emailData.put("producto", order.getProductName());
 
                         restTemplate.postForEntity(urlTermux, emailData, String.class);
-                        System.out.println("Petición de email reenviada a Termux exitosamente");
+                        System.out.println("Petición enviada a Termux con detalles completos");
                     } catch (Exception e) {
-                        System.err.println("No se pudo conectar con el celular (Termux): " + e.getMessage());
+                        System.err.println("Error al conectar con Termux: " + e.getMessage());
                     }
                 }
             }
         } else if ("merchant_order".equals(topic)) {
-            // RESTAURADO: Tu lógica original para merchant_order
-            String resourceUrl = (String) payload.get("resource");
-            System.out.println("Webhook merchant_order recibido: " + resourceUrl);
+            System.out.println("Webhook merchant_order recibido: " + payload.get("resource"));
         }
 
         return ResponseEntity.ok("Webhook procesado");
 
     } catch (Exception e) {
-        System.err.println("Error procesando webhook: " + e.getMessage());
-        return ResponseEntity.ok("Webhook recibido pero con error");
+        System.err.println("Error general en el webhook: " + e.getMessage());
+        e.printStackTrace();
+        return ResponseEntity.status(500).body("Error interno");
     }
 }
 
