@@ -539,6 +539,7 @@ String mensajeHTML = String.format(
     payment.getTransactionAmount()
 );
 
+                        emailData.put("mensaje", mensajeHTML);
                         
                         // Mantengo estos por si tu script de Termux los usa por separado
                         emailData.put("estado", payment.getStatus());
