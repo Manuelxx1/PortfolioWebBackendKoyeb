@@ -507,19 +507,34 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                         // 1. Definimos variables para el estilo dinámico
 String colorBorde;
 String icono;
+String estadoParaElUsuario;
 
-if ("approved".equals(payment.getStatus())) {
+// Logica ultra-precisa de estados de Mercado Pago
+String statusReal = payment.getStatus();
+
+if ("approved".equals(statusReal)) {
     colorBorde = "#27ae60"; // Verde
     icono = "✅";
-} else if ("rejected".equals(payment.getStatus())) {
+    estadoParaElUsuario = "Aprobado";
+} 
+else if ("in_process".equals(statusReal) || "pending".equals(statusReal) || "in_mediation".equals(statusReal)) {
+    colorBorde = "#f1c40f"; // Amarillo (Lo que te pasó recién)
+    icono = "⏳";
+    estadoParaElUsuario = "En Proceso";
+} 
+else {
+    // Aquí caen: rejected, cancelled, refunded, charged_back
     colorBorde = "#e74c3c"; // Rojo
     icono = "❌";
-} else {
-    colorBorde = "#f1c40f"; // Amarillo/Naranja para pendientes
-    icono = "⏳";
+    estadoParaElUsuario = "Rechazado / Cancelado";
 }
 
-// 1. Pon la URL de tu logo aquí
+        System.out.println("ESTADO RECIBIDO: " + payment.getStatus());
+
+// Ahora usa 'estadoParaElUsuario' en el título del HTML para que no diga "in_process"
+
+                        
+                        // 1. Pon la URL de tu logo aquí
 String urlLogo = "https://img.freepik.com/vector-premium/plantilla-vector-diseno-logotipo-eshop-concepto-logotipo-tienda-linea_809852-666.jpg"; 
 
 // 2. Agrégalo al inicio del HTML
