@@ -544,29 +544,25 @@ String urlLogo = "https://img.freepik.com/vector-premium/plantilla-vector-diseno
 
 // 2. Agrégalo al inicio del HTML
 String mensajeHTML = String.format(
-    "<div style='font-family: sans-serif; border: 3px solid %s; padding: 20px; border-radius: 15px; max-width: 500px;'>" +
-    "   <div style='text-align: center; margin-bottom: 20px;'>" +
-    "       <img src='%s' alt='nombre de mi eshop' style='width: 150px; height: auto;'>" + // <-- El logo va aquí
-    "   </div>" +
-    "   <h1 style='color: %s; text-align: center;'> %s ¡Pago %s!</h1>" +
+    "<div style='font-family: sans-serif; border: 3px solid %s; padding: 20px; border-radius: 15px;'>" +
+    "   <h1 style='color: %s;'> %s ¡Pago %s!</h1>" +
+    "   <p style='color: #555; font-weight: bold;'>%s</p>" + // 5to %s: Mensaje de Ayuda
     "   <hr style='border: 0; border-top: 1px solid #eee;'>" +
-    "   <p><strong>ID de Pago:</strong> %s</p>" +
-    "   <div style='background: #f9f9f9; padding: 15px; border-left: 5px solid %s;'>%s</div>" +
-    "   <h2 style='color: #2c3e50;'>Total: ARS %s</h2>" +
+    "   <p><strong>ID de Pago:</strong> %s</p>" +           // 6to %s: ID de Pago
+    "   <div style='background: #f9f9f9; padding: 15px; border-left: 5px solid %s;'>%s</div>" + // 7mo y 8vo %s
+    "   <h2 style='color: #2c3e50;'>Total: ARS %s</h2>" +   // 9no %s: Monto
     "   <p>¡Gracias por confiar en nosotros! 😊</p>" +
     "</div>",
-    colorBorde, 
-    urlLogo,      // Se inserta en el segundo %s
-    colorBorde, 
-    icono, 
-    estadoParaElUsuario,
-    mensajeAyuda,
-    payment.getId(), 
-    colorBorde, 
-    detallesDeCompra.toString(),
-    payment.getTransactionAmount()
+    colorBorde,           // 1. Color del borde
+    colorBorde,           // 2. Color del título
+    icono,                // 3. Emoji
+    estadoParaElUsuario,  // 4. Texto del estado
+    mensajeAyuda,         // 5. El texto de "No te preocupes..."
+    payment.getId(),      // 6. ID del pago
+    colorBorde,           // 7. Color del detalle lateral
+    detallesDeCompra.toString(), // 8. Lista de productos
+    payment.getTransactionAmount() // 9. Monto total
 );
-                        
                         
                         emailData.put("mensaje", mensajeHTML);
                         
