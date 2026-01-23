@@ -526,7 +526,7 @@ String urlLogo = "https://img.freepik.com/vector-premium/plantilla-vector-diseno
 String mensajeHTML = String.format(
     "<div style='font-family: sans-serif; border: 3px solid %s; padding: 20px; border-radius: 15px; max-width: 500px;'>" +
     "   <div style='text-align: center; margin-bottom: 20px;'>" +
-    "       <img src='%s' alt='Logo' style='width: 150px; height: auto;'>" + // <-- El logo va aquí
+    "       <img src='%s' alt='nombre de mi eshop' style='width: 150px; height: auto;'>" + // <-- El logo va aquí
     "   </div>" +
     "   <h1 style='color: %s; text-align: center;'> %s ¡Pago %s!</h1>" +
     "   <hr style='border: 0; border-top: 1px solid #eee;'>" +
