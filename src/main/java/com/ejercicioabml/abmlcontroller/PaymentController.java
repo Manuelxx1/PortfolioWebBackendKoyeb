@@ -508,6 +508,7 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
 String colorBorde;
 String icono;
 String estadoParaElUsuario;
+String mensajeAyuda = ""; // Empezamos vacío
 
 // Logica ultra-precisa de estados de Mercado Pago
 //String statusReal = payment.getStatus();
@@ -517,17 +518,20 @@ if ("approved".equals(statusReal)) {
     colorBorde = "#27ae60"; // Verde
     icono = "✅";
     estadoParaElUsuario = "Aprobado";
+    mensajeAyuda = "¡Tu pedido ya está siendo preparado!";
 } 
 else if ("in_process".equals(statusReal) || "pending".equals(statusReal) || "in_mediation".equals(statusReal)) {
     colorBorde = "#f1c40f"; // Amarillo (Lo que te pasó recién)
     icono = "⏳";
     estadoParaElUsuario = "En Proceso";
+    mensajeAyuda = "Te avisaremos apenas se acredite el dinero.";
 } 
 else {
     // Aquí caen: rejected, cancelled, refunded, charged_back
     colorBorde = "#e74c3c"; // Rojo
     icono = "❌";
     estadoParaElUsuario = "Rechazado / Cancelado";
+    mensajeAyuda = "No te preocupes, puedes intentar nuevamente con otro medio de pago.";
 }
 
         System.out.println("ESTADO RECIBIDO: " + payment.getStatus());
@@ -555,7 +559,8 @@ String mensajeHTML = String.format(
     urlLogo,      // Se inserta en el segundo %s
     colorBorde, 
     icono, 
-    payment.getStatus(),
+    estadoParaElUsuario,
+    mensajeAyuda,
     payment.getId(), 
     colorBorde, 
     detallesDeCompra.toString(),
