@@ -533,6 +533,7 @@ String mensajeHTML = String.format(
     "   <p><strong>ID de Pago:</strong> %s</p>" +
     "   <div style='background: #f9f9f9; padding: 15px; border-left: 5px solid %s;'>%s</div>" +
     "   <h2 style='color: #2c3e50;'>Total: ARS %s</h2>" +
+    "   <p>¡Gracias por confiar en nosotros! 😊</p>" +
     "</div>",
     colorBorde, 
     urlLogo,      // Se inserta en el segundo %s
