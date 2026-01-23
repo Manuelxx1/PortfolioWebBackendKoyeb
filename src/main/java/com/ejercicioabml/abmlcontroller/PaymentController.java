@@ -510,7 +510,8 @@ String icono;
 String estadoParaElUsuario;
 
 // Logica ultra-precisa de estados de Mercado Pago
-String statusReal = payment.getStatus();
+//String statusReal = payment.getStatus();
+String statusReal = "rejected";
 
 if ("approved".equals(statusReal)) {
     colorBorde = "#27ae60"; // Verde
