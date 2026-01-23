@@ -504,21 +504,40 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                         Map<String, String> emailData = new HashMap<>();
                         emailData.put("correo", destinatario);
                         
-                        // Cambiamos el texto aburrido por etiquetas HTML con estilo
+                        // 1. Definimos variables para el estilo dinámico
+String colorBorde;
+String icono;
+
+if ("approved".equals(payment.getStatus())) {
+    colorBorde = "#27ae60"; // Verde
+    icono = "✅";
+} else if ("rejected".equals(payment.getStatus())) {
+    colorBorde = "#e74c3c"; // Rojo
+    icono = "❌";
+} else {
+    colorBorde = "#f1c40f"; // Amarillo/Naranja para pendientes
+    icono = "⏳";
+}
+
+// 2. Aplicamos esas variables en el HTML
 String mensajeHTML = String.format(
-    "<div style='font-family: sans-serif; border: 2px solid #009ee3; padding: 20px; border-radius: 15px;'>" +
-    "   <h1 style='color: #009ee3;'>¡Pago Confirmado!</h1>" +
-    "   <p><strong>Estado:</strong> %s</p>" +
+    "<div style='font-family: sans-serif; border: 3px solid %s; padding: 20px; border-radius: 15px;'>" + // <-- El color va aquí
+    "   <h1 style='color: %s;'> %s ¡Pago %s!</h1>" + // <-- Color, icono y estado aquí
     "   <p><strong>ID de Pago:</strong> %s</p>" +
     "   <hr style='border: 0; border-top: 1px solid #eee;'>" +
-    "   <div style='background: #f9f9f9; padding: 10px;'>%s</div>" +
-    "   <h2 style='color: #27ae60;'>Total: ARS %s</h2>" +
-    "   <p>😊 ¡Gracias por tu compra!</p>" +
+    "   <div style='background: #f9f9f9; padding: 15px; border-left: 5px solid %s;'>%s</div>" + // <-- Pequeño detalle lateral
+    "   <h2 style='color: #2c3e50;'>Total: ARS %s</h2>" +
+    "   <p>¡Gracias por confiar en nosotros! 😊</p>" +
     "</div>",
-    payment.getStatus(), payment.getId(), detallesDeCompra.toString(), payment.getTransactionAmount()
+    colorBorde,         // Para el borde principal
+    colorBorde,         // Para el título
+    icono,              // El emoji
+    payment.getStatus(),// El nombre del estado
+    payment.getId(),
+    colorBorde,         // Para el detalle lateral
+    detallesDeCompra.toString(),
+    payment.getTransactionAmount()
 );
-
-emailData.put("mensaje", mensajeHTML);
 
                         
                         // Mantengo estos por si tu script de Termux los usa por separado
