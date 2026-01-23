@@ -504,28 +504,23 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                         Map<String, String> emailData = new HashMap<>();
                         emailData.put("correo", destinatario);
                         
-                        // Armamos el cuerpo del mensaje con el agradecimiento al final
-String mensajeCompleto = String.format(
-    "Resultado de la compra\n" +
-    "Status: %s\n\n" +
-    "Payment ID: %s\n" +
-    "External Reference: %s\n\n" +
-    "Detalles de la orden\n" +
-    "Comprador: %s\n" +
-    "Total: ARS %s\n\n" +
-    "%s\n" + // Aquí van los productos
-    "------------------------------------------\n" +
-    "¡Gracias por confiar en nosotros! 😊\n" +
-    "Si tienes alguna duda, contáctanos.",
-    payment.getStatus(),
-    payment.getId(),
-    externalRef,
-    payment.getPayer().getEmail(),
-    payment.getTransactionAmount(),
-    detallesDeCompra.toString()
+                        // Cambiamos el texto aburrido por etiquetas HTML con estilo
+String mensajeHTML = String.format(
+    "<div style='font-family: sans-serif; border: 2px solid #009ee3; padding: 20px; border-radius: 15px;'>" +
+    "   <h1 style='color: #009ee3;'>¡Pago Confirmado!</h1>" +
+    "   <p><strong>Estado:</strong> %s</p>" +
+    "   <p><strong>ID de Pago:</strong> %s</p>" +
+    "   <hr style='border: 0; border-top: 1px solid #eee;'>" +
+    "   <div style='background: #f9f9f9; padding: 10px;'>%s</div>" +
+    "   <h2 style='color: #27ae60;'>Total: ARS %s</h2>" +
+    "   <p>😊 ¡Gracias por tu compra!</p>" +
+    "</div>",
+    payment.getStatus(), payment.getId(), detallesDeCompra.toString(), payment.getTransactionAmount()
 );
 
-                        emailData.put("mensaje", mensajeCompleto);
+emailData.put("mensaje", mensajeHTML);
+
+                        
                         // Mantengo estos por si tu script de Termux los usa por separado
                         emailData.put("estado", payment.getStatus());
                         emailData.put("producto", order.getProductName());
