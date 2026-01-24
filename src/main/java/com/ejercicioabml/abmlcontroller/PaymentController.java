@@ -545,6 +545,9 @@ String urlLogo = "https://img.freepik.com/vector-premium/plantilla-vector-diseno
 // 2. Agrégalo al inicio del HTML
 String mensajeHTML = String.format(
     "<div style='font-family: sans-serif; border: 3px solid %s; padding: 20px; border-radius: 15px;'>" +
+    "   <div style='text-align: center; margin-bottom: 10px;'>" +
+    "       <img src='%s' alt='nombre del eshop' style='max-width: 150px; height: auto;'>" +
+    "   </div>" +
     "   <h1 style='color: %s;'> %s ¡Pago %s!</h1>" +
     "   <p style='color: #555; font-weight: bold;'>%s</p>" + // 5to %s: Mensaje de Ayuda
     "   <hr style='border: 0; border-top: 1px solid #eee;'>" +
@@ -554,6 +557,7 @@ String mensajeHTML = String.format(
     "   <p>¡Gracias por confiar en nosotros! 😊</p>" +
     "</div>",
     colorBorde,           // 1. Color del borde
+    urlLogo,            // 2. URL de la imagen
     colorBorde,           // 2. Color del título
     icono,                // 3. Emoji
     estadoParaElUsuario,  // 4. Texto del estado
