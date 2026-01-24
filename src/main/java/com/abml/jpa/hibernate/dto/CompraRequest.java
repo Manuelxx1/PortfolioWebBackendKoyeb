@@ -33,12 +33,7 @@ public class CompraRequest {
 
 
 
-    public String getShippingType() {
-        return shippingType;
-    }
-    public void setShippingType(String shippingType) {
-        this.shippingType = shippingType;
-    }
+    
 
     public String getShippingType() {
         return shippingType;
