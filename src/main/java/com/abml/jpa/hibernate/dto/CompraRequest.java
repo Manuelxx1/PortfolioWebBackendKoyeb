@@ -9,6 +9,9 @@ public class CompraRequest {
     private int quantity;
     private Long idUsuario; // <-- nuevo campo
     private String usuario;
+    private String shippingType; // "standard", "express", "pickup" 
+    private double shippingCost;
+
 
     // Getters y setters
     public int getQuantity() {
@@ -29,6 +32,27 @@ public class CompraRequest {
     public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
 
 
+
+    public String getShippingType() {
+        return shippingType;
+    }
+    public void setShippingType(String shippingType) {
+        this.shippingType = shippingType;
+    }
+
+    public String getShippingType() {
+        return shippingType;
+    }
+    public void setShippingType(String shippingType) {
+        this.shippingType = shippingType;
+    }
+
+    public double getShippingCost {
+        return shippingCost;
+    }
+    public void setShippingCost(double shippingCost) {
+        this.shippingCost = shippingCost;
+    }
 
         @Override
     public String toString() {
