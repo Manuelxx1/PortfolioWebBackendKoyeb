@@ -74,6 +74,9 @@ public class Orders {
     @Column(name = "created_at", updatable = false, insertable = false)
     private Timestamp createdAt;
 
+    private String shippingType; // "standard", "express", "pickup" 
+    private double shippingCost;
+
     // Método helper para calcular el total dinámicamente
     public void calculateTotal() {
         BigDecimal total = BigDecimal.ZERO;
@@ -128,6 +131,12 @@ public class Orders {
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public String getshippingType() { return shippingType; }
+    public void setshippingType(String shippingType) { this.shippingType = shippingType; }
+
+    public double getshippingCost() { return shippingCost; }
+    public void setshippingCost(double shippingCost) { this.shippingCost = shippingCost; }
 
 
 }
