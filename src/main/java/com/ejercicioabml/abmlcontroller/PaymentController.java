@@ -511,8 +511,8 @@ String estadoParaElUsuario;
 String mensajeAyuda = ""; // Empezamos vacío
 
 // Logica ultra-precisa de estados de Mercado Pago
-//String statusReal = payment.getStatus();
-String statusReal = "rejected";
+String statusReal = payment.getStatus();
+
 
 if ("approved".equals(statusReal)) {
     colorBorde = "#27ae60"; // Verde
