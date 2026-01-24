@@ -11,6 +11,7 @@ public class CompraRequest {
     private String usuario;
     private String shippingType; // "standard", "express", "pickup" 
     private double shippingCost;
+    private String shippingName;
 
 
     // Getters y setters
@@ -48,6 +49,19 @@ public class CompraRequest {
     public void setShippingCost(double shippingCost) {
         this.shippingCost = shippingCost;
     }
+
+
+
+    
+
+public String getShippingName() {
+    return shippingName;
+}
+
+public void setShippingName(String shippingName) {
+    this.shippingName = shippingName;
+}
+
 
         @Override
     public String toString() {
