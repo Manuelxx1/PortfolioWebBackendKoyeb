@@ -132,11 +132,11 @@ public class Orders {
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public String getshippingType() { return shippingType; }
-    public void setshippingType(String shippingType) { this.shippingType = shippingType; }
+    public String getShippingType() { return shippingType; }
+    public void setShippingType(String shippingType) { this.shippingType = shippingType; }
 
-    public double getshippingCost() { return shippingCost; }
-    public void setshippingCost(double shippingCost) { this.shippingCost = shippingCost; }
+    public double getShippingCost() { return shippingCost; }
+    public void setShippingCost(double shippingCost) { this.shippingCost = shippingCost; }
 
 
 }
