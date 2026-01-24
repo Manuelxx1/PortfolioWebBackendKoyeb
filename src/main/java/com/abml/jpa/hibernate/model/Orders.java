@@ -76,7 +76,8 @@ public class Orders {
 
     private String shippingType; // "standard", "express", "pickup" 
     private double shippingCost;
-
+private String shippingName;
+   
     // Método helper para calcular el total dinámicamente
     public void calculateTotal() {
         BigDecimal total = BigDecimal.ZERO;
@@ -138,5 +139,14 @@ public class Orders {
     public double getShippingCost() { return shippingCost; }
     public void setShippingCost(double shippingCost) { this.shippingCost = shippingCost; }
 
+
+
+public String getShippingName() {
+    return shippingName;
+}
+
+public void setShippingName(String shippingName) {
+    this.shippingName = shippingName;
+}
 
 }
