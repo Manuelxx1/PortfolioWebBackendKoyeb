@@ -103,7 +103,17 @@ System.out.println("Usuario encontrado: " + usuario);
         order.setProductName(product.getName());
         order.setStatus("pending");
         order.setUser(usuario);
-        order.setTotal(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+
+            // Calcular total con envío 
+            BigDecimal total = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+            if (compraRequestDTO.getShippingCost() > 0) { 
+                total = total.add(BigDecimal.valueOf(compraRequestDTO.getShippingCost())); 
+            }
+            
+        order.setTotal(total);
+            // Guardar datos de envío
+            order.setShippingType(compraRequestDTO.getShippingType()); 
+            order.setShippingCost(compraRequestDTO.getShippingCost());
 
         // Primero guardamos para que tenga un id 
             orderRepository.save(order); 
