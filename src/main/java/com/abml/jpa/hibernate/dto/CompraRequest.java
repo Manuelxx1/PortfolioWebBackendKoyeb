@@ -42,7 +42,7 @@ public class CompraRequest {
         this.shippingType = shippingType;
     }
 
-    public double getShippingCost {
+    public double getShippingCost() {
         return shippingCost;
     }
     public void setShippingCost(double shippingCost) {
