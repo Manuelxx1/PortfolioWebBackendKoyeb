@@ -114,6 +114,8 @@ System.out.println("Usuario encontrado: " + usuario);
             // Guardar datos de envío
             order.setShippingType(compraRequestDTO.getShippingType()); 
             order.setShippingCost(compraRequestDTO.getShippingCost());
+            order.setShippingName(compraRequestDTO.getShippingName());
+
 
         // Primero guardamos para que tenga un id 
             orderRepository.save(order); 
