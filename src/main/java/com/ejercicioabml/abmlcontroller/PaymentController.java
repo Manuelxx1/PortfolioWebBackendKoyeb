@@ -146,7 +146,8 @@ order.setTotal(total);
             // 4.1. Crear Ítem Request para el envío 
             PreferenceItemRequest shippingItem = PreferenceItemRequest.builder() .title("Costo de envío - " + compraRequestDTO.getShippingName())
                 .quantity(1) //porque es las veces que se cobra el envío 
-                .unitPrice(BigDecimal.valueOf(compraRequestDTO.getShippingCost())) // costo del envío .build();
+                .unitPrice(BigDecimal.valueOf(compraRequestDTO.getShippingCost())) // costo del envío
+                .build();
 
             // 5. Crear Payer Request usando el Builder
             PreferencePayerRequest payerRequest = PreferencePayerRequest.builder()
