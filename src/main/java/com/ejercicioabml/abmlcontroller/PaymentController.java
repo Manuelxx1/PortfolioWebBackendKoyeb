@@ -79,6 +79,11 @@ public class PaymentController {
 
             // Mostrar lo que llega al DTO
         System.out.println("CompraRequest recibido: " + compraRequestDTO);
+            System.out.println("DTO completo: " + compraRequestDTO);
+System.out.println("shippingType: " + compraRequestDTO.getShippingType());
+System.out.println("shippingCost: " + compraRequestDTO.getShippingCost());
+System.out.println("shippingName: " + compraRequestDTO.getShippingName());
+
             // 1. Buscar producto y verificar stock
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
