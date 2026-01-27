@@ -34,7 +34,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 
 import java.util.List;
@@ -167,7 +167,7 @@ PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
 
 // 2. Usar ambos ítems en la PreferenceRequest
 PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-    .items(Arrays.asList(productItem, shippingItem)) // producto + envio
+.items(List.of(productItem, shippingItem)) // producto + envio más limpio es List.of que Arrays.asList 
     .payer(payerRequest)
     .externalReference(order.getExternalReference()) // ahora usa el valor guardado
     .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
