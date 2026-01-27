@@ -134,13 +134,19 @@ order.setTotal(total);
             
             // --- CONFIGURACIÓN DE MERCADO PAGO (VERSIÓN 2.5.0) ---
             
-            // 4. Crear Ítem Request usando el Builder
+            // 4. Crear Ítem Request para el producto usando el Builder
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
                 .title(product.getName() + " (x " + quantity + ")")
                 .quantity(quantity)
+              //  precio unitario del producto
                 .unitPrice(product.getPrice()) // product.getPrice() ya es BigDecimal
 
                 .build();
+
+            // 4.1. Crear Ítem Request para el envío 
+            PreferenceItemRequest shippingItem = PreferenceItemRequest.builder() .title("Costo de envío - " + compraRequestDTO.getShippingName())
+                .quantity(1) //porque es las veces que se cobra el envío 
+                .unitPrice(BigDecimal.valueOf(compraRequestDTO.getShippingCost())) // costo del envío .build();
 
             // 5. Crear Payer Request usando el Builder
             PreferencePayerRequest payerRequest = PreferencePayerRequest.builder()
@@ -156,9 +162,9 @@ PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
     .pending("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
     .build();
 
-// 2. Usarlo en la PreferenceRequest
+// 2. Usar ambos ítems en la PreferenceRequest
 PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-    .items(Collections.singletonList(itemRequest))
+    .items(Arrays.asList(productItem, shippingItem)) // producto + envio
     .payer(payerRequest)
     .externalReference(order.getExternalReference()) // ahora usa el valor guardado
     .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
