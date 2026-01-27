@@ -79,6 +79,7 @@ public class Orders {
 private String shippingName;
    
     // Método helper para calcular el total dinámicamente
+    /*
     public void calculateTotal() {
         BigDecimal total = BigDecimal.ZERO;
         if (items != null) {
@@ -89,7 +90,7 @@ private String shippingName;
         this.total = total;
         this.amount = total;
     }
-
+*/
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
