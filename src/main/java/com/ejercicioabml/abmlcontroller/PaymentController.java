@@ -167,7 +167,7 @@ PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
 
 // 2. Usar ambos ítems en la PreferenceRequest
 PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-.items(List.of(productItem, shippingItem)) // producto + envio más limpio es List.of que Arrays.asList 
+.items(List.of(productItem, shippingItem)) // producto + envio más limpio y moderno es List.of que Arrays.asList 
     .payer(payerRequest)
     .externalReference(order.getExternalReference()) // ahora usa el valor guardado
     .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
