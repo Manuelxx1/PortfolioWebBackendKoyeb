@@ -58,7 +58,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 @RestController 
 //@CrossOrigin afecta el funcionamiento de Postman
 //@CrossOrigin es fundamental para conectar angular con el backend Springboot
-@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
+@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev")
 
 
 
