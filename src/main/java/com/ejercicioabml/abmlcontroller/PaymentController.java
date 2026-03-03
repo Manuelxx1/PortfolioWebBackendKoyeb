@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev")
+@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev")
 public class PaymentController {
 
     private final PaymentClient paymentClient;
