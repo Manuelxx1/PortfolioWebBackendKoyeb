@@ -166,9 +166,9 @@ order.setTotal(total);
             // 6. Crear la Preference Request usando el Builder
 // 1. Crear el objeto de Back URLs por separado
 PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-    .success("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
-    .failure("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
-    .pending("https://4200-cs-582739288523-default.cs-us-east1-yeah.cloudshell.dev/estado-compra")
+    .success("https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev/estado-compra")
+    .failure("https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev/estado-compra")
+    .pending("https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev/estado-compra")
     .build();
 
 // 2. Usar ambos ítems en la PreferenceRequest
