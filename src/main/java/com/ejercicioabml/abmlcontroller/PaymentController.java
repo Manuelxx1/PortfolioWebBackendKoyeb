@@ -68,7 +68,10 @@ public class PaymentController {
     private OrderItemsRepository orderItemsRepository;
     
     public PaymentController() {
-        MercadoPagoConfig.setAccessToken("APP_USR-4456023071312309-111404-da075421e24ad80c6ba26beb86c2e77a-2989163784");
+        String accessToken = System.getenv("MERCADOPAGO_ACCESS_TOKEN");
+MercadoPagoConfig.setAccessToken(accessToken);
+
+        
         this.paymentClient = new PaymentClient();
         this.preferenceClient = new PreferenceClient();
     }
