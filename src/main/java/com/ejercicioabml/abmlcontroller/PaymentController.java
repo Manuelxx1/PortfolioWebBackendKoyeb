@@ -502,6 +502,13 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 order.setStatus(payment.getStatus());
                 order.setTotal(payment.getTransactionAmount());
                 order.setAmount(payment.getTransactionAmount()); 
+
+                //  NUEVO: guardar cuotas
+order.setInstallments(payment.getInstallments());
+if (payment.getTransactionDetails() != null) {
+    order.setInstallmentAmount(payment.getTransactionDetails().getInstallmentAmount());
+    order.setTotalPaidAmount(payment.getTransactionDetails().getTotalPaidAmount());
+}
                 
                 if (payment.getPayer() != null) {
                     order.setMpPayerName(payment.getPayer().getFirstName());
