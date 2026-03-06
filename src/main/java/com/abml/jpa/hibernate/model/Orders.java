@@ -210,19 +210,19 @@ public void setInstallments(Integer installments) {
     this.installments = installments;
 }
 
-public Double getInstallmentAmount() {
+public BigDecimal getInstallmentAmount() {
     return installmentAmount;
 }
 
-public void setInstallmentAmount(Double installmentAmount) {
+public void setInstallmentAmount(BigDecimal installmentAmount) {
     this.installmentAmount = installmentAmount;
 }
 
-public Double getTotalPaidAmount() {
+public BigDecimal getTotalPaidAmount() {
     return totalPaidAmount;
 }
 
-public void setTotalPaidAmount(Double totalPaidAmount) {
+public void setTotalPaidAmount(BigDecimal totalPaidAmount) {
     this.totalPaidAmount = totalPaidAmount;
 }
 
