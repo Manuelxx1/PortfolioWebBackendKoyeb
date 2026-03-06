@@ -202,4 +202,29 @@ private Double totalPaidAmount;      // total pagado con intereses
         this.shippingName = shippingName;
     } 
 
+    public Integer getInstallments() {
+    return installments;
+}
+
+public void setInstallments(Integer installments) {
+    this.installments = installments;
+}
+
+public Double getInstallmentAmount() {
+    return installmentAmount;
+}
+
+public void setInstallmentAmount(Double installmentAmount) {
+    this.installmentAmount = installmentAmount;
+}
+
+public Double getTotalPaidAmount() {
+    return totalPaidAmount;
+}
+
+public void setTotalPaidAmount(Double totalPaidAmount) {
+    this.totalPaidAmount = totalPaidAmount;
+}
+
+
 }
