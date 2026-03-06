@@ -87,8 +87,8 @@ public class Orders {
     private String shippingName;
 
     private Integer installments;        // número de cuotas
-private Double installmentAmount;    // monto por cuota
-private Double totalPaidAmount;      // total pagado con intereses
+private BigDecimal installmentAmount;    // monto por cuota
+private BigDecimal totalPaidAmount;      // total pagado con intereses
 
    
     // Método helper para calcular el total dinámicamente
