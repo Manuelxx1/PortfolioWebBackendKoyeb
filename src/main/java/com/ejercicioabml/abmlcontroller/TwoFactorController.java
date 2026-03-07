@@ -1,7 +1,10 @@
 package com.ejercicioabml.abmlcontroller;
+import com.abml.jpa.hibernate.service.TwoFactorRedisService;
+import com.abml.jpa.hibernate.service.TwoFactorMailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/2fa")
