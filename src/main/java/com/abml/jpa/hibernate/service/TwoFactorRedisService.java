@@ -1,3 +1,5 @@
+
+package com.abml.jpa.hibernate.service;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
