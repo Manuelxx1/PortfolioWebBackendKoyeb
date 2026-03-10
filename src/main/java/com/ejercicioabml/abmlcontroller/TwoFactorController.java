@@ -1,6 +1,6 @@
 package com.ejercicioabml.abmlcontroller;
 import com.abml.jpa.hibernate.service.TwoFactorRedisService;
-import com.abml.jpa.hibernate.service.TwoFactorMailService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +13,12 @@ public class TwoFactorController {
     @Autowired
     private TwoFactorRedisService twoFactorRedisService;
 
-    @Autowired
-    private TwoFactorMailService twoFactorMailService;
-
     // Endpoint para enviar el código
     @PostMapping("/send")
     public ResponseEntity<String> sendCode(@RequestParam String email) {
-        String code = twoFactorMailService.generateCode();
-        twoFactorRedisService.saveCode(email, code);
+        String code = twoFactorRedisService.generateCode(); // genera el código
+    twoFactorRedisService.saveCode(email, code);        // guarda en Redis
+        
         // Llamada al microservicio en Termux vía túnel
     String url = "https://b2488e5afca48e.lhr.life/api/send?email=" + email + "&code=" + code;
     restTemplate.postForObject(url, null, String.class);
