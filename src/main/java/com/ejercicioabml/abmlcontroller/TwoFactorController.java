@@ -21,7 +21,9 @@ public class TwoFactorController {
     public ResponseEntity<String> sendCode(@RequestParam String email) {
         String code = twoFactorMailService.generateCode();
         twoFactorRedisService.saveCode(email, code);
-        twoFactorMailService.sendCodeByEmail(email, code);
+        // Llamada al microservicio en Termux vía túnel
+    String url = "https://abcd1234.localhost.run/api/send?email=" + email + "&code=" + code;
+    restTemplate.postForObject(url, null, String.class);
         return ResponseEntity.ok("Código enviado a " + email);
     }
 
