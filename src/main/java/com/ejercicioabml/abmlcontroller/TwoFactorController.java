@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.SecureRandom;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api/2fa")
