@@ -32,7 +32,7 @@ private String generateCode() {
       
         
         // Llamada al microservicio en Termux vía túnel
-    String url = "https://b2488e5afca48e.lhr.life/api/send?email=" + email + "&code=" + code;
+    String url = "https://throws-release-combat-patient.trycloudflare.com/api/send?email=" + email + "&code=" + code;
         RestTemplate restTemplate = new RestTemplate();
     restTemplate.postForObject(url, null, String.class);
         return ResponseEntity.ok("Código enviado a " + email);
