@@ -34,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.client.RestTemplate;
 
 
 
@@ -422,6 +423,12 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
             .body(Map.of("error", "Nombre o contraseña incorrectos"));
     }
 
+
+      // ✅ Credenciales correctas → disparamos el 2FA
+    // Podés llamar directamente al servicio, o usar RestTemplate para invocar tu /api/2fa/send
+    String url = "https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/2fa/send?email=" + user.getEmail();
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.postForObject(url, null, String.class);
   
 
   //LoginDTO es dolo para obtener datos de entrada al endpoint 
@@ -435,7 +442,7 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
   
   return ResponseEntity.ok(Map.of(
     "id",user.getId(),
-        "mensaje", "Login exitoso",
+        "mensaje", "Credenciales válidas. Se envió un código 2FA al correo.",
         "usuario", user.getUsername(),
         "email", user.getEmail(),
         "name", user.getName(),
