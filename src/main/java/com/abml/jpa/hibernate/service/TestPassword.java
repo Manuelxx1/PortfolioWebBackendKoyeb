@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestPassword {
-    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger log = LoggerFactory.getLogger(TestPassword.class);
     public static void main(String[] args) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -15,7 +15,7 @@ public class TestPassword {
         String hashedPassword = "$2a$10$TrzYiTOSXDf7QChkNt9H2u.rAatsBgWJHn3XCmiD.B6nfvwnhuDMS";
 
         boolean matches = encoder.matches(rawPassword, hashedPassword);
-log.info("Datos del LoginDTO TestPassword recibido: username={} password={}", dto.getUsername(), dto.getPassword());
+log.info("¿Coincide? " + matches);
         System.out.println("¿Coincide? " + matches);
     }
 }
