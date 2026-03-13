@@ -453,6 +453,25 @@ logger.info("Datos del LoginDTO recibido: username={} password={}", dto.getUsern
     ));
 }
 
+  //hacer un test del pasword
+    @GetMapping("/test-password")
+    public ResponseEntity<?> testPassword() {
+        String rawPassword = "Unodostrescatorce";
+        String hashedPassword = "$2a$10$TrzYiTOSXDf7QChkNt9H2u.rAatsBgWJHn3XCmiD.B6nfvwnhuDMS";
+
+        boolean matches = passwordEncoder.matches(rawPassword, hashedPassword);
+
+        // Esto se verá en los logs de Render
+        
+        logger.info("Resultado test password: {}", matches);
+
+        // Y también como respuesta JSON
+        return ResponseEntity.ok(Map.of(
+            "rawPassword", rawPassword,
+            "hashedPassword", hashedPassword,
+            "matches", matches
+        ));
+          }
 
 //endpoints para cambiar el perfil dashboard 
   
