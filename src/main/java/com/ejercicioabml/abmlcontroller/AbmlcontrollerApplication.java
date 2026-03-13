@@ -454,19 +454,18 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
 //endpoints para cambiar el perfil dashboard 
   
       @PutMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody UsersDTO dto) {
-        if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
-            return ResponseEntity.badRequest().body("La contraseña es obligatoria");
-        }
-        try {
-            productService.updatePassword(dto.getUsername(), dto.getPassword());
-            return ResponseEntity.ok().body(Map.of("success", true,"mensajecontraseña","SE CAMBIO LA CONTRASEÑA EXITOSAMENTE"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(Map.of("success", false, "error", e.getMessage()));
-        }
-        
+public ResponseEntity<?> changePassword(@RequestBody LoginDTO dto) {
+    Optional<Users> userOpt = userRepository.findByUsername(dto.getUsername());
+    if (userOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                             .body(Map.of("error", "Usuario no encontrado"));
     }
+    Users user = userOpt.get();
+    user.setPassword(passwordEncoder.encode(dto.getPassword())); //  encriptar
+    userRepository.save(user);
+    return ResponseEntity.ok(Map.of("mensajecontraseña", "SE CAMBIO LA CONTRASEÑA EXITOSAMENTE", "success", true));
+}
+
 
       @PutMapping("/update-username")
 public ResponseEntity<?> updateUsername(@RequestBody UsersDTO dto) {
