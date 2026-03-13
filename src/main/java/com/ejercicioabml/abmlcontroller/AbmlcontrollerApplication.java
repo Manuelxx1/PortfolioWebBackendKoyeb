@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
@@ -409,6 +410,7 @@ public ResponseEntity<?> register(@RequestBody UserDTO dto) {
 
 
   //login para eshop
+/*
 @PostMapping("/loginsinjwteshop")
 public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
     Optional<Users> userOpt = userRepository.findByUsername(dto.getUsername());
@@ -452,7 +454,51 @@ logger.info("Datos del LoginDTO recibido: username={} password={}", dto.getUsern
     "createdAt", user.getcreatedAt()
     ));
 }
+  */
 
+
+  //login para eshop loginsinjwteshop refactoctorizado
+  @PostMapping("/loginsinjwteshop")
+public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
+    Optional<Users> userOpt = userRepository.findByUsername(dto.getUsername());
+    if (userOpt.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("error", "Nombre o contraseña incorrectos"));
+    }
+
+    Users user = userOpt.get();
+    if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("error", "Nombre o contraseña incorrectos"));
+    }
+
+    // Credenciales correctas
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", user.getId());
+    response.put("usuario", user.getUsername());
+    response.put("email", user.getEmail());
+    response.put("name", user.getName());
+    response.put("createdAt", user.getcreatedAt());
+
+    try {
+        String url = "https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/2fa/send?email=" + user.getEmail();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForObject(url, null, String.class);
+
+        // 🔹 Devolvemos 202 Accepted → credenciales válidas, pendiente de 2FA
+        response.put("mensaje", "Credenciales válidas. Se envió un código 2FA al correo.");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+
+    } catch (Exception e) {
+        // Si falla el envío de 2FA, no confundimos con credenciales inválidas
+        response.put("mensaje", "Credenciales válidas, pero error al enviar código 2FA. Intente más tarde.");
+        response.put("error2FA", e.getMessage());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+    }
+}
+
+
+  
   //hacer un test del pasword
     @GetMapping("/test-password")
     public ResponseEntity<?> testPassword() {
