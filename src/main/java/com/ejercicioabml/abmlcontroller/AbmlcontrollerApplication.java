@@ -418,8 +418,9 @@ public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
     }
 
   System.out.println("Datos del LoginDTO: " + dto.getUsername() + " / " + dto.getPassword());
-
-    Users user = userOpt.get();
+logger.info("Datos del LoginDTO recibido: username={} password={}", dto.getUsername(), dto.getPassword());
+    
+  Users user = userOpt.get();
     if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("error", "Nombre o contraseña incorrectos"));
