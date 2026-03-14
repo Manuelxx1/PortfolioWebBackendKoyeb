@@ -50,8 +50,9 @@ private String generateCode() {
 public ResponseEntity<Map<String, Object>> validateCode(@RequestParam String email, @RequestParam String code) {
     System.out.println("Entró a validateCode");
     boolean valid = twoFactorRedisService.validateCode(email, code);
+    System.out.println("datos de variable valid de redis validatecode");
     if (valid) {
-        Users user = userRepository.findByEmail(email).orElseThrow();
+ user = userRepository.findByEmail(email).orElseThrow();
 
         return ResponseEntity.ok(Map.of(
             "mensaje", "Código válido, acceso permitido",
