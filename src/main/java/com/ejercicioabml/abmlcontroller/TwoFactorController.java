@@ -43,7 +43,7 @@ private String generateCode() {
     // Endpoint para validar el código
     @PostMapping("/validate")
 public ResponseEntity<Map<String, Object>> validateCode(@RequestParam String email, @RequestParam String code) {
-    System.out.println("Entró a validateCode")
+    System.out.println("Entró a validateCode");
     boolean valid = twoFactorRedisService.validateCode(email, code);
     if (valid) {
         Users user = userRepository.findByEmail(email).orElseThrow();
