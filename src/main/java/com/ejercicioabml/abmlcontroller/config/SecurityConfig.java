@@ -42,7 +42,7 @@ public class SecurityConfig {
           // 2. Define qué rutas permites sin autenticación
           .authorizeHttpRequests(auth -> auth
               // endpoints públicos
-              .requestMatchers("/login","/loginsinjwt","/register","/loginsinjwteshop","/registereshop").permitAll()
+              .requestMatchers("/login","/loginsinjwt","/register","/loginsinjwteshop","/registereshop","/api/2fa/**").permitAll()
               
               // endpoint protegido: requiere JWT válido
               .requestMatchers("/profile").authenticated()
