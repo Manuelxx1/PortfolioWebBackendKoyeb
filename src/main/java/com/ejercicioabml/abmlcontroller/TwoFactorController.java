@@ -54,6 +54,16 @@ public ResponseEntity<Map<String, Object>> validateCode(@RequestParam String ema
     if (valid) {
 Users user = userRepository.findByEmail(email).orElseThrow();
 
+
+        System.out.println("Respuesta enviada: " + Map.of(
+    "mensaje", "Código válido, acceso permitido",
+    "id", user.getId(),
+    "usuario", user.getUsername(),
+    "email", user.getEmail(),
+    "name", user.getName(),
+    "createdAt", user.getcreatedAt()
+));
+
         return ResponseEntity.ok(Map.of(
             "mensaje", "Código válido, acceso permitido",
             "id", user.getId(),
