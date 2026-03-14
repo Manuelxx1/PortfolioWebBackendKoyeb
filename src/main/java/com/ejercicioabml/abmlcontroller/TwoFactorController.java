@@ -42,14 +42,24 @@ private String generateCode() {
 
     // Endpoint para validar el código
     @PostMapping("/validate")
-public ResponseEntity<Map<String, String>> validateCode(@RequestParam String email, @RequestParam String code) {
+public ResponseEntity<Map<String, Object>> validateCode(@RequestParam String email, @RequestParam String code) {
     boolean valid = twoFactorRedisService.validateCode(email, code);
     if (valid) {
-        return ResponseEntity.ok(Map.of("mensaje", "Código válido, acceso permitido"));
+        Users user = userRepository.findByEmail(email).orElseThrow();
+
+        return ResponseEntity.ok(Map.of(
+            "mensaje", "Código válido, acceso permitido",
+            "id", user.getId(),
+            "usuario", user.getUsername(),
+            "email", user.getEmail(),
+            "name", user.getName(),
+            "createdAt", user.getcreatedAt()
+        ));
     } else {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                              .body(Map.of("error", "Código inválido o expirado"));
     }
 }
+
 
 }
