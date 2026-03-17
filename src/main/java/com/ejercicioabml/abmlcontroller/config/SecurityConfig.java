@@ -38,17 +38,19 @@ public class SecurityConfig {
         http
           // 1. Deshabilita CSRF porque es una API stateless
           .csrf(csrf -> csrf.disable())
-          
+        
           // 2. Define qué rutas permites sin autenticación
           .authorizeHttpRequests(auth -> auth
-              // endpoints públicos
+             
+                /*
+                // endpoints públicos
               .requestMatchers("/login","/loginsinjwt","/register","/loginsinjwteshop","/registereshop","/api/2fa/**").permitAll()
               
               // endpoint protegido: requiere JWT válido
               .requestMatchers("/profile").authenticated()
               
               // TODO: si tienes más rutas que quieres públicas, añádelas aquí
-              
+              */
               // el resto: público
               .anyRequest().permitAll()
           )
