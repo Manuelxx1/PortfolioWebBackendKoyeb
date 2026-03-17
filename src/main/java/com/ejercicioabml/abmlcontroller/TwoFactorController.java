@@ -11,8 +11,12 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 
+
 @RestController
 @RequestMapping("/api/2fa")
+
+    @CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev")
+
 public class TwoFactorController {
 
     @Autowired
