@@ -59,7 +59,8 @@ public class SecurityConfig {
           );
         
         // 4. Inserta el filtro de JWT antes del filtro de usuario/clave
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+      //con esta línea comentada desactivamos JWT 
+        // http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
