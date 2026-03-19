@@ -43,7 +43,12 @@ private String generateCode() {
       
         
         // Llamada al microservicio en Termux vía túnel
-    String url = "https://purpose-pest-scratch-exception.trycloudflare.com/api/send?email=" + email + "&code=" + code;
+        // Obtiene la variable de entorno TERMUX_URL
+String baseUrl = System.getenv("TERMUX_URL");
+
+// Construye la URL dinámica usando la variable
+String url = baseUrl + "/api/send?email=" + email + "&code=" + code;
+
         RestTemplate restTemplate = new RestTemplate();
     restTemplate.postForObject(url, null, String.class);
         return ResponseEntity.ok("Código enviado a " + email);
