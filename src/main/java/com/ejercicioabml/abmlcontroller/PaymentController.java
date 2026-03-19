@@ -219,93 +219,29 @@ PreferenceRequest preferenceRequest = PreferenceRequest.builder()
 
 
     //compra desde el carrito 
-    @PostMapping("/create-cart")
-    public ResponseEntity<String> createCartPreference(@RequestBody List<CartItemDto> cartItems) {
-        try {
-            log.info("CartItems recibidos: {}", cartItems);
+@PostMapping("/comprarCarrito")
+    public ResponseEntity<String> comprarCarrito(@RequestBody CheckoutCarritoRequest request) {
+        // Buscar usuario
+        Users user = userRepository.findById(request.getIdUsuario())
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            if (cartItems == null || cartItems.isEmpty()) {
-                return ResponseEntity.badRequest().body("El carrito está vacío");
-            }
+        // Pasar todo al servicio
+        String initPoint = cartService.comprarCarrito(
+            user,
+            request.getItems(),
+            request.getName(),
+            request.getEmail(),
+            request.getPhone(),
+            request.getAddress(),
+            request.getCity(),
+            request.getPostalCode(),
+            request.getShippingType(),
+            request.getShippingCost(),
+            request.getShippingName()
+        );
 
-            List<PreferenceItemRequest> items = new ArrayList<>();
-            BigDecimal totalCarrito = BigDecimal.ZERO;
-
-            for (CartItemDto ci : cartItems) {
-                Product product = productRepository.findById(ci.getProductId())
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
-
-                if (product.getStock() < ci.getQuantity()) {
-                    return ResponseEntity.badRequest()
-                            .body("Stock insuficiente para " + product.getName());
-                }
-
-                // Cálculo intermedio para el total del carrito, usa BigDecimal.valueOf(int)
-                BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
-                totalCarrito = totalCarrito.add(itemTotal);
-
-                // Cada ítem con cantidad y precio unitario para Mercado Pago (usa double)
-                PreferenceItemRequest item = PreferenceItemRequest.builder()
-                    .title(product.getName())
-                    .quantity(ci.getQuantity())
-                    .unitPrice(product.getPrice()) // 
-                    .currencyId("ARS")
-                    .build();
-
-                items.add(item); 
-            }
-
-            // Usuario genérico
-            Users guestUser = userRepository.findByUsername("guest")
-                    .orElseThrow(() -> new RuntimeException("Usuario genérico no encontrado"));
-
-            Orders order = new Orders();
-            order.setProductName("Carrito de compra");
-            order.setStatus("pending");
-            order.setTotal(totalCarrito); 
-            order.setUser(guestUser);
-            orderRepository.save(order);
-
-            // Guardar ítems de la orden
-            for (CartItemDto ci : cartItems) {
-                Product product = productRepository.findById(ci.getProductId())
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + ci.getProductId()));
-
-                OrderItems oi = new OrderItems();
-                oi.setOrder(order);
-                oi.setProduct(product);
-                oi.setProductName(product.getName());
-                oi.setQuantity(ci.getQuantity());
-                oi.setPrice(product.getPrice());
-                
-                // LÍNEA 198 (Aprox.) - CORRECCIÓN: Cálculo directo y seguro
-                oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
-                
-                orderItemsRepository.save(oi);
-            }
-
-            // Crear preferencia en MercadoPago
-            PreferenceRequest request = PreferenceRequest.builder()
-                    .items(items)
-                    .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
-                    .externalReference(order.getId().toString())
-                    .build();
-
-            Preference preference = preferenceClient.create(request);
-
-            log.info("Respuesta de MercadoPago: {}", preference);
-            log.info("Preference ID: {}", preference.getId());
-            log.info("InitPoint: {}", preference.getInitPoint());
-
-            order.setPreferenceId(preference.getId());
-            orderRepository.save(order);
-
-            return ResponseEntity.ok(preference.getInitPoint());
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creando preferencia de carrito: " + e.getMessage());
-        }
+        // Devolver el initPoint para redirigir a Mercado Pago
+        return ResponseEntity.ok(initPoint);
     }
 
 
