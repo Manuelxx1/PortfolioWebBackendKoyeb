@@ -5,6 +5,7 @@ import com.abml.jpa.hibernate.repository.CartItemRepository;
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.model.Product;
+import com.abml.jpa.hibernate.dto.CartItemDto;
 //Notifications mediante websocket stomp
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 //Enviar mensajes programados
@@ -14,6 +15,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.preference.PreferenceClient;
+import com.mercadopago.client.preference.PreferenceItemRequest;
+import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.resources.preference.Preference;
+
+
+import java.util.stream.Collectors;
 
 
 @Service
@@ -48,6 +58,69 @@ public class CartService {
     cartRepo.save(item);
   }
 
+  //para comprar con el checkout de MP
+public String comprarCarrito(Users user,
+                                 List<CartItemDto> items,
+                                 String name,
+                                 String email,
+                                 String phone,
+                                 String address,
+                                 String city,
+                                 String postalCode,
+                                 String shippingType,
+                                 Double shippingCost,
+                                 String shippingName) {
+
+        // Configurar credenciales
+        String accessToken = System.getenv("MERCADOPAGO_ACCESS_TOKEN");
+MercadoPagoConfig.setAccessToken(accessToken);
+
+        // Convertir los items del carrito a items de Mercado Pago
+        List<PreferenceItemRequest> mpItems = items.stream()
+                .map(i -> PreferenceItemRequest.builder()
+                        .title(getProductName(i.getProductId()))
+                        .quantity(i.getQuantity())
+                        .unitPrice(getProductPrice(i.getProductId()))
+                        .currencyId("ARS")
+                        .build())
+                .collect(Collectors.toList());
+
+        // Agregar costo de envío como un ítem extra
+        if (shippingCost != null && shippingCost > 0) {
+            mpItems.add(PreferenceItemRequest.builder()
+                    .title("Envío: " + shippingName)
+                    .quantity(1)
+                    .unitPrice(shippingCost)
+                    .currencyId("ARS")
+                    .build());
+        }
+
+        // Crear preferencia
+        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                .items(mpItems)
+                .payer(PreferenceRequest.PayerRequest.builder()
+                        .name(name)
+                        .email(email)
+                        .build())
+                .build();
+
+        PreferenceClient client = new PreferenceClient();
+        Preference preference = client.create(preferenceRequest);
+
+        // initPoint es la URL de checkout
+        return preference.getInitPoint();
+    }
+
+    private String getProductName(Long productId) {
+        // Recuperar nombre del producto desde DB
+        return "Producto " + productId;
+    }
+
+    private Double getProductPrice(Long productId) {
+        // Recuperar precio del producto desde DB
+        return 100.0; // ejemplo
+  }
+  
   
   // /increase → botón +
     public void increaseFromCart(Users user, Long productId) {
