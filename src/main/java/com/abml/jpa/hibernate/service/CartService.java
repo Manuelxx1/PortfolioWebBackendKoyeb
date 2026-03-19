@@ -16,11 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Importaciones de Mercado Pago (v2.5.0) - CORRECTAS
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
-import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.client.preference.PreferenceItemRequest;
+import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.resources.preference.Preference;
+import com.mercadopago.resources.payment.Payment; 
+
 
 
 import java.util.stream.Collectors;
