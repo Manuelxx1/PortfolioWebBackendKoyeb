@@ -67,6 +67,9 @@ public class PaymentController {
 
     @Autowired
     private OrderItemsRepository orderItemsRepository;
+
+    @Autowired
+    private CartService cartService;
     
     public PaymentController() {
         String accessToken = System.getenv("MERCADOPAGO_ACCESS_TOKEN");
