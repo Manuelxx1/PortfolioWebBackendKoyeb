@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.math.BigDecimal;
 
 // Importaciones de Mercado Pago (v2.5.0) - CORRECTAS
 import com.mercadopago.MercadoPagoConfig;
