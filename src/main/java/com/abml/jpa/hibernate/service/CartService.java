@@ -120,6 +120,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
         // Manejo de error: loguear y devolver algo apropiado
         throw new RuntimeException("Error al crear preferencia en Mercado Pago", e);
 }
+}
 
     private String getProductName(Long productId) {
         // Recuperar nombre del producto desde DB
