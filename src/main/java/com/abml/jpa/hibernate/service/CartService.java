@@ -17,15 +17,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.math.BigDecimal;
 
-// Importaciones de Mercado Pago (v2.5.0) - CORRECTAS
 import com.mercadopago.MercadoPagoConfig;
-import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
-import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceItemRequest;
+import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.payment.Payment; 
 
 
 
@@ -77,22 +74,21 @@ public String comprarCarrito(Users user,
                                  BigDecimal shippingCost,
                                  String shippingName) {
 
-        // Configurar credenciales
-        String accessToken = System.getenv("MERCADOPAGO_ACCESS_TOKEN");
-MercadoPagoConfig.setAccessToken(accessToken);
+        // Configurar credenciales de Mercado Pago
+        MercadoPagoConfig.setAccessToken("TU_ACCESS_TOKEN");
 
         // Convertir los items del carrito a items de Mercado Pago
         List<PreferenceItemRequest> mpItems = items.stream()
                 .map(i -> PreferenceItemRequest.builder()
                         .title(getProductName(i.getProductId()))
                         .quantity(i.getQuantity())
-                        .unitPrice(getProductPrice(i.getProductId()))
+                        .unitPrice(BigDecimal.valueOf(getProductPrice(i.getProductId())))
                         .currencyId("ARS")
                         .build())
                 .collect(Collectors.toList());
 
-        // Agregar costo de envío como un ítem extra
-        if (shippingCost != null && shippingCost > 0) {
+        // Agregar costo de envío como ítem extra si corresponde
+        if (shippingCost != null && shippingCost.compareTo(BigDecimal.ZERO) > 0) {
             mpItems.add(PreferenceItemRequest.builder()
                     .title("Envío: " + shippingName)
                     .quantity(1)
@@ -101,10 +97,10 @@ MercadoPagoConfig.setAccessToken(accessToken);
                     .build());
         }
 
-        // Crear preferencia
+        // Crear preferencia con datos del comprador
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(mpItems)
-                .payer(PreferenceRequest.PayerRequest.builder()
+                .payer(PreferencePayerRequest.builder()
                         .name(name)
                         .email(email)
                         .build())
@@ -113,7 +109,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
         PreferenceClient client = new PreferenceClient();
         Preference preference = client.create(preferenceRequest);
 
-        // initPoint es la URL de checkout
+        // initPoint es la URL de checkout de Mercado Pago
         return preference.getInitPoint();
     }
 
@@ -122,11 +118,10 @@ MercadoPagoConfig.setAccessToken(accessToken);
         return "Producto " + productId;
     }
 
-    private Double getProductPrice(Long productId) {
+    private BigDecimal getProductPrice(Long productId) {
         // Recuperar precio del producto desde DB
         return 100.0; // ejemplo
-  }
-  
+    }
   
   // /increase → botón +
     public void increaseFromCart(Users user, Long productId) {
