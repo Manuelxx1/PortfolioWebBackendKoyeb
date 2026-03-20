@@ -226,6 +226,7 @@ PreferenceRequest preferenceRequest = PreferenceRequest.builder()
 @PostMapping("/comprarCarrito")
     public ResponseEntity<String> comprarCarrito(@RequestBody CheckoutCarritoRequest request) {
         // Buscar usuario
+      try {
         Users user = userRepository.findById(request.getIdUsuario())
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -246,6 +247,12 @@ PreferenceRequest preferenceRequest = PreferenceRequest.builder()
 
         // Devolver el initPoint para redirigir a Mercado Pago
         return ResponseEntity.ok(initPoint);
+          
+        } catch (RuntimeException e) {
+            // Si algo falla en el servicio, devolvemos 500 con el mensaje
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Error al procesar la compra: " + e.getMessage());
+      }
     }
 
 
