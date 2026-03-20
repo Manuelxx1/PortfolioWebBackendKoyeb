@@ -1,6 +1,8 @@
 package com.abml.jpa.hibernate.dto;
 import com.abml.jpa.hibernate.dto.CartItemDto;
 import java.util.List;
+import java.math.BigDecimal;
+
 
 public class CheckoutCarritoRequest {
     private Long idUsuario;
