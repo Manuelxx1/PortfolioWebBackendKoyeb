@@ -91,19 +91,7 @@ private BigDecimal installmentAmount;    // monto por cuota
 private BigDecimal totalPaidAmount;      // total pagado con intereses
 
    
-    // Método helper para calcular el total dinámicamente
-    /*
-    public void calculateTotal() {
-        BigDecimal total = BigDecimal.ZERO;
-        if (items != null) {
-            for (OrderItems i : items) {
-                total = total.add(i.getAmount());
-            }
-        }
-        this.total = total;
-        this.amount = total;
-    }
-*/
+    
     // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
