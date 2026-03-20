@@ -73,7 +73,7 @@ public String comprarCarrito(Users user,
                                  String address,
                                  String city,
                                  String postalCode,
-                                 BigDecimal shippingType,
+                                 String shippingType,
                                  BigDecimal shippingCost,
                                  String shippingName) {
 
