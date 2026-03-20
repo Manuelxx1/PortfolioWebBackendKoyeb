@@ -79,13 +79,14 @@ String accessToken = System.getenv("MERCADOPAGO_ACCESS_TOKEN");
 MercadoPagoConfig.setAccessToken(accessToken);
         // Convertir los items del carrito a items de Mercado Pago
         List<PreferenceItemRequest> mpItems = items.stream()
-                .map(i -> PreferenceItemRequest.builder()
-                        .title(getProductName(i.getProductId()))
-                        .quantity(i.getQuantity())
-                        .unitPrice(BigDecimal.valueOf(getProductPrice(i.getProductId())))
-                        .currencyId("ARS")
-                        .build())
-                .collect(Collectors.toList());
+        .map(i -> PreferenceItemRequest.builder()
+                .title(getProductName(i.getProductId()))
+                .quantity(i.getQuantity())
+                .unitPrice(getProductPrice(i.getProductId())) // aquí va directo
+                .currencyId("ARS")
+                .build())
+        .collect(Collectors.toList());
+
 
         // Agregar costo de envío como ítem extra si corresponde
         if (shippingCost != null && shippingCost.compareTo(BigDecimal.ZERO) > 0) {
