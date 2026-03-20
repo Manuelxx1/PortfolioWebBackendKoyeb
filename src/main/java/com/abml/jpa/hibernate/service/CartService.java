@@ -43,7 +43,7 @@ public class CartService {
   @Autowired
 private OrdersRepository ordersRepository;
     @Autowired
-private UserRepository ordersRepository;
+private UserRepository userRepository;
 
   public List<CartItem> getCart(Users user) {
     return cartRepo.findByUser(user);
