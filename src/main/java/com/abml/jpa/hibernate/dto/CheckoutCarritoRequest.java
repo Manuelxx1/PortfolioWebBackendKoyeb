@@ -12,7 +12,7 @@ public class CheckoutCarritoRequest {
     private String city;
     private String postalCode;
     private String shippingType;
-    private Double shippingCost;
+    private BigDecimal shippingCost;
     private String shippingName;
 
     // Getters y Setters
@@ -88,11 +88,11 @@ public class CheckoutCarritoRequest {
         this.shippingType = shippingType;
     }
 
-    public Double getShippingCost() {
+    public BigDecimal getShippingCost() {
         return shippingCost;
     }
 
-    public void setShippingCost(Double shippingCost) {
+    public void setShippingCost(BigDecimal shippingCost) {
         this.shippingCost = shippingCost;
     }
 
