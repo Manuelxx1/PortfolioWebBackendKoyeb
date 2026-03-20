@@ -247,6 +247,11 @@ PreferenceRequest preferenceRequest = PreferenceRequest.builder()
 
         // Devolver el initPoint para redirigir a Mercado Pago
         return ResponseEntity.ok(initPoint);
+         
+          /*
+          se captura la RuntimeException generada por el catch en el CartService 
+         y se devuelve un 500 con un mensaje claro
+         para pasarlo al frontend           */
           
         } catch (RuntimeException e) {
             // Si algo falla en el servicio, devolvemos 500 con el mensaje
