@@ -72,8 +72,8 @@ public String comprarCarrito(Users user,
                                  String address,
                                  String city,
                                  String postalCode,
-                                 String shippingType,
-                                 Double shippingCost,
+                                 BigDecimal shippingType,
+                                 BigDecimal shippingCost,
                                  String shippingName) {
 
         // Configurar credenciales
