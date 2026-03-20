@@ -24,6 +24,7 @@ import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.exceptions.MPException;
+import com.mercadopago.exceptions.MPApiException;
 
 
 import java.util.stream.Collectors;
@@ -122,7 +123,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
   y la convierte en RuntimeException.
   */
     
-  } catch (MPException e) {
+  } catch (MPException | MPApiException e) {
         // Manejo de error: loguear y devolver algo apropiado
         throw new RuntimeException("Error al crear preferencia en Mercado Pago", e);
 }
