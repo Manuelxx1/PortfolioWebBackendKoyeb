@@ -115,6 +115,12 @@ MercadoPagoConfig.setAccessToken(accessToken);
 
         // initPoint es la URL de checkout de Mercado Pago
         return preference.getInitPoint();
+  
+  
+  /*
+  se captura la excepción del SDK de MP (MPException) 
+  y la convierte en RuntimeException.
+  */
     
   } catch (MPException e) {
         // Manejo de error: loguear y devolver algo apropiado
