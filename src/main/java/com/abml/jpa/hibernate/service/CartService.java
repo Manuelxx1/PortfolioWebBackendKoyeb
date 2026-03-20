@@ -120,9 +120,10 @@ MercadoPagoConfig.setAccessToken(accessToken);
     }
 
     private BigDecimal getProductPrice(Long productId) {
-        // Recuperar precio del producto desde DB
-        return 100.0; // ejemplo
-    }
+    // Recuperar precio del producto desde DB
+    return BigDecimal.valueOf(100.0); // ejemplo
+}
+
   
   // /increase → botón +
     public void increaseFromCart(Users user, Long productId) {
