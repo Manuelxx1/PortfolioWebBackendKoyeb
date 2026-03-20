@@ -75,8 +75,8 @@ public String comprarCarrito(Users user,
                                  String shippingName) {
 
         // Configurar credenciales de Mercado Pago
-        MercadoPagoConfig.setAccessToken("TU_ACCESS_TOKEN");
-
+String accessToken = System.getenv("MERCADOPAGO_ACCESS_TOKEN");
+MercadoPagoConfig.setAccessToken(accessToken);
         // Convertir los items del carrito a items de Mercado Pago
         List<PreferenceItemRequest> mpItems = items.stream()
                 .map(i -> PreferenceItemRequest.builder()
