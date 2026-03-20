@@ -2,9 +2,14 @@
 package com.abml.jpa.hibernate.service;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 import com.abml.jpa.hibernate.repository.CartItemRepository;
+import com.abml.jpa.hibernate.repository.UserRepository;
+import com.abml.jpa.hibernate.repository.OrderRepository;
+import com.abml.jpa.hibernate.repository.OrderItemsRepository;
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.Users;
 import com.abml.jpa.hibernate.model.Product;
+import com.abml.jpa.hibernate.model.Orders;
+import com.abml.jpa.hibernate.model.OrderItems;
 import com.abml.jpa.hibernate.dto.CartItemDto;
 //Notifications mediante websocket stomp
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -35,6 +40,10 @@ public class CartService {
 
   @Autowired private CartItemRepository cartRepo;
   @Autowired private ProductRepository productRepo;
+  @Autowired
+private OrdersRepository ordersRepository;
+    @Autowired
+private UserRepository ordersRepository;
 
   public List<CartItem> getCart(Users user) {
     return cartRepo.findByUser(user);
@@ -114,9 +123,51 @@ MercadoPagoConfig.setAccessToken(accessToken);
         PreferenceClient client = new PreferenceClient();
         Preference preference = client.create(preferenceRequest);
 
-        // initPoint es la URL de checkout de Mercado Pago
-        return preference.getInitPoint();
-  
+            // Registrar la orden en la base de datos
+            Orders order = new Orders();
+            order.setUser(user);
+            order.setLoginUsername(user.getUsername());
+            order.setLoginEmail(user.getEmail());
+            order.setMpPayerName(name);
+            order.setMpPayerEmail(email);
+            order.setPreferenceId(preference.getId());
+            order.setExternalReference(preference.getExternalReference());
+            order.setStatus("pendiente");
+            order.setShippingType(shippingType);
+            order.setShippingCost(shippingCost != null ? shippingCost.doubleValue() : 0.0);
+            order.setShippingName(shippingName);
+            order.setName(name);
+            order.setEmail(email);
+            order.setPhone(phone);
+            order.setAddress(address);
+            order.setCity(city);
+            order.setPostalCode(postalCode);
+
+            // Convertir items del carrito a OrderItems
+            List<OrderItems> orderItems = items.stream().map(i -> {
+                OrderItems oi = new OrderItems();
+                oi.setOrder(order);
+                oi.setProductId(i.getProductId());
+                oi.setQuantity(i.getQuantity());
+                oi.setUnitPrice(getProductPrice(i.getProductId()));
+                return oi;
+            }).collect(Collectors.toList());
+
+            order.setItems(orderItems);
+
+            // Calcular total
+            BigDecimal total = orderItems.stream()
+                    .map(oi -> oi.getUnitPrice().multiply(BigDecimal.valueOf(oi.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .add(shippingCost != null ? shippingCost : BigDecimal.ZERO);
+
+            order.setTotal(total);
+            order.setAmount(total);
+
+            ordersRepository.save(order);
+
+            // Devolver la URL de checkout de MP 
+            return preference.getInitPoint();
   
   /*
   se captura la excepción del SDK de MP (MPException) 
