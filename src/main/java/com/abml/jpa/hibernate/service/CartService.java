@@ -23,7 +23,7 @@ import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.resources.preference.Preference;
-
+import com.mercadopago.exceptions.MPException;
 
 
 import java.util.stream.Collectors;
@@ -116,7 +116,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
         // initPoint es la URL de checkout de Mercado Pago
         return preference.getInitPoint();
     
-  } catch (com.mercadopago.exceptions.MPException e) {
+  } catch (MPException e) {
         // Manejo de error: loguear y devolver algo apropiado
         throw new RuntimeException("Error al crear preferencia en Mercado Pago", e);
 }
