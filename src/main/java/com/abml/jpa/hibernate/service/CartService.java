@@ -74,6 +74,9 @@ public String comprarCarrito(Users user,
                                  BigDecimal shippingCost,
                                  String shippingName) {
 
+try {
+
+  
         // Configurar credenciales de Mercado Pago
 String accessToken = System.getenv("MERCADOPAGO_ACCESS_TOKEN");
 MercadoPagoConfig.setAccessToken(accessToken);
@@ -112,7 +115,11 @@ MercadoPagoConfig.setAccessToken(accessToken);
 
         // initPoint es la URL de checkout de Mercado Pago
         return preference.getInitPoint();
-    }
+    
+  } catch (com.mercadopago.exceptions.MPException e) {
+        // Manejo de error: loguear y devolver algo apropiado
+        throw new RuntimeException("Error al crear preferencia en Mercado Pago", e);
+}
 
     private String getProductName(Long productId) {
         // Recuperar nombre del producto desde DB
