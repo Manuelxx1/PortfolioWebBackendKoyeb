@@ -41,7 +41,7 @@ public class CartService {
   @Autowired private CartItemRepository cartRepo;
   @Autowired private ProductRepository productRepo;
   @Autowired
-private OrderRepository ordersRepository;
+private OrderRepository orderRepository;
     @Autowired
 private UserRepository userRepository;
 
