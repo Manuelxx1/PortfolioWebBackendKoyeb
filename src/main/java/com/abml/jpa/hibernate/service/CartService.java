@@ -131,18 +131,6 @@ MercadoPagoConfig.setAccessToken(accessToken);
             order.setCity(city);
             order.setPostalCode(postalCode);
 
-  // Crear preferencia con externalReference = ID de la orden
-        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                .items(mpItems)
-                .payer(PreferencePayerRequest.builder()
-                        .name(name)
-                        .email(email)
-                        .build())
-                .externalReference(order.getId().toString()) // 🔹 clave
-                .build();
-
-        PreferenceClient client = new PreferenceClient();
-        Preference preference = client.create(preferenceRequest);
 
 
             // Convertir items del carrito a OrderItems
@@ -183,6 +171,20 @@ List<OrderItems> orderItems = items.stream().map(i -> {
             // Guardar orden con ítems (cascade = ALL se encarga de persistirlos)
   // y también para obtener su ID
         orderRepository.save(order);
+
+  
+  // Crear preferencia con externalReference = ID de la orden
+        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                .items(mpItems)
+                .payer(PreferencePayerRequest.builder()
+                        .name(name)
+                        .email(email)
+                        .build())
+                .externalReference(order.getId().toString()) // 🔹 clave
+                .build();
+
+        PreferenceClient client = new PreferenceClient();
+        Preference preference = client.create(preferenceRequest);
 
 
 
