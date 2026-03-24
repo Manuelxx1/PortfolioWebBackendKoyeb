@@ -436,9 +436,14 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 paymentId = Long.parseLong(resource.replaceAll("[^0-9]", ""));
             }
 
+System.out.println("PaymentId extraído: " + paymentId);
+
             if (paymentId != null) {
                 // Obtener el pago desde Mercado Pago
                 Payment payment = paymentClient.get(paymentId);
+
+                System.out.println("Estado del pago en MP: " + payment.getStatus());
+                System.out.println("ExternalReference recibido: " + payment.getExternalReference());
                 String externalRef = payment.getExternalReference();
 
                 if (externalRef == null) {
@@ -449,6 +454,8 @@ public ResponseEntity<String> webhook(@RequestBody Map<String, Object> payload) 
                 // Buscar la orden en nuestra base de datos
                 Orders order = orderRepository.findById(Long.parseLong(externalRef))
                         .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+                    System.out.println("Orden encontrada en DB con id: " + order.getId() + " y estado actual: " + order.getStatus());
 
                 // 1. Actualizar estado y datos del pagador en la DB
                 order.setStatus(payment.getStatus());
@@ -475,6 +482,7 @@ if (payment.getTransactionDetails() != null) {
                 }
 
                 orderRepository.save(order);
+                System.out.println("✅ Orden actualizada en DB con estado: " + order.getStatus());
 
                 // 2. Construir el detalle de productos (Iterando los items de MP)
                 StringBuilder detallesDeCompra = new StringBuilder();
