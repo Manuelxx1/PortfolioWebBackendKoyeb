@@ -445,15 +445,16 @@ System.out.println("PaymentId extraído: " + paymentId);
                 System.out.println("Estado del pago en MP: " + payment.getStatus());
                 System.out.println("ExternalReference recibido: " + payment.getExternalReference());
                 String externalRef = payment.getExternalReference();
+Orders order;
+if (externalRef != null) {
+    order = orderRepository.findById(Long.parseLong(externalRef))
+            .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+} else {
+    // Buscar por preferenceId como alternativa
+    order = orderRepository.findByPreferenceId(payment.getOrder().getId().toString())
+            .orElseThrow(() -> new RuntimeException("Orden no encontrada por preferenceId"));
+}
 
-                if (externalRef == null) {
-                    System.err.println("No se encontró external_reference en el pago");
-                    return ResponseEntity.ok("Webhook recibido pero sin external_reference");
-                }
-
-                // Buscar la orden en nuestra base de datos
-                Orders order = orderRepository.findById(Long.parseLong(externalRef))
-                        .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
                     System.out.println("Orden encontrada en DB con id: " + order.getId() + " y estado actual: " + order.getStatus());
 
