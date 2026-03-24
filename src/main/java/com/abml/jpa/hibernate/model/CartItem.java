@@ -14,6 +14,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+//este modelo entidad se utiliza para guardar los items
+//o productos que nos retorna la búsqueda a la tabla 
+//cart_items que representa al carrito de compras 
+//que luego vemos en el frontend 
 @Entity
 @Table(name = "cart_items")
 public class CartItem {
