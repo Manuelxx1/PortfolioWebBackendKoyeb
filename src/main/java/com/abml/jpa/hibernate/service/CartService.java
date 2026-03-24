@@ -146,7 +146,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
             // Convertir items del carrito a OrderItems
 List<OrderItems> orderItems = items.stream().map(i -> {
     // Buscar el producto en la base de datos
-    Product product = productRepository.findById(i.getProductId())
+    Product product = productRepo.findById(i.getProductId())
             .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + i.getProductId()));
 
     OrderItems oi = new OrderItems();
