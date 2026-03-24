@@ -179,6 +179,26 @@ List<OrderItems> orderItems = items.stream().map(i -> {
             order.setAmount(total);
 
             // Guardar orden con ítems (cascade = ALL se encarga de persistirlos)
+  // y también para obtener su ID
+        orderRepository.save(order);
+
+
+  // Crear preferencia con externalReference = ID de la orden
+        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                .items(mpItems)
+                .payer(PreferencePayerRequest.builder()
+                        .name(name)
+                        .email(email)
+                        .build())
+                .externalReference(order.getId().toString()) // 🔹 clave
+                .build();
+
+        PreferenceClient client = new PreferenceClient();
+        Preference preference = client.create(preferenceRequest);
+
+        // Actualizar la orden con el preferenceId y externalReference
+        order.setPreferenceId(preference.getId());
+        order.setExternalReference(preference.getExternalReference());
         orderRepository.save(order);
 
             // Devolver la URL de checkout de MP 
