@@ -164,7 +164,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
             order.setTotal(total);
             order.setAmount(total);
 
-            ordersRepository.save(order);
+            orderRepository.save(order);
 
             // Devolver la URL de checkout de MP 
             return preference.getInitPoint();
