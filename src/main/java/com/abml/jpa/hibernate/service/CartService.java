@@ -111,7 +111,27 @@ MercadoPagoConfig.setAccessToken(accessToken);
                     .build());
         }
 
-          // Crear preferencia con externalReference = ID de la orden
+          
+            // Registrar la orden en la base de datos
+            Orders order = new Orders();
+            order.setUser(user);
+            order.setLoginUsername(user.getUsername());
+            order.setLoginEmail(user.getEmail());
+            order.setMpPayerName(name);
+            order.setMpPayerEmail(email);
+            
+            order.setStatus("pendiente");
+            order.setShippingType(shippingType);
+            order.setShippingCost(shippingCost != null ? shippingCost.doubleValue() : 0.0);
+            order.setShippingName(shippingName);
+            order.setName(name);
+            order.setEmail(email);
+            order.setPhone(phone);
+            order.setAddress(address);
+            order.setCity(city);
+            order.setPostalCode(postalCode);
+
+  // Crear preferencia con externalReference = ID de la orden
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(mpItems)
                 .payer(PreferencePayerRequest.builder()
@@ -124,25 +144,6 @@ MercadoPagoConfig.setAccessToken(accessToken);
         PreferenceClient client = new PreferenceClient();
         Preference preference = client.create(preferenceRequest);
 
-            // Registrar la orden en la base de datos
-            Orders order = new Orders();
-            order.setUser(user);
-            order.setLoginUsername(user.getUsername());
-            order.setLoginEmail(user.getEmail());
-            order.setMpPayerName(name);
-            order.setMpPayerEmail(email);
-            order.setPreferenceId(preference.getId());
-            order.setExternalReference(preference.getExternalReference());
-            order.setStatus("pendiente");
-            order.setShippingType(shippingType);
-            order.setShippingCost(shippingCost != null ? shippingCost.doubleValue() : 0.0);
-            order.setShippingName(shippingName);
-            order.setName(name);
-            order.setEmail(email);
-            order.setPhone(phone);
-            order.setAddress(address);
-            order.setCity(city);
-            order.setPostalCode(postalCode);
 
             // Convertir items del carrito a OrderItems
 List<OrderItems> orderItems = items.stream().map(i -> {
