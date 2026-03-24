@@ -111,17 +111,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
                     .build());
         }
 
-        // Crear preferencia con datos del comprador
-        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                .items(mpItems)
-                .payer(PreferencePayerRequest.builder()
-                        .name(name)
-                        .email(email)
-                        .build())
-                .build();
-
-        PreferenceClient client = new PreferenceClient();
-        Preference preference = client.create(preferenceRequest);
+        
 
             // Registrar la orden en la base de datos
             Orders order = new Orders();
