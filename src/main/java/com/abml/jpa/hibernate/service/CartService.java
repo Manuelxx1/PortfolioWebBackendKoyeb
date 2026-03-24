@@ -169,7 +169,7 @@ List<OrderItems> orderItems = items.stream().map(i -> {
 
             // Calcular total
             BigDecimal total = orderItems.stream()
-                    .map(oi -> oi.getUnitPrice().multiply(BigDecimal.valueOf(oi.getQuantity())))
+                    .map(oi -> oi.getPrice().multiply(BigDecimal.valueOf(oi.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add)
                     .add(shippingCost != null ? shippingCost : BigDecimal.ZERO);
 
