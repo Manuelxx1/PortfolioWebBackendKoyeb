@@ -144,16 +144,28 @@ MercadoPagoConfig.setAccessToken(accessToken);
             order.setPostalCode(postalCode);
 
             // Convertir items del carrito a OrderItems
-            List<OrderItems> orderItems = items.stream().map(i -> {
-                OrderItems oi = new OrderItems();
-                oi.setOrder(order);
-                oi.setProduct(i.getProductId());
-                oi.setQuantity(i.getQuantity());
-                oi.setUnitPrice(getProductPrice(i.getProductId()));
-                return oi;
-            }).collect(Collectors.toList());
+List<OrderItems> orderItems = items.stream().map(i -> {
+    // Buscar el producto en la base de datos
+    Product product = productRepository.findById(i.getProductId())
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + i.getProductId()));
 
-            order.setItems(orderItems);
+    OrderItems oi = new OrderItems();
+    oi.setOrder(order); // vincular con la orden
+    oi.setProduct(product); // vincular con el producto
+    oi.setQuantity(i.getQuantity());
+
+    // Precio unitario del producto
+    oi.setPrice(product.getPrice());
+
+    // Calcular monto total del ítem (precio × cantidad)
+    oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())));
+
+    // Guardar nombre del producto como texto plano
+    oi.setProductName(product.getName());
+
+    return oi;
+}).collect(Collectors.toList());
+
 
             // Calcular total
             BigDecimal total = orderItems.stream()
