@@ -165,6 +165,8 @@ List<OrderItems> orderItems = items.stream().map(i -> {
 
     return oi;
 }).collect(Collectors.toList());
+  // 🔹 Asignar los ítems a la orden
+        order.setItems(orderItems);
 
 
             // Calcular total
@@ -176,7 +178,8 @@ List<OrderItems> orderItems = items.stream().map(i -> {
             order.setTotal(total);
             order.setAmount(total);
 
-            orderRepository.save(order);
+            // Guardar orden con ítems (cascade = ALL se encarga de persistirlos)
+        orderRepository.save(order);
 
             // Devolver la URL de checkout de MP 
             return preference.getInitPoint();
