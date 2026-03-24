@@ -147,7 +147,7 @@ MercadoPagoConfig.setAccessToken(accessToken);
             List<OrderItems> orderItems = items.stream().map(i -> {
                 OrderItems oi = new OrderItems();
                 oi.setOrder(order);
-                oi.setProductId(i.getProductId());
+                oi.setProduct(i.getProductId());
                 oi.setQuantity(i.getQuantity());
                 oi.setUnitPrice(getProductPrice(i.getProductId()));
                 return oi;
