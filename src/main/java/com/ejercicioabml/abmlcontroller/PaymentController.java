@@ -495,8 +495,9 @@ if (payment.getTransactionDetails() != null) {
                                        .append("\n");
                     });
                 } else {
+                    String nombreSeguro = (order.getProductName() != null) ? order.getProductName() : "Productos de la orden #" + order.getId();
                     // Si MP no envía info adicional, usamos los datos locales de la orden
-                    detallesDeCompra.append(order.getProductName())
+                    detallesDeCompra.append(nombreSeguro)
                                    .append(" - Cantidad: 1 - Precio: ARS ")
                                    .append(order.getTotal());
                 }
