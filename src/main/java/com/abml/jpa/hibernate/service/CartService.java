@@ -173,10 +173,10 @@ order.setItems(orderItems);
   // Crear preferencia con externalReference = ID de la orden
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(mpItems)
-                .payer(PreferencePayerRequest.builder()
-                        .name(name)
-                        .email(email)
-                        .build())
+               // .payer(PreferencePayerRequest.builder()
+                        //.name(name)
+                        //.email(email)
+                       // .build())
                 .externalReference(order.getId().toString()) // 🔹 clave
               .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .build();
