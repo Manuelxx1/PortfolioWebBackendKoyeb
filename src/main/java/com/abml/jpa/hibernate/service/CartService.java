@@ -181,6 +181,7 @@ List<OrderItems> orderItems = items.stream().map(i -> {
                         .email(email)
                         .build())
                 .externalReference(order.getId().toString()) // 🔹 clave
+              .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
                 .build();
 
         PreferenceClient client = new PreferenceClient();
