@@ -482,8 +482,8 @@ if (payment.getTransactionDetails() != null) {
                     destinatario = order.getUser().getEmail();
                 }
 
-                orderRepository.save(order);
-                System.out.println("✅ Orden actualizada en DB con estado: " + order.getStatus());
+                orderRepository.saveAndFlush(order); 
+                System.out.println(" Orden actualizada en DB con estado: " + order.getStatus());
 
                 // 2. Construir el detalle de productos (Iterando los items de MP)
                 StringBuilder detallesDeCompra = new StringBuilder();
