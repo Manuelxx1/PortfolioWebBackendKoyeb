@@ -134,32 +134,28 @@ MercadoPagoConfig.setAccessToken(accessToken);
 
 
             // Convertir items del carrito a OrderItems
+// 1. Primero creamos los OrderItems (donde ya buscas en la DB)
 List<OrderItems> orderItems = items.stream().map(i -> {
-    // Buscar el producto en la base de datos
     Product product = productRepo.findById(i.getProductId())
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + i.getProductId()));
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + i.getProductId()));
 
     OrderItems oi = new OrderItems();
-    oi.setOrder(order); // vincular con la orden
-    oi.setProduct(product); // vincular con el producto
+    oi.setOrder(order);
+    oi.setProduct(product);
     oi.setQuantity(i.getQuantity());
-
-    // Precio unitario del producto
     oi.setPrice(product.getPrice());
-
-    // Calcular monto total del ítem (precio × cantidad)
     oi.setAmount(product.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())));
-
-    // Guardar nombre del producto como texto plano
     oi.setProductName(product.getName());
-
     return oi;
 }).collect(Collectors.toList());
-  // 🔹 Asignar los ítems a la orden
-        order.setItems(orderItems);
+
+order.setItems(orderItems);
 
 
-            // Calcular total
+           
+  
+  
+  // Calcular total
             BigDecimal total = orderItems.stream()
                     .map(oi -> oi.getPrice().multiply(BigDecimal.valueOf(oi.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add)
@@ -171,6 +167,26 @@ List<OrderItems> orderItems = items.stream().map(i -> {
             // Guardar orden con ítems (cascade = ALL se encarga de persistirlos)
   // y también para obtener su ID
         orderRepository.save(order);
+
+  //  CREAR LOS ITEMS PARA MERCADO PAGO (Usando los datos reales de orderItems)
+        List<PreferenceItemRequest> mpItems = orderItems.stream()
+            .map(oi -> PreferenceItemRequest.builder()
+                    .title(oi.getProductName())
+                    .quantity(oi.getQuantity())
+                    .unitPrice(oi.getPrice()) // AQUÍ ESTABA EL ERROR: Ahora usa el precio de la DB
+                    .currencyId("ARS")
+                    .build())
+            .collect(Collectors.toList());
+
+        // Sumar envío a Mercado Pago
+        if (shippingCost != null && shippingCost.compareTo(BigDecimal.ZERO) > 0) {
+            mpItems.add(PreferenceItemRequest.builder()
+                    .title("Envío: " + shippingName)
+                    .quantity(1)
+                    .unitPrice(shippingCost)
+                    .currencyId("ARS")
+                    .build());
+              }
 
   
   // Crear preferencia con externalReference = ID de la orden
@@ -209,16 +225,7 @@ List<OrderItems> orderItems = items.stream().map(i -> {
 }
 }
 
-    private String getProductName(Long productId) {
-        // Recuperar nombre del producto desde DB
-        return "Producto " + productId;
-    }
-
-    private BigDecimal getProductPrice(Long productId) {
-    // Recuperar precio del producto desde DB
-    return BigDecimal.valueOf(100.0); // ejemplo
-}
-
+    
   
   // /increase → botón +
     public void increaseFromCart(Users user, Long productId) {
