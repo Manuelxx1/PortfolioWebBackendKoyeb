@@ -457,38 +457,40 @@ if (externalRef != null) {
 
 
                     System.out.println("Orden encontrada en DB con id: " + order.getId() + " y estado actual: " + order.getStatus());
-
-                // 1. Actualizar estado y datos del pagador en la DB
-                order.setStatus(payment.getStatus());
-                order.setTotal(payment.getTransactionAmount());
-                order.setAmount(payment.getTransactionAmount()); 
+// 1. PRIMERO: Guardamos el estado que tiene la orden en la DB actualmente (antes de cambiarlo)
+String estadoAnterior = order.getStatus();
+                // 2. SEGUNDO: Actualizamos los datos del pago en el objeto (pero NO el status todavía)
+order.setTotal(payment.getTransactionAmount());
+order.setAmount(payment.getTransactionAmount());
 
                              // ---  NUEVO: LÓGICA DE DESCUENTO DE STOCK ---
                 // Solo descontamos si el pago es "approved" y la orden aún no estaba aprobada
                 // (esto evita que si MP manda el webhook dos veces, restes el stock dos veces)
-                if ("approved".equals(payment.getStatus()) && !"approved".equals(order.getStatus())) {
-                    
-                    System.out.println("💳 Pago aprobado. Descontando stock para la orden: " + order.getId());
+                // 3. TERCERO: LÓGICA DE STOCK (Usando el estado que guardamos en el paso 1)
+if ("approved".equals(payment.getStatus()) && !"approved".equals(estadoAnterior)) {
+    
+    System.out.println("💳 Pago aprobado. Descontando stock para la orden: " + order.getId());
 
-                    for (OrderItems item : order.getItems()) {
-                        Product product = item.getProduct();
-                        int cantidadComprada = item.getQuantity();
+    for (OrderItems item : order.getItems()) {
+        Product product = item.getProduct();
+        if (product != null) {
+            int cantidadComprada = item.getQuantity();
+            int stockActual = product.getStock();
+            
+            if (stockActual >= cantidadComprada) {
+                product.setStock(stockActual - cantidadComprada);
+                // IMPORTANTE: Asegúrate que el nombre del repo sea el correcto (productRepository o productRepo)
+                productRepository.save(product); 
+                System.out.println("✅ Stock restado: " + product.getName() + " (Nuevo stock: " + product.getStock() + ")");
+            } else {
+                System.err.println("⚠️ STOCK INSUFICIENTE para: " + product.getName());
+            }
+        }
+    }
+}
 
-                        if (product != null) {
-                            int stockActual = product.getStock();
-                            if (stockActual >= cantidadComprada) {
-                                product.setStock(stockActual - cantidadComprada);
-                                productRepository.save(product); // 🔹 Actualiza la tabla Products
-                                System.out.println("✅ Stock restado: " + product.getName() + " (Quedan: " + product.getStock() + ")");
-                            } else {
-                                System.err.println("⚠️ STOCK INSUFICIENTE para: " + product.getName());
-                                // Opcional: podrías poner el stock en 0 si prefieres
-                                // product.setStock(0);
-                                // productRepo.save(product);
-                            }
-                        }
-                    }
-                }
+                // 4. CUARTO: Ahora sí, actualizamos el status de la orden para que coincida con MP
+order.setStatus(payment.getStatus());
                 // --- FIN LÓGICA DE STOCK ---
 
                 //  NUEVO: guardar cuotas
