@@ -57,9 +57,12 @@ private UserRepository userRepository;
   //del controller provenientes del frontend 
   //y se le asignan a este metodo 
   public void addToCart(Users user, Long productId, int quantity) {
-    // 1. Buscamos si el usuario ya tiene este producto específico en su carrito
-    
-    Optional<CartItem> itemExistente = cartRepo.findByUserAndProductId(user, productId);
+    // 1. Buscamos el producto primero (ya lo hacías)
+        Product product = productRepo.findById(productId)
+          .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+    // 2. Ahora buscamos si ya existe el ítem en el carrito con ese usuario y ese producto
+    Optional<CartItem> itemExistente = cartRepo.findByUserAndProduct(user, product);
 
     if (itemExistente.isPresent()) {
         // 2. SI YA EXISTE: Solo aumentamos la cantidad
@@ -68,11 +71,10 @@ private UserRepository userRepository;
         item.setAddedAt(LocalDateTime.now()); // Actualizamos la fecha si quieres
         cartRepo.save(item);
         System.out.println("✅ Cantidad actualizada: " + item.getProduct().getName());
-    } else {
-        // 3. SI NO EXISTE: Recién ahí creamos el objeto nuevo (tu código original)
-        Product product = productRepo.findById(productId)
-          .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
+    } 
+      //si no existe ecreamos uno nuevo
+    else {
+  
         CartItem item = new CartItem();
         item.setUser(user);
         item.setProduct(product);
