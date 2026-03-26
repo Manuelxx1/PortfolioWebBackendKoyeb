@@ -28,6 +28,7 @@ import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.resources.preference.Preference;
+import com.mercadopago.client.preference.PreferenceBackUrlsRequest;    
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.exceptions.MPApiException;
 
