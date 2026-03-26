@@ -11,6 +11,7 @@ import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.model.Orders;
 import com.abml.jpa.hibernate.model.OrderItems;
 import com.abml.jpa.hibernate.dto.CartItemDto;
+
 //Notifications mediante websocket stomp
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 //Enviar mensajes programados
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.math.BigDecimal;
 
 import com.mercadopago.MercadoPagoConfig;
@@ -53,7 +55,7 @@ private UserRepository userRepository;
 
   //metod que agrega el producto que nos retorno
   //la búsqueda en el frontend 
-  //se reciben los datos del método addToCart
+  //se reciben los datos del método add
   //del controller provenientes del frontend 
   //y se le asignan a este metodo 
   public void addToCart(Users user, Long productId, int quantity) {
