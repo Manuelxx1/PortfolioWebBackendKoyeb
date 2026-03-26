@@ -11,6 +11,7 @@ package com.abml.jpa.hibernate.repository;
 
 import com.abml.jpa.hibernate.model.CartItem;
 import com.abml.jpa.hibernate.model.Users;
+import com.abml.jpa.hibernate.model.Product;
 import java.util.List;
 import java.util.Optional;
 //class JpaRepository (que maneja repositorios JPA
@@ -37,7 +38,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
   // Este método busca un ítem que coincida con el usuario Y el producto
   //y así poder agregar items al carrito aumentando la cantidad nomas
   //sin que se repita el registro del items en la tabla
-  Optional<CartItem> findByUserAndProduct(Users user, Long product);
+  Optional<CartItem> findByUserAndProduct(Users user, Product product);
 
 
   // Busca carritos con items agregados antes de cierta fecha 
