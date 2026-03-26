@@ -169,17 +169,26 @@ order.setItems(orderItems);
                     .build());
               }
 
+                        // 1. Crear el objeto de Back URLs por separado
+PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+    .success("https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev/estado-compra")
+    .failure("https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev/estado-compra")
+    .pending("https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev/estado-compra")
+    .build();
+
   
   // Crear preferencia con externalReference = ID de la orden
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(mpItems)
-               // .payer(PreferencePayerRequest.builder()
-                        //.name(name)
-                        //.email(email)
-                       // .build())
+                .payer(PreferencePayerRequest.builder()
+                        .name(name)
+                        .email(email)
+                       .build())
                 .externalReference(order.getId().toString()) // 🔹 clave
               .notificationUrl("https://portfoliowebbackendkoyeb-1-ulka.onrender.com/api/payments/webhook")
-                .build();
+                .backUrls(backUrls) // <-- Aquí pasas el objeto ya construido
+    .autoReturn("all")
+          .build();
 
         PreferenceClient client = new PreferenceClient();
         Preference preference = client.create(preferenceRequest);
