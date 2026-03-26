@@ -37,7 +37,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
   // Este método busca un ítem que coincida con el usuario Y el producto
   //y así poder agregar items al carrito aumentando la cantidad nomas
   //sin que se repita el registro del items en la tabla
-  Optional<CartItem> findByUserAndProductId(Users user, Long productId);
+  Optional<CartItem> findByUserAndProduct(Users user, Long product);
 
 
   // Busca carritos con items agregados antes de cierta fecha 
