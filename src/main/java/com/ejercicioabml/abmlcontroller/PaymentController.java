@@ -478,7 +478,7 @@ if (externalRef != null) {
                             int stockActual = product.getStock();
                             if (stockActual >= cantidadComprada) {
                                 product.setStock(stockActual - cantidadComprada);
-                                productRepo.save(product); // 🔹 Actualiza la tabla Products
+                                productRepository.save(product); // 🔹 Actualiza la tabla Products
                                 System.out.println("✅ Stock restado: " + product.getName() + " (Quedan: " + product.getStock() + ")");
                             } else {
                                 System.err.println("⚠️ STOCK INSUFICIENTE para: " + product.getName());
