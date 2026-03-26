@@ -40,6 +40,9 @@ public class Product {
   public String getDescription() { return description; }
   public BigDecimal getPrice() { return price; }
   public Integer getStock() { return stock; }
+  public void setStock(Integer stock) {
+    this.stock = stock;
+  }
   public LocalDateTime getCreatedAt() { return createdAt; }
   public String getImageUrl() { return imageUrl; }
   public String getCategory() { return category; }
