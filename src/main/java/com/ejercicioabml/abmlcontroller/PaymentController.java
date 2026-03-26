@@ -463,6 +463,34 @@ if (externalRef != null) {
                 order.setTotal(payment.getTransactionAmount());
                 order.setAmount(payment.getTransactionAmount()); 
 
+                             // ---  NUEVO: LÓGICA DE DESCUENTO DE STOCK ---
+                // Solo descontamos si el pago es "approved" y la orden aún no estaba aprobada
+                // (esto evita que si MP manda el webhook dos veces, restes el stock dos veces)
+                if ("approved".equals(payment.getStatus()) && !"approved".equals(order.getStatus())) {
+                    
+                    System.out.println("💳 Pago aprobado. Descontando stock para la orden: " + order.getId());
+
+                    for (OrderItems item : order.getItems()) {
+                        Product product = item.getProduct();
+                        int cantidadComprada = item.getQuantity();
+
+                        if (product != null) {
+                            int stockActual = product.getStock();
+                            if (stockActual >= cantidadComprada) {
+                                product.setStock(stockActual - cantidadComprada);
+                                productRepo.save(product); // 🔹 Actualiza la tabla Products
+                                System.out.println("✅ Stock restado: " + product.getName() + " (Quedan: " + product.getStock() + ")");
+                            } else {
+                                System.err.println("⚠️ STOCK INSUFICIENTE para: " + product.getName());
+                                // Opcional: podrías poner el stock en 0 si prefieres
+                                // product.setStock(0);
+                                // productRepo.save(product);
+                            }
+                        }
+                    }
+                }
+                // --- FIN LÓGICA DE STOCK ---
+
                 //  NUEVO: guardar cuotas
 order.setInstallments(payment.getInstallments());
 if (payment.getTransactionDetails() != null) {
