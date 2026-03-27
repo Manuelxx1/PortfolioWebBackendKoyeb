@@ -795,62 +795,9 @@ public List<Product> searchProducts(@RequestParam String name) {
 
     @Autowired private CartService cartService;
 
-  /* para usar con login
-  @GetMapping("/api/cart")
-  public List<CartItem> getCart(HttpSession session) {
-    Users user = (Users) session.getAttribute("user");
-    if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-    return cartService.getCart(user);
-  }
+  
 
-  @PostMapping("/add")
-  public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body, HttpSession session) {
-    Users user = (Users) session.getAttribute("user");
-    if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-    Long productId = Long.valueOf(body.get("productId").toString());
-    int quantity = Integer.parseInt(body.get("quantity").toString());
-
-    cartService.addToCart(user, productId, quantity);
-    return ResponseEntity.ok("Producto agregado");
-  }
-
-  @DeleteMapping("/remove/{id}")
-  public ResponseEntity<?> removeFromCart(@PathVariable Long id, HttpSession session) {
-    Users user = (Users) session.getAttribute("user");
-    if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-    cartService.removeFromCart(user, id);
-    return ResponseEntity.ok("Producto eliminado");
-  }
-
-         //vaciar carrito                             
-@DeleteMapping("/clear")
-public ResponseEntity<?> clearCart(HttpSession session) {
-    Users user = (Users) session.getAttribute("user");
-    if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-    cartService.clearCart(user);
-    return ResponseEntity.ok("Carrito vaciado");
-}
-*/
-
-
-  // endpoints de prueba sin login 
-  @Autowired
-private UserRepository userRepository;
-    @Autowired private CartItemRepository cartRepo;
-
-private Users getTestUser() {
-    return userRepository.findByUsername("guest")
-        .orElseGet(() -> {
-            Users newUser = new Users();
-            newUser.setUsername("guest");
-            newUser.setEmail("guest@example.com");
-            newUser.setName("Usuario de prueba");
-            newUser.setPassword("guest");
-            return userRepository.save(newUser);
-        });
-}
+  
 
 
 
