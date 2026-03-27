@@ -854,25 +854,18 @@ public ResponseEntity<List<CartItem>> clearCart() {
 }
 
 */
-  //quitar items del carrito 
+  
 // Botón +
     @PostMapping("/increase")
-public ResponseEntity<List<CartItem>> increaseFromCart(
-        @RequestBody Map<String, Object> body,
-        Authentication authentication) {
-
-    // Obtener el username del usuario logueado
-    String username = authentication.getName();
-
-    // Buscar el usuario en la base de datos
-    Users user = userRepository.findByUsername(username)
+public ResponseEntity<List<CartItem>> increaseFromCart(@RequestBody Map<String, Object> body) {
+    Long userId = Long.valueOf(body.get("userId").toString());
+    Users user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
     Long productId = Long.valueOf(body.get("productId").toString());
     cartService.increaseFromCart(user, productId);
 
-    // devolver carrito actualizado
-    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
+    List<CartItem> updatedCart = cartRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
 
