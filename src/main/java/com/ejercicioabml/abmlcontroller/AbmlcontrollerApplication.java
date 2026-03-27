@@ -830,7 +830,7 @@ public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
         this.template.convertAndSend("/topic/notificaciones", mensaje);
     return ResponseEntity.ok("Producto agregado");
 }
-
+/*
 @DeleteMapping("/remove/{cartItemId}")
 public ResponseEntity<List<CartItem>> removeFromCart(@PathVariable Long cartItemId) {
     Users user = getTestUser();
@@ -853,7 +853,7 @@ public ResponseEntity<List<CartItem>> clearCart() {
     return ResponseEntity.ok(updatedCart);
 }
 
-
+*/
   //quitar items del carrito 
 // Botón +
     @PostMapping("/increase")
@@ -879,6 +879,7 @@ public ResponseEntity<List<CartItem>> increaseFromCart(
 
   
 // boton -
+  /*
 @PostMapping("/decrease")
 public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, Object> body) {
     Users user = getTestUser();
@@ -890,6 +891,7 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
     List<CartItem> updatedCart = cartItemRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
+*/
 
 @GetMapping("/users")
     public List<Users> getAllUsers() {
