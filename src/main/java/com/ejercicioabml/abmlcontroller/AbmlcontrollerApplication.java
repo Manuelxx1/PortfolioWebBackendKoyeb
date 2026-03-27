@@ -865,7 +865,7 @@ public ResponseEntity<List<CartItem>> increaseFromCart(@RequestBody Map<String, 
     Long productId = Long.valueOf(body.get("productId").toString());
     cartService.increaseFromCart(user, productId);
 
-    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
 
