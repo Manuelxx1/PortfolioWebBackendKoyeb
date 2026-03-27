@@ -234,14 +234,31 @@ PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
     
   
   // /increase → botón +
+  //Define un método público(increaseFromCart) que no devuelve nada (void).
+//Recibe dos parámetros:
+//Users user: el objeto del usuario dueño del carrito.
+//Long productId: el ID del producto que se quiere aumentar.
     public void increaseFromCart(Users user, Long productId) {
-        CartItem item = cartRepo.findByUser(user).stream()
+        //Aquí ocurre la búsqueda del ítem dentro del carrito del usuario:
+//cartRepo.findByUser(user) → obtiene todos los CartItem asociados a ese usuario desde la base.
+//.stream() → convierte la lista en un flujo para poder aplicar filtros.
+//.filter(i -> i.getProduct().getId().equals(productId)) → se queda solo con los ítems cuyo producto tenga el mismo ID que el productId recibido.
+//.findFirst() → toma el primero que cumpla la condición.
+//.orElseThrow(...) → si no encuentra ninguno, lanza una excepción "Item no encontrado".
+//El resultado se guarda en la variable item.
+      CartItem item = cartRepo.findByUser(user).stream()
             .filter(i -> i.getProduct().getId().equals(productId))
             .findFirst()
             .orElseThrow(() -> new RuntimeException("Item no encontrado"));
-
+//Se Modifica el objeto CartItem encontrado:
+// (item.getQuantity() + 1) Obtiene la cantidad actual
+//y Le suma 1
+//Actualiza el valor de la property Quantity con setQuantity(...)
         item.setQuantity(item.getQuantity() + 1);
-        cartRepo.save(item);
+       //Persiste el cambio en la base de datos usando el repositorio.
+//Si el ítem ya existía, se actualiza con la nueva cantidad.
+//Si fuera un ítem nuevo (no en este caso), lo insertaría.
+      cartRepo.save(item);
     }
 
     // /decrease → botón −
