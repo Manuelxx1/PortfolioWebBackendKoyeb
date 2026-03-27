@@ -834,16 +834,37 @@ public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
   
 // Botón +
     @PostMapping("/increase")
+  //Se Define el método increaseFromCart
+  //ResponseEntity<List<CartItem>> 
+  //indica que la respuesta será un objeto HTTP
+  //con un cuerpo que contiene una lista de CartItem
+  //@RequestBody Map<String, Object> body 
+  //significa que espera recibir un JSON(Object) en el body de la request,
+  //y lo convierte en un Map para acceder a sus claves (userId, productId).
 public ResponseEntity<List<CartItem>> increaseFromCart(@RequestBody Map<String, Object> body) {
-    Long userId = Long.valueOf(body.get("userId").toString());
-    Users user = userRepository.findById(userId)
+    //Extrae el valor de la clave "userId" del body, 
+  //lo convierte a String y luego a Long
+  ////Este es el ID del usuario que mandó el frontend.
+  Long userId = Long.valueOf(body.get("userId").toString());
+   //Busca en la base de datos el objeto Users correspondiente a ese userId.
+  //Si no lo encuentra, lanza una excepción con el mensaje "Usuario no encontrado".
+//Si lo encuentra, guarda el objeto Users en la variable user.
+  Users user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
+//Extrae el productId del body, lo convierte a String y luego a Long.
+  //Este es el ID del producto que se quiere aumentar en el carrito.
     Long productId = Long.valueOf(body.get("productId").toString());
-    cartService.increaseFromCart(user, productId);
-
+      //Llama al servicio de carrito (cartService) para que aumente la cantidad del producto indicado en el carrito del usuario.
+//Este método (cartService) se encarga de la lógica: buscar el CartItem, incrementar la cantidad y guardarlo.
+  cartService.increaseFromCart(user, productId);
+  //Vuelve a consultar el repositorio de carrito (cartItemRepo)
+  //para obtener la lista actualizada de ítems del carrito de ese usuario
+  //después de la modificación.
     List<CartItem> updatedCart = cartItemRepo.findByUser(user);
-    return ResponseEntity.ok(updatedCart);
+    //Devuelve una respuesta HTTP con código 200 OK 
+  //con en el cuerpo la lista de CartItem actualizada. 
+  //El frontend recibe esa lista y puede mostrar el carrito actualizado.
+  return ResponseEntity.ok(updatedCart);
 }
 
 
