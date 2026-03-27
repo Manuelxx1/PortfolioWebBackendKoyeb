@@ -28,6 +28,8 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.AuthenticationConfiguration;
+import org.springframework.security.core.Authentication;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -854,15 +856,25 @@ public ResponseEntity<List<CartItem>> clearCart() {
   //quitar items del carrito 
 // Botón +
     @PostMapping("/increase")
-public ResponseEntity<List<CartItem>> increaseFromCart(@RequestBody Map<String, Object> body) {
-    Users user = getTestUser();
+public ResponseEntity<List<CartItem>> increaseFromCart(
+        @RequestBody Map<String, Object> body,
+        Authentication authentication) {
+
+    // Obtener el username del usuario logueado
+    String username = authentication.getName();
+
+    // Buscar el usuario en la base de datos
+    Users user = userRepo.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
     Long productId = Long.valueOf(body.get("productId").toString());
     cartService.increaseFromCart(user, productId);
 
-    // devolver carrito actualizado con el aumento del item
+    // devolver carrito actualizado
     List<CartItem> updatedCart = cartRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
+
 
   
 // boton -
