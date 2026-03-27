@@ -830,30 +830,7 @@ public ResponseEntity<?> addToCart(@RequestBody Map<String, Object> body) {
         this.template.convertAndSend("/topic/notificaciones", mensaje);
     return ResponseEntity.ok("Producto agregado");
 }
-/*
-@DeleteMapping("/remove/{cartItemId}")
-public ResponseEntity<List<CartItem>> removeFromCart(@PathVariable Long cartItemId) {
-    Users user = getTestUser();
-    cartService.removeFromCart(user, cartItemId);
 
-    // devolver carrito actualizado
-    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
-    return ResponseEntity.ok(updatedCart);
-}
-
-
-
-@DeleteMapping("/clear")
-public ResponseEntity<List<CartItem>> clearCart() {
-    Users user = getTestUser();
-    cartService.clearCart(user);
-
-    // devolver carrito vacío
-    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
-    return ResponseEntity.ok(updatedCart);
-}
-
-*/
   
 // Botón +
     @PostMapping("/increase")
@@ -870,21 +847,45 @@ public ResponseEntity<List<CartItem>> increaseFromCart(@RequestBody Map<String, 
 }
 
 
-  
-// boton -
-  /*
-@PostMapping("/decrease")
+  @PostMapping("/decrease")
 public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, Object> body) {
-    Users user = getTestUser();
-    Long productId = Long.valueOf(body.get("productId").toString());
+    Long userId = Long.valueOf(body.get("userId").toString());
+    Users user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+    Long productId = Long.valueOf(body.get("productId").toString());
     cartService.decreaseFromCart(user, productId);
 
-    // devolver carrito actualizado
     List<CartItem> updatedCart = cartItemRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
-*/
+
+@PostMapping("/remove")
+public ResponseEntity<List<CartItem>> removeFromCart(@RequestBody Map<String, Object> body) {
+    Long userId = Long.valueOf(body.get("userId").toString());
+    Users user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    Long productId = Long.valueOf(body.get("productId").toString());
+    cartService.removeFromCart(user, productId);
+
+    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
+    return ResponseEntity.ok(updatedCart);
+}
+
+@PostMapping("/clear")
+public ResponseEntity<List<CartItem>> clearCart(@RequestBody Map<String, Object> body) {
+    Long userId = Long.valueOf(body.get("userId").toString());
+    Users user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    cartService.clearCart(user);
+
+    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
+    return ResponseEntity.ok(updatedCart);
+}
+
+
 
 @GetMapping("/users")
     public List<Users> getAllUsers() {
