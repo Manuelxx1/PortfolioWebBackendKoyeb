@@ -260,18 +260,15 @@ public void decreaseFromCart(Users user, Long productId) {
     }
 }
 
-    // /remove/{id}
-    public void removeFromCart(Users user, Long cartItemId) {
-        CartItem item = cartRepo.findById(cartItemId)
+    public void removeFromCart(Users user, Long productId) {
+        CartItem item = cartRepo.findByUser(user).stream()
+            .filter(i -> i.getProduct().getId().equals(productId))
+            .findFirst()
             .orElseThrow(() -> new RuntimeException("Item no encontrado"));
-
-        if (!item.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("No autorizado");
-        }
 
         cartRepo.delete(item);
     }
-
+  
     // /clear
     public void clearCart(Users user) {
         List<CartItem> items = cartRepo.findByUser(user);
