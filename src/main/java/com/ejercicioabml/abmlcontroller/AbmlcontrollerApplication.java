@@ -328,7 +328,8 @@ perso.setEducacion(peducacion);//tipo de datos de salida tipo String
     } 
         */
 
-
+    @Autowired private UserRepository userRepository;
+@Autowired private CartItemRepository cartItemRepo;  
   //login sinjwt copilot para el proyecto buscador y noticias 
 //a pesar que no se usa jwt se usa unas clasess
   //de springsecurity como BCryptPasswordEncoder en securityconfig  para codificar
@@ -836,7 +837,7 @@ public ResponseEntity<List<CartItem>> removeFromCart(@PathVariable Long cartItem
     cartService.removeFromCart(user, cartItemId);
 
     // devolver carrito actualizado
-    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
 
@@ -848,7 +849,7 @@ public ResponseEntity<List<CartItem>> clearCart() {
     cartService.clearCart(user);
 
     // devolver carrito vacío
-    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
 
@@ -864,14 +865,14 @@ public ResponseEntity<List<CartItem>> increaseFromCart(
     String username = authentication.getName();
 
     // Buscar el usuario en la base de datos
-    Users user = userRepo.findByUsername(username)
+    Users user = userRepository.findByUsername(username)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
     Long productId = Long.valueOf(body.get("productId").toString());
     cartService.increaseFromCart(user, productId);
 
     // devolver carrito actualizado
-    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
 
@@ -886,7 +887,7 @@ public ResponseEntity<List<CartItem>> decreaseFromCart(@RequestBody Map<String, 
     cartService.decreaseFromCart(user, productId);
 
     // devolver carrito actualizado
-    List<CartItem> updatedCart = cartRepo.findByUser(user);
+    List<CartItem> updatedCart = cartItemRepo.findByUser(user);
     return ResponseEntity.ok(updatedCart);
 }
 
