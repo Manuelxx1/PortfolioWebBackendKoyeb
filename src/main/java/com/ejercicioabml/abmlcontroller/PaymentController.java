@@ -35,7 +35,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 
 import java.math.BigDecimal;
-
+//para el formato de moneda 
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import java.util.ArrayList;
 
@@ -518,14 +520,18 @@ if (payment.getTransactionDetails() != null) {
                 // 2. Construir el detalle de productos (Iterando los items de MP)
                 StringBuilder detallesDeCompra = new StringBuilder();
                 if (payment.getAdditionalInfo() != null && payment.getAdditionalInfo().getItems() != null) {
+                    
                     detallesDeCompra.append("<table style='width:100%; border-collapse:collapse;'>")
          .append("<thead><tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr></thead><tbody>");
                     payment.getAdditionalInfo().getItems().forEach(item -> {
-                        BigDecimal subtotal = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+                        Locale localeAR = new Locale("es", "AR"); // Español de Argentina
+NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(localeAR);
+BigDecimal subtotal = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+String subtotalFormateado = currencyFormatter.format(subtotal);
     detallesDeCompra.append("<tr>")
              .append("<td>").append(item.getTitle()).append("</td>")
              .append("<td style='text-align:center;'>").append(item.getQuantity()).append("</td>")
-             .append("<td style='text-align:right;'>ARS ").append(subtotal).append("</td>")
+             .append("<td style='text-align:right;'>ARS ").append(subtotalFormateado).append("</td>")
              .append("</tr>");
                
 });
