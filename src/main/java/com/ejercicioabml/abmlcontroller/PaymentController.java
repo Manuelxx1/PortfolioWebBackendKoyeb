@@ -520,10 +520,11 @@ if (payment.getTransactionDetails() != null) {
                 if (payment.getAdditionalInfo() != null && payment.getAdditionalInfo().getItems() != null) {
                     payment.getAdditionalInfo().getItems().forEach(item -> {
                         detallesDeCompra.append(item.getTitle())
-                                       .append(" - Cantidad: ").append(item.getQuantity())
-                                       .append(" - Precio: ARS ").append(item.getUnitPrice())
-                                       .append("\n");
-                    });
+               .append(" - Cantidad: ").append(item.getQuantity())
+               .append(" - Precio: ARS ")
+               .append(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+               .append("\n");
+});
                 } else {
                     String nombreSeguro = (order.getProductName() != null) ? order.getProductName() : "Productos de la orden #" + order.getId();
                     // Si MP no envía info adicional, usamos los datos locales de la orden
@@ -602,9 +603,9 @@ String mensajeHTML = String.format(
     mensajeAyuda,         // 5. El texto de "No te preocupes..."
     payment.getId(),      // 6. ID del pago
     colorBorde,           // 7. Color del detalle lateral
-    detallesDeCompra.toString(), // 8. Lista de productos
-   //payment.getTransactionAmount() // 9. Monto total
-payment.getTransactionDetails().getTotalPaidAmount()
+    detallesDeCompra.toString(), // 8. Lista de productos con detalle de compra 
+   payment.getTransactionAmount() // 9. Monto total
+
 );
                         
                         emailData.put("mensaje", mensajeHTML);
