@@ -603,7 +603,8 @@ String mensajeHTML = String.format(
     payment.getId(),      // 6. ID del pago
     colorBorde,           // 7. Color del detalle lateral
     detallesDeCompra.toString(), // 8. Lista de productos
-    payment.getTransactionAmount() // 9. Monto total
+   //payment.getTransactionAmount() // 9. Monto total
+payment.getTransactionDetails().getTotalPaidAmount()
 );
                         
                         emailData.put("mensaje", mensajeHTML);
