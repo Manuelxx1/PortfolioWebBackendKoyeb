@@ -613,7 +613,9 @@ String mensajeHTML = String.format(
                         // Mantengo estos por si tu script de Termux los usa por separado
                         emailData.put("estado", payment.getStatus());
                         emailData.put("producto", order.getProductName());
-
+//restTemplate nos permite enviar los datos a la api controller de Termux,
+                        //el controller recibe los datos y llama a su servicio 
+                        //que es el encargado de enviar el email al usuario                         
                         restTemplate.postForEntity(urlTermux, emailData, String.class);
                         System.out.println("Petición enviada a Termux con detalles completos");
                     } catch (Exception e) {
