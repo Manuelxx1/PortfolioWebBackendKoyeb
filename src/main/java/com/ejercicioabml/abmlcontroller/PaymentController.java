@@ -518,13 +518,19 @@ if (payment.getTransactionDetails() != null) {
                 // 2. Construir el detalle de productos (Iterando los items de MP)
                 StringBuilder detallesDeCompra = new StringBuilder();
                 if (payment.getAdditionalInfo() != null && payment.getAdditionalInfo().getItems() != null) {
+                    detallesDeCompra.append("<table style='width:100%; border-collapse:collapse;'>")
+         .append("<thead><tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr></thead><tbody>");
                     payment.getAdditionalInfo().getItems().forEach(item -> {
-                        detallesDeCompra.append(item.getTitle())
-               .append(" - Cantidad: ").append(item.getQuantity())
-               .append(" - Precio: ARS ")
-               .append(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-               .append("\n");
+                        BigDecimal subtotal = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+    detallesDeCompra.append("<tr>")
+             .append("<td>").append(item.getTitle()).append("</td>")
+             .append("<td style='text-align:center;'>").append(item.getQuantity()).append("</td>")
+             .append("<td style='text-align:right;'>ARS ").append(subtotal).append("</td>")
+             .append("</tr>");
+               
 });
+                    detallesDeCompra.append("</tbody></table>");
+                    
                 } else {
                     String nombreSeguro = (order.getProductName() != null) ? order.getProductName() : "Productos de la orden #" + order.getId();
                     // Si MP no envía info adicional, usamos los datos locales de la orden
