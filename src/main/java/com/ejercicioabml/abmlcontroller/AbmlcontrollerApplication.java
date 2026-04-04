@@ -784,6 +784,12 @@ public List<Product> searchProducts(@RequestParam String name) {
     return productService.searchByName(name);
 }
 
+  // Endpoint GET para traer todos los productos
+    @GetMapping("/api/todoslosproductos")
+    public List<Product> getAllProducts() {
+        return productService.findAll();
+    }
+
 
   @GetMapping("/{id}")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
