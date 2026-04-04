@@ -25,6 +25,10 @@ public class ProductService {
       .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
   }
 
+  //traer todos los productos 
+public List<Product> findAll() {
+        return productRepo.findAll();
+}
 
   
  
