@@ -795,6 +795,13 @@ public List<Product> searchProducts(@RequestParam String name) {
         return productService.getFeaturedProducts();
     }
 
+
+  // Endpoint para obtener productos por categoría
+    @GetMapping("/category/{category}")
+    public List<Product> getProductsByCategory(@PathVariable String category) {
+        return productService.getProductsByCategory(category);
+    }
+
   @GetMapping("/{id}")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
     try {
