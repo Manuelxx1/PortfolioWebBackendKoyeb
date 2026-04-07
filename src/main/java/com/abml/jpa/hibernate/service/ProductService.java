@@ -31,6 +31,8 @@ public List<Product> findAll() {
         return productRepo.findAll();
 }
 //Buscar productos o datos por section
+  //usando los datos del archivo  enum section 
+  //como parámetro de consulta
   public List<Product> getFeaturedProducts() {
         return productRepo.findBySection(Section.DESTACADOS);
   }
