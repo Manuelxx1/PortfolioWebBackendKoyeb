@@ -29,7 +29,10 @@ public class ProductService {
 public List<Product> findAll() {
         return productRepo.findAll();
 }
-
+//Buscar productos o datos por section
+  public List<Product> getFeaturedProducts() {
+        return productRepository.findBySection(Section.DESTACADOS);
+  }
   
  
   @Autowired
