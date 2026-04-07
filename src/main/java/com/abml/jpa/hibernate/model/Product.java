@@ -33,6 +33,11 @@ public class Product {
 
   @Column(name = "created_at")
   private LocalDateTime createdAt;
+
+  
+  @Enumerated(EnumType.STRING)
+  @Column(name = "section")
+  private Section section;
   
   // Getters
   public Long getId() { return id; }
