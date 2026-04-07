@@ -54,5 +54,7 @@ public class Product {
 
   // Setters (opcional, pero útil si vas a modificar desde el servicio)
   public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-  public void setCategory(String category) { this.category = category; }
+  
+public void setCategory(String category) { this.category = category; }
+public void setSection(Section section) { this.section = section; }
 }
