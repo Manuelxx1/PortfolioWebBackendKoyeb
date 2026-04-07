@@ -790,6 +790,10 @@ public List<Product> searchProducts(@RequestParam String name) {
         return productService.findAll();
     }
 
+  @GetMapping("/api/destacados")
+    public List<Product> getFeaturedProducts() {
+        return productService.getFeaturedProducts();
+    }
 
   @GetMapping("/{id}")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
