@@ -23,4 +23,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   //método personalizado 
   List<Product> findByNameContainingIgnoreCase(String name);
 
+
+  //Buscar los productos por su section buscando en el campo section
+    List<Product> findBySection(Section section);
+
+
 }
