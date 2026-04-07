@@ -2,6 +2,7 @@ package com.abml.jpa.hibernate.repository;
 
 
 import com.abml.jpa.hibernate.model.Product;
+import com.abml.jpa.hibernate.model.Section;
 import java.util.List;
 import java.util.Optional;
 //class JpaRepository (que maneja repositorios JPA
