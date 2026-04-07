@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-
+import com.abml.jpa.hibernate.model.Section;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
