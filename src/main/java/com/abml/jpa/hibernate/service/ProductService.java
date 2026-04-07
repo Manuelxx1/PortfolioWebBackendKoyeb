@@ -1,5 +1,6 @@
 package com.abml.jpa.hibernate.service;
 import com.abml.jpa.hibernate.model.Product;
+import com.abml.jpa.hibernate.model.Section;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.model.Users;
