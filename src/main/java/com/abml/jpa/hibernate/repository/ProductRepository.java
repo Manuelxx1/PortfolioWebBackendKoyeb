@@ -27,6 +27,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   //Buscar los productos por su section buscando en el campo section
     List<Product> findBySection(Section section);
+//mostrar Productos por categoría 
+    List<Product> findByCategory(String category);
+
 
 
 }
