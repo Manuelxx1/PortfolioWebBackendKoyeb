@@ -36,8 +36,14 @@ public List<Product> findAll() {
   public List<Product> getFeaturedProducts() {
         return productRepo.findBySection(Section.DESTACADOS);
   }
+
+  //productos por categoría 
   
- 
+ public List<Product> getProductsByCategory(String category) {
+        return productRepo.findByCategory(category);
+    }
+  
+  
   @Autowired
     private PasswordEncoder passwordEncoder;
 public void updatePassword(String usuario, String nuevaPassword) {
