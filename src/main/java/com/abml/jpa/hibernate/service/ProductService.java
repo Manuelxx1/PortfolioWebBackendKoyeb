@@ -16,7 +16,7 @@ public class ProductService {
   @Autowired private ProductRepository productRepo;
     @Autowired private UserRepository userRepository;
 //para el buscador principal 
-  public List<Product> searchByName(String name) {
+  public List<Product> searchByName(String name,String category) {
     return productRepo.findByNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(String name, String category);
   }
 
