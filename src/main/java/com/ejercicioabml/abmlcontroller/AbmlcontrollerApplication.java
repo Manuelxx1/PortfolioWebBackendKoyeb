@@ -778,13 +778,13 @@ public ResponseEntity<?> login(@RequestBody Persona user) {
   //para el eshop
   //para product 
 @Autowired private ProductService productService;
-
+//para el buscador principal 
   @GetMapping("/api/products/search")
 public List<Product> searchProducts(@RequestParam String name) {
-    return productService.searchByName(name);
+    return productService.searchByNameOrCategory(name);
 }
 
-  // Endpoint GET para traer todos los productos
+  // Endpoint GET para traer todos los productos del menú productos 
     @GetMapping("/api/todoslosproductos")
     public List<Product> getAllProducts() {
         return productService.findAll();
