@@ -15,10 +15,10 @@ public class ProductService {
 
   @Autowired private ProductRepository productRepo;
     @Autowired private UserRepository userRepository;
-
+//para el buscador principal 
   public List<Product> searchByName(String name) {
-    return productRepo.findByNameContainingIgnoreCase(name);
-}
+    return productRepo.findByNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(String name, String category);
+  }
 
 
   public Product getProductById(Long id) {
