@@ -21,8 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   // Con JpaRepository ya tenés todos los métodos básicos:
     // findById, findAll, save, deleteById, etc.
 
-  //método personalizado 
-  List<Product> findByNameContainingIgnoreCase(String name);
+  //método personalizado para el buscador principal 
+  List<Product> findByNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(String name, String category);
 
 
   //Buscar los productos por su section buscando en el campo section
