@@ -36,7 +36,7 @@ public List<Product> findAll() {
   public List<Product> getFeaturedProducts() {
         return productRepo.findBySection(Section.DESTACADOS);
   }
-  public List<Product> getProductsenoferta {
+  public List<Product> getProductsenoferta() {
         return productRepo.findBySection(Section.OFERTAS);
   }
 
