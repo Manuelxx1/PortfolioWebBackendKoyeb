@@ -795,6 +795,11 @@ public List<Product> searchProducts(@RequestParam String name) {
         return productService.getFeaturedProducts();
     }
 
+  @GetMapping("/api/productsenoferta")
+    public List<Product> getProductsenoferta() {
+        return productService.getProductsenoferta();
+    }
+
 
   // Endpoint para obtener productos por categoría
     @GetMapping("/category/{category}")
