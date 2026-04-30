@@ -15,6 +15,7 @@ public class CompraRequest {
 
     // Datos personales 
     private String name;
+    private String dni;
     private String email; 
     private String phone;
     private String address;
@@ -54,9 +55,19 @@ public class CompraRequest {
     public void setName(String name) {
         this.name = name; 
     } 
+   
+    public String getDni() { 
+        return dni; 
+    }
+ 
+    public void setDni(String dni) {
+        this.dni = dni; 
+    } 
+    
     public String getEmail() { 
         return email; 
     } 
+
     public void setEmail(String email) { 
         this.email = email; 
     }
