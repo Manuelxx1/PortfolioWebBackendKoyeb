@@ -121,6 +121,7 @@ System.out.println("Usuario encontrado: " + usuario);
         order.setStatus("pending");
         order.setUser(usuario);
 order.setName(compraRequestDTO.getName());
+order.setDni(compraRequestDTO.getDni());
 order.setEmail(compraRequestDTO.getEmail());
 order.setPhone(compraRequestDTO.getPhone());
 order.setAddress(compraRequestDTO.getAddress());
