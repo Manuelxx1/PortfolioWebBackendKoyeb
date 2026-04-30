@@ -76,6 +76,7 @@ public class Orders {
 
     // Datos personales del comprador 
     private String name; 
+    private String dni; 
     private String email; 
     private String phone; 
     private String address; 
@@ -101,6 +102,8 @@ private BigDecimal totalPaidAmount;      // total pagado con intereses
 
     public String getLoginUsername() { return loginUsername; }
     public void setLoginUsername(String loginUsername) { this.loginUsername = loginUsername; }
+
+    
 
     public String getLoginEmail() { return loginEmail; }
     public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
@@ -141,9 +144,17 @@ private BigDecimal totalPaidAmount;      // total pagado con intereses
     public void setName(String name) {
         this.name = name; 
     } 
+
+    public String getDni() { 
+        return dni; 
+    }
+    public void setDni(String dni) {
+        this.dni= dni; 
+    } 
     public String getEmail() { 
         return email; 
     } 
+    
     public void setEmail(String email) { 
         this.email = email; 
     }
