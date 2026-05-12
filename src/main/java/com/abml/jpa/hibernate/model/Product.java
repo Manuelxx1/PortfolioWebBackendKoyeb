@@ -25,6 +25,7 @@ public class Product {
 
   private String name;
   private String description;
+  private String category_id;
   private BigDecimal price;
   private Integer stock;
 
@@ -36,10 +37,20 @@ public class Product {
   @Column(name = "created_at")
   private LocalDateTime createdAt;
 
-  
+  //al mover la columna section de products
+  //a una tabla nueva llamada sections 
+  //se debería modificar esto estableciendola relacion
+//con esa tabla
   @Enumerated(EnumType.STRING)
   @Column(name = "section")
   private Section section;
+
+//crea la relación con la tabla categories
+  //mediante el campo category_id de products
+ //category_id es la foreign key de productos
+  @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
   
   // Getters
   public Long getId() { return id; }
@@ -54,6 +65,14 @@ public class Product {
   public String getImageUrl() { return imageUrl; }
   public String getCategory() { return category; }
 
+
+  public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
   // Setters (opcional, pero útil si vas a modificar desde el servicio)
   public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
   
