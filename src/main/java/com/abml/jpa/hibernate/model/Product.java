@@ -43,7 +43,8 @@ public class Product {
   //se debería modificar esto estableciendola relacion
 //con esa tabla
   @Enumerated(EnumType.STRING)
-  @Column(name = "section")
+  @ManyToOne
+    @JoinColumn(name = "section_id")
   private Section section;
 
 //crea la relación con la tabla categories
@@ -81,4 +82,5 @@ public class Product {
   
 
 public void setSection(Section section) { this.section = section; }
+public Section getSection() { return section; }
 }
