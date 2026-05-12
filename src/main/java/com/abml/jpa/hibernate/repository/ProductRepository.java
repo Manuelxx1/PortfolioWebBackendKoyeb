@@ -37,8 +37,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   //Revisar este metodo o modificarlo para que funcione otra vez
   List<Product> findBySection(Section section);
 //mostrar Productos por categoría 
-    List<Product> findByCategory(String category);
-
+//Si querés filtrar por el nombre de la categoría (que es un String dentro de la entidad Category)
+  // Esto le dice a Spring Data JPA que use la propiedad name de la entidad relacionada Category.
+  List<Product> findByCategory_Name(String categoryName);
 
   //para el backoffice filtro para realizar consultas dinamicas 
 @Query("SELECT p FROM Product p WHERE " +
