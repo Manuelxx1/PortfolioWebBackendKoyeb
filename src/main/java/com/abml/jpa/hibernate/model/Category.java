@@ -25,9 +25,16 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //@Column(nullable = false, unique = true) 
+    //asegura que el nombre de la categoría no se repita
+    //y sea obligatorio.
+
     @Column(nullable = false, unique = true, length = 100)
     private String name;
+@OneToMany(mappedBy = "category") establece la relación inversa con Product.
 
+//cascade = CascadeType.ALL y orphanRemoval = true permiten que si eliminás una categoría,
+    //también se eliminen sus productos asociados (esto es opcional, depende de tu lógica de negocio).
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
