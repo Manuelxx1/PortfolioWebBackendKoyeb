@@ -42,10 +42,16 @@ public class Product {
   //a una tabla nueva llamada sections 
   //se debería modificar esto estableciendola relacion
 //con esa tabla
-  @Enumerated(EnumType.STRING)
-  @ManyToOne
-    @JoinColumn(name = "section_id")
+  //esto ya no sirve mas
+  /*@Enumerated(EnumType.STRING)
+  
+    @Column(name = "section")
   private Section section;
+  */
+  
+@ManyToOne
+@JoinColumn(name = "section_id", nullable = false)
+private Section section;
 
 //crea la relación con la tabla categories
   //mediante el campo category_id de products
