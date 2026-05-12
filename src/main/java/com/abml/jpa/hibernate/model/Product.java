@@ -10,6 +10,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import com.abml.jpa.hibernate.model.Section;
+import com.abml.jpa.hibernate.model.Category;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
@@ -32,7 +33,7 @@ public class Product {
   @Column(name = "image_url")
   private String imageUrl;
 
-  private String category;
+  
 
   @Column(name = "created_at")
   private LocalDateTime createdAt;
@@ -63,8 +64,7 @@ public class Product {
   }
   public LocalDateTime getCreatedAt() { return createdAt; }
   public String getImageUrl() { return imageUrl; }
-  public String getCategory() { return category; }
-
+  
 
   public Category getCategory() {
         return category;
