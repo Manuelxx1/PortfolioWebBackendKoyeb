@@ -746,6 +746,16 @@ public ResponseEntity<Orders> getOrderByExternalReference(@PathVariable String e
             .orElse(ResponseEntity.notFound().build());
 }
 
+    //endpoints del backoffice para probar filtros dinámicos
+  //  luego mover a un controller propio
+    @GetMapping("/filter")
+    public List<Product> filterProducts(
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) Integer minStock,
+        @RequestParam(required = false) Double maxPrice
+    ) {
+        return productRepository.findByFilters(category, minStock, maxPrice);
+    }
 
-
+    
         }
