@@ -31,8 +31,7 @@ public class Category {
 
     @Column(nullable = false, unique = true, length = 100)
     private String name;
-@OneToMany(mappedBy = "category") establece la relación inversa con Product.
-
+    //establece la relación inversa con Product
 //cascade = CascadeType.ALL y orphanRemoval = true permiten que si eliminás una categoría,
     //también se eliminen sus productos asociados (esto es opcional, depende de tu lógica de negocio).
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
