@@ -26,7 +26,7 @@ public class Product {
 
   private String name;
   private String description;
-  private String category_id;
+  
   private BigDecimal price;
   private Integer stock;
 
@@ -49,6 +49,9 @@ public class Product {
 //crea la relación con la tabla categories
   //mediante el campo category_id de products
  //category_id es la foreign key de productos
+  //al tener la relación no hace falta declarar el campo
+  //category_id aparte,Hibernate ya sabe que existe
+  //la property en products
   @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
