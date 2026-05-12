@@ -44,7 +44,7 @@ public List<Product> findAll() {
   //productos por categoría 
   
  public List<Product> getProductsByCategory(String category) {
-        return productRepo.findByCategory(category);
+        return productRepo.findByCategory_Name(category);
     }
   
   
