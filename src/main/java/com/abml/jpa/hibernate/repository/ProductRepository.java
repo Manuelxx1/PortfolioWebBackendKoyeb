@@ -26,10 +26,23 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
   //Buscar los productos por su section buscando en el campo section
-    List<Product> findBySection(Section section);
+  //section se movió a una tabla nueva por normalizacion de la base
+  //a la tabla llamada sections 
+  //Revisar este metodo o modificarlo para que funcione otra vez
+  List<Product> findBySection(Section section);
 //mostrar Productos por categoría 
     List<Product> findByCategory(String category);
 
 
+  //para el backoffice filtro para realizar consultas dinamicas 
+@Query("SELECT p FROM Product p WHERE " +
+           "(:category IS NULL OR p.category.name = :category) AND " +
+           "(:minStock IS NULL OR p.stock > :minStock) AND " +
+           "(:maxPrice IS NULL OR p.price < :maxPrice)")
+    List<Product> findByFilters(
+        @Param("category") String category,
+        @Param("minStock") Integer minStock,
+        @Param("maxPrice") Double maxPrice
+    );
 
 }
