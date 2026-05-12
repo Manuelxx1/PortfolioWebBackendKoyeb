@@ -22,8 +22,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // findById, findAll, save, deleteById, etc.
 
   //método personalizado para el buscador principal 
-  List<Product> findByNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(String name, String category);
+  //List<Product> findByNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(String name, String category);
 
+//  Si lo que querés es filtrar por el nombre de la categoría,
+  //tenés que apuntar al campo name dentro de Category:
+//  Category_Name le dice a Spring Data que use la propiedad name de la entidad relacionada Category.
+
+//El segundo parámetro ahora representa el nombre de la categoría, no el objeto completo.
+  List<Product> findByNameContainingIgnoreCaseOrCategory_NameContainingIgnoreCase(String name, String categoryName);
 
   //Buscar los productos por su section buscando en el campo section
   //section se movió a una tabla nueva por normalizacion de la base
