@@ -796,8 +796,8 @@ public List<Product> searchProducts(@RequestParam String name) {
     }
 
   @GetMapping("/api/productsenoferta")
-    public List<Product> getProductsenoferta() {
-        return productService.getProductsenoferta();
+    public List<Product> getProductsEnOferta() {
+        return productService.getProductsEnOferta();
     }
 
 
