@@ -35,10 +35,10 @@ public List<Product> findAll() {
   //usando los datos del archivo  enum section 
   //como parámetro de consulta
   public List<Product> getFeaturedProducts() {
-        return productRepo.findBySection(Section.DESTACADOS);
+        return productRepo.findBySection(destacados);
   }
   public List<Product> getProductsenoferta() {
-        return productRepo.findBySection(Section.OFERTAS);
+        return productRepo.findBySection(ofertas);
   }
 
   //productos por categoría 
