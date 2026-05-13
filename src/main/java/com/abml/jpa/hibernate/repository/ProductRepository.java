@@ -35,8 +35,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   //section se movió a una tabla nueva por normalizacion de la base
   //a la tabla llamada sections 
   //Revisar este metodo o modificarlo para que funcione otra vez
-  List<Product> findBySection(Section section);
-//mostrar Productos por categoría 
+  //List<Product> findBySection(Section section);
+
+  List<Product> findBySection_Name(String sectionName);
+
+  //mostrar Productos por categoría 
 //Si querés filtrar por el nombre de la categoría (que es un String dentro de la entidad Category)
   // Esto le dice a Spring Data JPA que use la propiedad name de la entidad relacionada Category.
   List<Product> findByCategory_Name(String categoryName);
