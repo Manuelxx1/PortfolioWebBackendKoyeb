@@ -3,6 +3,7 @@ import com.abml.jpa.hibernate.model.Product;
 import com.abml.jpa.hibernate.model.Section;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 import com.abml.jpa.hibernate.repository.UserRepository;
+import com.abml.jpa.hibernate.repository.SectionRepository;
 import com.abml.jpa.hibernate.model.Users;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,8 @@ public class ProductService {
 
   @Autowired private ProductRepository productRepo;
     @Autowired private UserRepository userRepository;
-
+@Autowired
+    private SectionRepository sectionRepo;
   
   //para el buscador principal 
   public List<Product> searchByNameOrCategory(String name) {
@@ -35,15 +37,19 @@ public List<Product> findAll() {
 }
 //Buscar productos o datos por section
   //usando los datos del archivo  enum section 
+ //enum ya no se usa más porque section ahora es una entidad propia 
+  //no pertenece más como campo de la tabla products
+// ahora es una tabla llamada sections que se creo por normalizacion de la base
   //como parámetro de consulta
-  const sectiondestacado=Destacados;
-  const sectionofertas=Ofertas;
-  public List<Product> getFeaturedProducts() {
-        return productRepo.findBySection(sectiondestacado);
-  }
-  public List<Product> getProductsenoferta() {
-        return productRepo.findBySection(sectionofertas);
-  }
+      public List<Product> getFeaturedProducts() {
+        Section destacados = sectionRepo.findByName("Destacados");
+        return productRepo.findBySection(destacados);
+    }
+
+    public List<Product> getProductsEnOferta() {
+        Section ofertas = sectionRepo.findByName("Ofertas");
+        return productRepo.findBySection(ofertas);
+    }
 
   //productos por categoría 
   
