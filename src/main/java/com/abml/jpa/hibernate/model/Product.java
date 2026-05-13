@@ -67,29 +67,59 @@ public class Product {
     private Category category;
   
   // Getters
-  public Long getId() { return id; }
-  public String getName() { return name; }
-  public String getDescription() { return description; }
-  public BigDecimal getPrice() { return price; }
-  public Integer getStock() { return stock; }
-  public void setStock(Integer stock) {
-    this.stock = stock;
-  }
-  public LocalDateTime getCreatedAt() { return createdAt; }
-  public String getImageUrl() { return imageUrl; }
-  
-
-  public Category getCategory() {
-        return category;
+  public Long getId() {
+        return id;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setId(Long id) {
+        this.id = id;
     }
-  // Setters (opcional, pero útil si vas a modificar desde el servicio)
-  public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-  
 
-public void setSection(Section section) { this.section = section; }
-public Section getSection() { return section; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
 }
