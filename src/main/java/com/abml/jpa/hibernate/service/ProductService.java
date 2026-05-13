@@ -36,8 +36,8 @@ public List<Product> findAll() {
 //Buscar productos o datos por section
   //usando los datos del archivo  enum section 
   //como parámetro de consulta
-  const sectiondestacado=destacados;
-  const sectionofertas=ofertas;
+  const sectiondestacado=Destacados;
+  const sectionofertas=Ofertas;
   public List<Product> getFeaturedProducts() {
         return productRepo.findBySection(sectiondestacado);
   }
