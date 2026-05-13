@@ -15,7 +15,9 @@ public class ProductService {
 
   @Autowired private ProductRepository productRepo;
     @Autowired private UserRepository userRepository;
-//para el buscador principal 
+
+  
+  //para el buscador principal 
   public List<Product> searchByNameOrCategory(String name) {
    // return productRepo.findByNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(name,name); 
     return productRepo.findByNameContainingIgnoreCaseOrCategory_NameContainingIgnoreCase(name,name);
@@ -34,11 +36,13 @@ public List<Product> findAll() {
 //Buscar productos o datos por section
   //usando los datos del archivo  enum section 
   //como parámetro de consulta
+  const sectiondestacado=destacados;
+  const sectionofertas=ofertas;
   public List<Product> getFeaturedProducts() {
-        return productRepo.findBySection(destacados);
+        return productRepo.findBySection(sectiondestacado);
   }
   public List<Product> getProductsenoferta() {
-        return productRepo.findBySection(ofertas);
+        return productRepo.findBySection(sectionofertas);
   }
 
   //productos por categoría 
