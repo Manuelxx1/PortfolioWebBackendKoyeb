@@ -42,14 +42,13 @@ public List<Product> findAll() {
 // ahora es una tabla llamada sections que se creo por normalizacion de la base
   //como parámetro de consulta
       public List<Product> getFeaturedProducts() {
-        Section destacados = sectionRepo.findByName("Destacados");
-        return productRepo.findBySection_NameIgnoreCase(destacados);
-    }
+    return productRepo.findBySection_NameIgnoreCase("Destacados");
+}
 
-    public List<Product> getProductsEnOferta() {
-        Section ofertas = sectionRepo.findByName("Ofertas");
-        return productRepo.findBySection_NameIgnoreCase(ofertas);
-    }
+public List<Product> getProductsEnOferta() {
+    return productRepo.findBySection_NameIgnoreCase("Ofertas");
+}
+
 
   //productos por categoría 
   
