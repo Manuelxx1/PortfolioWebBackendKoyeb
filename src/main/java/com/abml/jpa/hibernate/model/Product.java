@@ -13,6 +13,7 @@ import com.abml.jpa.hibernate.model.Section;
 import com.abml.jpa.hibernate.model.Category;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -51,7 +52,9 @@ public class Product {
   
 @ManyToOne
 @JoinColumn(name = "section_id", nullable = false)
-private Section section;
+//  Ignoramos la lista de productos dentro de Section para evitar el loop
+    @JsonIgnoreProperties("products")
+  private Section section;
 
 //crea la relación con la tabla categories
   //mediante el campo category_id de products
