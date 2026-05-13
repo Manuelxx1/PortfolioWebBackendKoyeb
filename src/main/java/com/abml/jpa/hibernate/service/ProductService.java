@@ -43,18 +43,18 @@ public List<Product> findAll() {
   //como parámetro de consulta
       public List<Product> getFeaturedProducts() {
         Section destacados = sectionRepo.findByName("Destacados");
-        return productRepo.findBySection(destacados);
+        return productRepo.findBySection_NameIgnoreCase(destacados);
     }
 
     public List<Product> getProductsEnOferta() {
         Section ofertas = sectionRepo.findByName("Ofertas");
-        return productRepo.findBySection(ofertas);
+        return productRepo.findBySection_NameIgnoreCase(ofertas);
     }
 
   //productos por categoría 
   
  public List<Product> getProductsByCategory(String category) {
-        return productRepo.findByCategory_Name(category);
+        return productRepo.findByCategory_NameIgnoreCase(category);
     }
   
   
