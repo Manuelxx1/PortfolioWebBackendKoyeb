@@ -48,13 +48,13 @@ public List<Product> findAll() {
   */
 
   public List<Product> getFeaturedProducts() {
-    return productRepository.findFeaturedProducts();
+    return productRepo.findFeaturedProducts();
 }
 
 
 public List<Product> getProductsEnOferta() {
     //return productRepo.findBySection_NameIgnoreCase("Ofertas");
-return productRepository.findFeaturedProducts();
+return productRepo.findFeaturedProducts();
 }
 
 
