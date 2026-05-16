@@ -122,4 +122,12 @@ public class Product {
     public void setSection(Section section) {
         this.section = section;
     }
+  public Category getCategory() {
+    return category;
+}
+
+public void setCategory(Category category) {
+    this.category = category;
+}
+
 }
