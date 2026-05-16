@@ -53,7 +53,8 @@ public List<Product> findAll() {
 
 
 public List<Product> getProductsEnOferta() {
-    return productRepo.findBySection_NameIgnoreCase("Ofertas");
+    //return productRepo.findBySection_NameIgnoreCase("Ofertas");
+return productRepository.findFeaturedProducts();
 }
 
 
