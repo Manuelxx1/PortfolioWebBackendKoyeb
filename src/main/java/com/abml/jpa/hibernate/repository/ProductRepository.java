@@ -45,6 +45,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   // Esto le dice a Spring Data JPA que use la propiedad name de la entidad relacionada Category.
   List<Product> findByCategory_NameIgnoreCase(String categoryName);
 
+
+//destacados por categoría 
+
+  @Query("SELECT p FROM Product p JOIN FETCH p.category JOIN FETCH p.section WHERE p.section.name = 'Destacados' AND p.category.id = :categoryId")
+    List<Product> findFeaturedProductsByCategory(@Param("categoryId") Long categoryId);
+
+  
   //para el backoffice filtro para realizar consultas dinamicas 
 @Query("SELECT p FROM Product p WHERE " +
            "(:category IS NULL OR p.category.name = :category) AND " +
