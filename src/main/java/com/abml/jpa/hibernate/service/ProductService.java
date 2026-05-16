@@ -41,11 +41,16 @@ public List<Product> findAll() {
   //no pertenece más como campo de la tabla products
 // ahora es una tabla llamada sections que se creo por normalizacion de la base
   //como parámetro de consulta
-      public List<Product> getFeaturedProducts() {
+     /* public List<Product> getFeaturedProducts() {
     return productRepo.findBySection_NameIgnoreCase("Destacados");
 
       }
-  
+  */
+
+  public List<Product> getFeaturedProducts() {
+    return productRepository.findFeaturedProducts();
+}
+
 
 public List<Product> getProductsEnOferta() {
     return productRepo.findBySection_NameIgnoreCase("Ofertas");
