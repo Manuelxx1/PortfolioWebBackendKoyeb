@@ -37,6 +37,7 @@ public class Category {
 //cascade = CascadeType.ALL y orphanRemoval = true permiten que si eliminás una categoría,
     //también se eliminen sus productos asociados (esto es opcional, depende de tu lógica de negocio).
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("category") // Ignoramos la propiedad category dentro de Product para evitar loops
     private List<Product> products;
 
 
