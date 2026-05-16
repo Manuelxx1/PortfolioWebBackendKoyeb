@@ -43,7 +43,9 @@ public List<Product> findAll() {
   //como parámetro de consulta
       public List<Product> getFeaturedProducts() {
     return productRepo.findBySection_NameIgnoreCase("Destacados");
-}
+
+      }
+  
 
 public List<Product> getProductsEnOferta() {
     return productRepo.findBySection_NameIgnoreCase("Ofertas");
@@ -54,7 +56,8 @@ public List<Product> getProductsEnOferta() {
   
  public List<Product> getProductsByCategory(String category) {
         return productRepo.findByCategory_NameIgnoreCase(category);
-    }
+   
+ }
   
   
   @Autowired
