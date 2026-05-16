@@ -39,13 +39,6 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
-    // Constructor vacío (requerido por JPA)
-    public Category() {}
-
-    // Constructor con parámetros
-    public Category(String name) {
-        this.name = name;
-    }
 
     // Getters y Setters
     public Long getId() {
