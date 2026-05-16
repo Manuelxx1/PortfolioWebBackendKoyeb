@@ -36,9 +36,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   //a la tabla llamada sections 
   //Revisar este metodo o modificarlo para que funcione otra vez
   //List<Product> findBySection(Section section);
-@Query("SELECT p FROM Product p JOIN FETCH p.category JOIN FETCH p.section WHERE p.section.name = 'Destacados'")
-  List<Product> findBySection_NameIgnoreCase(String sectionName);
 
+  //List<Product> findBySection_NameIgnoreCase(String sectionName);
+
+@Query("SELECT p FROM Product p JOIN FETCH p.category JOIN FETCH p.section WHERE p.section.name = 'Destacados'")
+List<Product> findFeaturedProducts();
 
   //mostrar Productos por categoría 
 //Si querés filtrar por el nombre de la categoría (que es un String dentro de la entidad Category)
@@ -46,10 +48,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   List<Product> findByCategory_NameIgnoreCase(String categoryName);
 
 
-//destacados por categoría 
 
- // @Query("SELECT p FROM Product p JOIN FETCH p.category JOIN FETCH p.section WHERE p.section.name = 'Destacados'")
-    //List<Product> findFeaturedProducts();
 
   
   //para el backoffice filtro para realizar consultas dinamicas 
