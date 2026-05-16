@@ -13,7 +13,7 @@ import jakarta.persistence.JoinColumn;
 import com.abml.jpa.hibernate.model.Section;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
