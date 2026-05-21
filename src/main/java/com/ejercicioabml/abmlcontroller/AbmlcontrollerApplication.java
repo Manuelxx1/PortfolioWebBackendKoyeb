@@ -966,7 +966,7 @@ Con UUID.randomUUID() obtenés un objeto UUID aleatorio.
 Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
   */
   String token = UUID.randomUUID().toString();
-    userService.savePasswordResetToken(email, token);
+    productService.savePasswordResetToken(email, token);
   //en emailService se hace la conexión túnel
   //a JavaMailSender que esta en Termux 
   // emailService.sendPasswordResetEmail(email, token);
