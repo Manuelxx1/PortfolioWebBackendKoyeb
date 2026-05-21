@@ -30,7 +30,7 @@ public class Users {
     //cuando se accede al endpoint por url en navegador
     //y también por frontend en vista ya que es un dato privado del sistema 
     private String password;
-@Column(name = "password_reset_token')
+@Column(name = "password_reset_token")
   private String  passwordResetToken;
 
     @Column(length = 100)
