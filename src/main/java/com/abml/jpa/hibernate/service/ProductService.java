@@ -108,11 +108,12 @@ public void updatePassword(String usuario, String nuevaPassword) {
   //desde el login por no recordar contraseña 
   public void savePasswordResetToken(String usuario, String nuevaPassword) {
         Users user = userRepository.findByEmail(usuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Email no encontrado"));
 
         
         userRepository.save(user);
 }
+
 
   
 }
