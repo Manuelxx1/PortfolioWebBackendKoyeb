@@ -65,7 +65,8 @@ return productRepo.findFeaturedProducts();
    
  }
   
-  
+  //endpoints para el dashboard de usuario
+  //para cambiar contraseña,username,email y alguna otra cosa 
   @Autowired
     private PasswordEncoder passwordEncoder;
 public void updatePassword(String usuario, String nuevaPassword) {
@@ -101,5 +102,17 @@ public void updatePassword(String usuario, String nuevaPassword) {
         user.setEmail(nuevoEmail);
        return userRepository.save(user);
   }
+
+
+  //para cambiar contraseña por solucitud de usuario 
+  //desde el login por no recordar contraseña 
+  public void savePasswordResetToken(String usuario, String nuevaPassword) {
+        Users user = userRepository.findByEmail(usuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        
+        userRepository.save(user);
+}
+
   
 }
