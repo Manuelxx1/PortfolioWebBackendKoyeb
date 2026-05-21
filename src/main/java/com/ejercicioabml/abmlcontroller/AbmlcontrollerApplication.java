@@ -42,6 +42,7 @@ import org.springframework.web.client.RestTemplate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.UUID;
 
 import java.text.Normalizer;
 import java.util.List;
@@ -954,5 +955,23 @@ public ResponseEntity<List<CartItem>> clearCart(@RequestBody Map<String, Object>
   public String enviarMensaje(String mensaje) {
     return mensaje; // lo devuelve tal cual 
   }
+
+@PostMapping("/api/auth/forgot-password")
+public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+    String email = request.get("email");
+   
+  /*
+  UUID es una clase de Java que genera identificadores únicos universales.
+Con UUID.randomUUID() obtenés un objeto UUID aleatorio.
+Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
+  */
+  String token = UUID.randomUUID().toString();
+    userService.savePasswordResetToken(email, token);
+  //en emailService se hace la conexión túnel
+  //a JavaMailSender que esta en Termux 
+  // emailService.sendPasswordResetEmail(email, token);
+    return ResponseEntity.ok("Se envió un enlace de recuperación a tu correo");
+}
+
   
 }
