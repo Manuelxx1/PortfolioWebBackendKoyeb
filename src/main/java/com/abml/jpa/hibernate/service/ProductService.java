@@ -119,7 +119,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
     private final RestTemplate restTemplate = new RestTemplate();
     String urlBase = System.getenv("TERMUX_URL");
     
-    private final String termuxEmailApi = urlBase + "/email/send";
+    private final String termuxEmailApi = urlBase + "/api/send-token-recuperar-contraseña";
 
   Map<String, String> body = new HashMap<>();
         body.put("email", email);
