@@ -129,4 +129,20 @@ public void updatePassword(String usuario, String nuevaPassword) {
 
 
   
+  @Autowired
+    private PasswordEncoder passwordEncoder;
+  public void resetPassword(String token, String newPassword) {
+        Users user = userRepository.findByPasswordResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Token inválido o expirado"));
+
+        // Encriptar la nueva contraseña con BCrypt
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+
+        // Limpiar el token para que no se reutilice
+        user.setPasswordResetToken(null);
+
+        userRepository.save(user);
+  }
+  
 }
