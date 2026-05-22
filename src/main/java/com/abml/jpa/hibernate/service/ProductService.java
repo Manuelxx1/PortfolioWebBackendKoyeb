@@ -123,7 +123,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
 
   Map<String, String> body = new HashMap<>();
         body.put("email", email);
-        body.put("token", token);
+        body.put("token", passwordResetToken);
         restTemplate.postForObject(termuxEmailApi, body, String.class);
   }
 
