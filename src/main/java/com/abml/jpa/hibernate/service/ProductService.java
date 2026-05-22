@@ -4,6 +4,9 @@ import com.abml.jpa.hibernate.model.Section;
 import com.abml.jpa.hibernate.repository.ProductRepository;
 import com.abml.jpa.hibernate.repository.UserRepository;
 import com.abml.jpa.hibernate.repository.SectionRepository;
+import org.springframework.web.client.RestTemplate;
+import java.util.Map;
+import java.util.HashMap;
 import com.abml.jpa.hibernate.model.Users;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,13 +109,23 @@ public void updatePassword(String usuario, String nuevaPassword) {
 
   //para cambiar contraseña por solucitud de usuario 
   //desde el login por no recordar contraseña 
-  public void savePasswordResetToken(String usuario, String passwordResetToken) {
-        Users user = userRepository.findByEmail(usuario)
+  public void savePasswordResetToken(String email, String passwordResetToken) {
+        Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email no encontrado"));
 
         user.setPasswordResetToken(passwordResetToken);
         userRepository.save(user);
-}
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    String urlBase = System.getenv("TERMUX_URL");
+    
+    private final String termuxEmailApi = urlBase + "/email/send";
+
+  Map<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("token", token);
+        restTemplate.postForObject(termuxEmailApi, body, String.class);
+  }
 
 
   
