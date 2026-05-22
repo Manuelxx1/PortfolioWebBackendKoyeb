@@ -116,10 +116,10 @@ public void updatePassword(String usuario, String nuevaPassword) {
         user.setPasswordResetToken(passwordResetToken);
         userRepository.save(user);
 
-    private final RestTemplate restTemplate = new RestTemplate();
+     RestTemplate restTemplate = new RestTemplate();
     String urlBase = System.getenv("TERMUX_URL");
     
-    private final String termuxEmailApi = urlBase + "/api/send-token-recuperar-contraseña";
+     String termuxEmailApi = urlBase + "/api/send-token-recuperar-contraseña";
 
   Map<String, String> body = new HashMap<>();
         body.put("email", email);
