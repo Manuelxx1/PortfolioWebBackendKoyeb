@@ -972,6 +972,13 @@ Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
   // emailService.sendPasswordResetEmail(email, token);
     return ResponseEntity.ok("Se envió un enlace de recuperación a tu correo");
 }
+@PostMapping("/api/auth/reset-password")
+public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+    String token = request.get("token");
+    String newPassword = request.get("newPassword");
+    userService.resetPassword(token, newPassword);
+    return ResponseEntity.ok("Contraseña actualizada correctamente");
+}
 
   
 }
