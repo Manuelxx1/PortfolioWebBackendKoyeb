@@ -129,8 +129,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
 
 
   
-  @Autowired
-    private PasswordEncoder passwordEncoder;
+  
   public void resetPassword(String token, String newPassword) {
         Users user = userRepository.findByPasswordResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token inválido o expirado"));
