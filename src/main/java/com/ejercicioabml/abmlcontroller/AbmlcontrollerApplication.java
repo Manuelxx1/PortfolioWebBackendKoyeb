@@ -976,7 +976,7 @@ Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
 public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
     String token = request.get("token");
     String newPassword = request.get("newPassword");
-    userService.resetPassword(token, newPassword);
+    productService.resetPassword(token, newPassword);
     return ResponseEntity.ok("Contraseña actualizada correctamente");
 }
 
