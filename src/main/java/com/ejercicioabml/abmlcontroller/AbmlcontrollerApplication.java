@@ -978,7 +978,11 @@ public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request)
     String newPassword = request.get("newPassword");
     System.out.println("este es el token de recuperación contraseña" +token);
   productService.resetPassword(token, newPassword);
-    return ResponseEntity.ok("Contraseña actualizada correctamente");
+    //retorna el json que espera angular por defecto 
+  Map<String, String> response = new HashMap<>();
+    response.put("message", "Contraseña actualizada correctamente");
+    return ResponseEntity.ok(response);
+}
 }
 
   
