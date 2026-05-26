@@ -1012,7 +1012,7 @@ Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
 @PostMapping("/api/auth/reset-username")
 public ResponseEntity<?> resetUsername(@RequestBody Map<String, String> request) {
     String token = request.get("token");
-    String newUsername = request.get("newPassword");
+    String newUsername = request.get("newUsername");
     System.out.println("este es el token de recuperación contraseña" +token);
   productService.resetUsername(token, newUsername);
     //retorna el json que espera angular por defecto 
