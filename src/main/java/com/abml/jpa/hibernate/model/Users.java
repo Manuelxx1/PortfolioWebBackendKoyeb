@@ -33,6 +33,9 @@ public class Users {
 @Column(name = "password_reset_token")
   private String  passwordResetToken;
 
+    @Column(name = "username_reset_token")
+  private String  usernameResetToken;
+
     @Column(length = 100)
     private String email;
 
@@ -67,9 +70,14 @@ public class Users {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-        public String getPasswordResetToken() { return passwordResetToken; }
+        
+public String getPasswordResetToken() { return passwordResetToken; }
     public void setPasswordResetToken(String passwordResetToken) { this.passwordResetToken = passwordResetToken; }
-public java.sql.Timestamp getcreatedAt() { return createdAt; }
+
+    public String getUsernameResetToken() { return usernameResetToken; }
+    public void setUsernameResetToken(String usernameResetToken) { this.usernameResetToken = usernameResetToken; }
+   
+    public java.sql.Timestamp getcreatedAt() { return createdAt; }
    // public List<Orders> getOrders() { return orders; }
    // public void setOrders(List<Orders> orders) { this.orders = orders; }
   }
