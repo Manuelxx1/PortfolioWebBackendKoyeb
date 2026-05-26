@@ -108,23 +108,33 @@ public void updatePassword(String usuario, String nuevaPassword) {
 
 
   //para cambiar contraseña por solucitud de usuario 
-  //desde el login por no recordar contraseña 
+  //desde el login por no recordar contraseña
+
+  //este es el service que es el que se comunica con Termux 
+  //usando una URL túnel que conecta a localhost del dispositivo que ejecuta Termux 
+  //esto es porque render u otro no deja usar smtp en el modo gratis
+  //para evitar qye se haga spam con sus servidores 
+  //si en el modo pago deja usar smtp entonces
+//ya no hace falta usar Termux 
+  //y la lógica del envío de email que esta en Termux se usaría en un servicio en render 
   public void savePasswordResetToken(String email, String passwordResetToken) {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email no encontrado"));
 
         user.setPasswordResetToken(passwordResetToken);
         userRepository.save(user);
-
-     RestTemplate restTemplate = new RestTemplate();
+//restTemplate nos permite conectarnos a termux en el dispositivo localhost 
+    RestTemplate restTemplate = new RestTemplate();
+  //url túnel para conectarnos a Termux en dispositivo localhost 
     String urlBase = System.getenv("TERMUX_URL");
-    
+    //url tunel con endpoint que está en Termux 
      String termuxEmailApi = urlBase + "/api/send-token-recuperar-contraseña";
 
   Map<String, String> body = new HashMap<>();
         body.put("email", email);
         body.put("token", passwordResetToken);
-        restTemplate.postForObject(termuxEmailApi, body, String.class);
+      //se envia a Termux usando restTemplate 
+    restTemplate.postForObject(termuxEmailApi, body, String.class);
   }
 
 
