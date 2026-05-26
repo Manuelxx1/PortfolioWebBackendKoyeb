@@ -168,7 +168,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
   //url túnel para conectarnos a Termux en dispositivo localhost 
     String urlBase = System.getenv("TERMUX_URL");
     //url tunel con endpoint que está en Termux 
-     String termuxEmailApi = urlBase + "/api/send-token-recuperar-contraseña";
+     String termuxEmailApi = urlBase + "/api/send-token-recuperar-usuario";
 
   Map<String, String> body = new HashMap<>();
         body.put("email", email);
@@ -176,4 +176,17 @@ public void updatePassword(String usuario, String nuevaPassword) {
       //se envia a Termux usando restTemplate 
     restTemplate.postForObject(termuxEmailApi, body, String.class);
   }
+
+  public void resetUsername(String token, String newUsername ) {
+        Users user = userRepository.findByUsernameResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Token inválido o expirado"));
+
+        user.setUsername(newUsername);
+
+        // Limpiar el token para que no se reutilice
+        user.setUsernameResetToken(null);
+
+        userRepository.save(user);
+  }
+
 }
