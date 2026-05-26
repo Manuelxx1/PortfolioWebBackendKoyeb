@@ -153,5 +153,27 @@ public void updatePassword(String usuario, String nuevaPassword) {
 
         userRepository.save(user);
   }
-  
+
+  //para cambiar usuario desde el login
+
+
+  public void saveUsernameResetToken(String email, String usernameResetToken) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email no encontrado"));
+
+        user.setUsernameResetToken(usernameResetToken);
+        userRepository.save(user);
+//restTemplate nos permite conectarnos a termux en el dispositivo localhost 
+    RestTemplate restTemplate = new RestTemplate();
+  //url túnel para conectarnos a Termux en dispositivo localhost 
+    String urlBase = System.getenv("TERMUX_URL");
+    //url tunel con endpoint que está en Termux 
+     String termuxEmailApi = urlBase + "/api/send-token-recuperar-contraseña";
+
+  Map<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("token", usernameResetToken);
+      //se envia a Termux usando restTemplate 
+    restTemplate.postForObject(termuxEmailApi, body, String.class);
+  }
 }
