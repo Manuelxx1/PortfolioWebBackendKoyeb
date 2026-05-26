@@ -161,7 +161,7 @@ public void updatePassword(String usuario, String nuevaPassword) {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email no encontrado"));
 
-        user.setUsernameResetToken(usernameResetToken);
+        user.saveUsernameResetToken(usernameResetToken);
         userRepository.save(user);
 //restTemplate nos permite conectarnos a termux en el dispositivo localhost 
     RestTemplate restTemplate = new RestTemplate();
