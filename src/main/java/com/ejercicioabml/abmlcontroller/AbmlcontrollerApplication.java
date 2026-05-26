@@ -978,7 +978,9 @@ Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
   
     return ResponseEntity.ok("Se envió un enlace de recuperación a tu correo");
 }
-@PostMapping("/api/auth/reset-password")
+
+  
+  @PostMapping("/api/auth/reset-password")
 public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
     String token = request.get("token");
     String newPassword = request.get("newPassword");
@@ -992,7 +994,7 @@ public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request)
 
 
   //para cambiar usuario desde el login
-  @PostMapping("/api/auth/forgot-forgot-usernane")
+  @PostMapping("/api/auth/forgot-usernane")
 public ResponseEntity<?> forgotUsername(@RequestBody Map<String, String> request) {
     String email = request.get("email");
    
@@ -1006,6 +1008,19 @@ Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
   
     return ResponseEntity.ok("Se envió un enlace de recuperación a tu correo");
 }
+
+@PostMapping("/api/auth/reset-username")
+public ResponseEntity<?> resetUsername(@RequestBody Map<String, String> request) {
+    String token = request.get("token");
+    String newUsername = request.get("newPassword");
+    System.out.println("este es el token de recuperación contraseña" +token);
+  productService.resetUsername(token, newUsername);
+    //retorna el json que espera angular por defecto 
+  Map<String, String> response = new HashMap<>();
+    response.put("message", "Contraseña actualizada correctamente");
+    return ResponseEntity.ok(response);
+}
+  
 }
 
   
