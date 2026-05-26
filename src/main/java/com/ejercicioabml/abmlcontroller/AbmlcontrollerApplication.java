@@ -994,7 +994,7 @@ public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request)
 
 
   //para cambiar usuario desde el login
-  @PostMapping("/api/auth/forgot-usernane")
+  @PostMapping("/api/auth/forgot-username")
 public ResponseEntity<?> forgotUsername(@RequestBody Map<String, String> request) {
     String email = request.get("email");
    
