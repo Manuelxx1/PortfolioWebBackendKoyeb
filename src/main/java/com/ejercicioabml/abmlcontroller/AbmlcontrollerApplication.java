@@ -966,10 +966,16 @@ Con UUID.randomUUID() obtenés un objeto UUID aleatorio.
 Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
   */
   String token = UUID.randomUUID().toString();
-    productService.savePasswordResetToken(email, token);
-  //en emailService se hace la conexión túnel
-  //a JavaMailSender que esta en Termux 
-  // emailService.sendPasswordResetEmail(email, token);
+  //aquí usamos un servicio que es el que se comunica con Termux 
+  //usando una URL túnel que conecta a localhost del dispositivo que ejecuta Termux 
+  //esto es porque render u otro no deja usar smtp en el modo gratis
+  //para evitar qye se haga spam con sus servidores 
+  //si en el modo pago deja usar smtp entonces
+//ya no hace falta usar Termux 
+  //y la lógica del envío de email que esta en Termux se usaría en un servicio en render 
+  
+  productService.savePasswordResetToken(email, token);
+  
     return ResponseEntity.ok("Se envió un enlace de recuperación a tu correo");
 }
 @PostMapping("/api/auth/reset-password")
@@ -982,6 +988,23 @@ public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request)
   Map<String, String> response = new HashMap<>();
     response.put("message", "Contraseña actualizada correctamente");
     return ResponseEntity.ok(response);
+}
+
+
+  //para cambiar usuario desde el login
+  @PostMapping("/api/auth/forgot-forgot-usernane")
+public ResponseEntity<?> forgotUsername(@RequestBody Map<String, String> request) {
+    String email = request.get("email");
+   
+  /*
+  UUID es una clase de Java que genera identificadores únicos universales.
+Con UUID.randomUUID() obtenés un objeto UUID aleatorio.
+Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
+  */
+  String token = UUID.randomUUID().toString();
+    productService.saveUsernameResetToken(email, token);
+  
+    return ResponseEntity.ok("Se envió un enlace de recuperación a tu correo");
 }
 }
 
