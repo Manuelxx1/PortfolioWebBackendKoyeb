@@ -1020,7 +1020,7 @@ public ResponseEntity<?> resetUsername(@RequestBody Map<String, String> request)
   productService.resetUsername(token, newUsername);
     //retorna el json que espera angular por defecto 
   Map<String, String> response = new HashMap<>();
-    response.put("message", "Contraseña actualizada correctamente");
+    response.put("message", "Usuario actualizado correctamente");
     return ResponseEntity.ok(response);
 }
   
