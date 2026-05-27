@@ -1005,8 +1005,11 @@ Con .toString() lo convertís en un String para guardarlo o enviarlo por correo.
   */
   String token = UUID.randomUUID().toString();
     productService.saveUsernameResetToken(email, token);
-  
-    return ResponseEntity.ok("Se envió un enlace de recuperación a tu correo");
+  //retorna el json que espera angular por defecto 
+  Map<String, String> response = new HashMap<>();
+    response.put("message", "Se envió un enlace de recuperación a tu correo"+ email);
+    return ResponseEntity.ok(response);
+    
 }
 
 @PostMapping("/api/auth/reset-username")
