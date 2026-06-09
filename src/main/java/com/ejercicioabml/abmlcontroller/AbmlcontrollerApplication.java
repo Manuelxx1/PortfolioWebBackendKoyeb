@@ -1033,18 +1033,18 @@ public ResponseEntity<?> resetUsername(@RequestBody Map<String, String> request)
     }
 
     @PostMapping ("api/backoffice/create-product")
-    public Product create(@RequestBody Product product) {
-        return productService.save(product);
+    public Product createProduct(@RequestBody Product product) {
+        return productService.createProduct(product);
     }
 
     @PutMapping("api/backoffice/update-product/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
-        return productService.update(id, product);
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
+        return productService.updateProduct(id, product);
     }
 
     @DeleteMapping("api/backoffice/delete-product/${id}")
-    public void delete(@PathVariable Long id) {
-        productService.delete(id);
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
     }
   
 }
