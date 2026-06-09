@@ -63,7 +63,7 @@ public class Product {
   //category_id aparte,Hibernate ya sabe que existe
   //la property en products
   @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id"  referencedColumnName = "id" )
     private Category category;
   
   // Getters
