@@ -1042,7 +1042,7 @@ public ResponseEntity<?> resetUsername(@RequestBody Map<String, String> request)
         return productService.updateProduct(id, product);
     }
 
-    @DeleteMapping("api/backoffice/delete-product/${id}")
+    @DeleteMapping("api/backoffice/delete-product/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }
