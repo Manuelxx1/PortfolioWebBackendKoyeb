@@ -1023,6 +1023,29 @@ public ResponseEntity<?> resetUsername(@RequestBody Map<String, String> request)
     response.put("message", "Usuario actualizado correctamente");
     return ResponseEntity.ok(response);
 }
+
+
+//endpoints para gestion de productos backoffice 
+  
+  @GetMapping("/api/backoffice/get-all-products")
+    public List<Product> getAll() {
+        return productService.findAll();
+    }
+
+    @PostMapping ("api/backoffice/create-product")
+    public Product create(@RequestBody Product product) {
+        return productService.save(product);
+    }
+
+    @PutMapping("api/backoffice/update-product/{id}")
+    public Product update(@PathVariable Long id, @RequestBody Product product) {
+        return productService.update(id, product);
+    }
+
+    @DeleteMapping("api/backoffice/delete-product/${id}")
+    public void delete(@PathVariable Long id) {
+        productService.delete(id);
+    }
   
 }
 
