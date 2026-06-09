@@ -51,8 +51,12 @@ public class Product {
   */
   
 @ManyToOne
-@JoinColumn(name = "section_id", nullable = false)
-//  Ignoramos la lista de productos dentro de Section para evitar el loop
+//@JoinColumn(name = "section_id", nullable = false)
+//temporal lo hacemos  nullable true para probar el form de gestión de productos 
+//de forma simple hasta que se agreguen los otros datos de relación desde el form de gestión de 
+ //productos 
+  @JoinColumn(name = "section_id", nullable = true)
+  //  Ignoramos la lista de productos dentro de Section para evitar el loop
     @JsonIgnoreProperties("products")
   private Section section;
 
@@ -63,8 +67,9 @@ public class Product {
   //category_id aparte,Hibernate ya sabe que existe
   //la property en products
   @ManyToOne
-    @JoinColumn(name = "category_id",referencedColumnName = "id" )
-    private Category category;
+   // @JoinColumn(name = "category_id",referencedColumnName = "id" )
+   @JoinColumn(name = "category_id", nullable = true)
+  private Category category;
   
   // Getters
   public Long getId() {
