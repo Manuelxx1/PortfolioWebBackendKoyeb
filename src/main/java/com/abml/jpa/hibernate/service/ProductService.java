@@ -189,4 +189,35 @@ public void updatePassword(String usuario, String nuevaPassword) {
         userRepository.save(user);
   }
 
+//para gestión de productos backoffice 
+  //para el método read(get) se usa el método findAll que está
+//al principio de este archivo 
+  
+  //create
+  public Product createProduct(Product product) {
+        return productRepo.save(product);
+
+    
+  }
+
+  // Método de actualización
+    public Product updateProduct(Long id, Product product) {
+        Product existing = productRepo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
+
+        existing.setName(product.getName());
+        existing.setPrice(product.getPrice());
+        existing.setStock(product.getStock());
+
+        return productRepo.save(existing);
+    }
+
+
+  //delete
+  public void deleteProduct(Long id) {
+        productRepo.deleteById(id);
+  }
+
+  
+
 }
