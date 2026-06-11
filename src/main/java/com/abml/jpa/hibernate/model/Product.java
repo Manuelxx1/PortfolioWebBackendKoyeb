@@ -9,6 +9,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import com.abml.jpa.hibernate.model.Section;
 import com.abml.jpa.hibernate.model.Category;
 import jakarta.persistence.EnumType;
@@ -36,8 +38,24 @@ public class Product {
 
   
 
-  @Column(name = "created_at")
-  private LocalDateTime createdAt;
+// Auditoría
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Callbacks JPA
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
   //al mover la columna section de products
   //a una tabla nueva llamada sections 
