@@ -208,8 +208,11 @@ public void updatePassword(String usuario, String nuevaPassword) {
         existing.setName(product.getName());
         existing.setPrice(product.getPrice());
         existing.setStock(product.getStock());
-
-        return productRepo.save(existing);
+        existing.setDescription(product.getDescription());
+      existing.setImageUrl(product.getImageUrl());
+existing.setSection(product.getSection());
+        existing.setCategory(product.getCategory());
+      return productRepo.save(existing);
     }
 
 
