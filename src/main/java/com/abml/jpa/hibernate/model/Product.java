@@ -35,6 +35,7 @@ public class Product {
 
   @Column(name = "image_url")
   private String imageUrl;
+  private String enlace;
 
   
 
@@ -138,6 +139,17 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+  //enlace 
+
+public String getEnlace() {
+        return enlace;
+    }
+
+    public void setEnlace(String enlace) {
+        this.enlace = enlace ;
+    }
+  
+  
     public Section getSection() {
         return section;
     }
