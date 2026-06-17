@@ -1,6 +1,5 @@
-package com.eshop.news.repository;
-
-import com.eshop.news.model.ArticleIndex;
+package com.abml.jpa.hibernate.repository;
+import com.abml.jpa.hibernate.model.ArticleIndex;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
