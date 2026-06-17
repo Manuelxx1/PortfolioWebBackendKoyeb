@@ -1,7 +1,7 @@
-package com.eshop.news.service;
+package com.abml.jpa.hibernate.service;
 
-import com.eshop.news.model.ArticleIndex;
-import com.eshop.news.repository.ArticleIndexRepository;
+import com.abml.jpa.hibernate.model.ArticleIndex;
+import com.abml.jpa.hibernate.repository.ArticleIndexRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
