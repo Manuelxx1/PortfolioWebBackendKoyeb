@@ -1,6 +1,4 @@
-package com.eshop.news.controller;
-
-
+package com.ejercicioabml.abmlcontroller;
 
 import com.abml.jpa.hibernate.model.ArticleIndex;
 import com.abml.jpa.hibernate.service.ArticleIndexService;
