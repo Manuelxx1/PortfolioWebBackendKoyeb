@@ -1,7 +1,9 @@
 package com.eshop.news.controller;
 
-import com.eshop.news.model.ArticleIndex;
-import com.eshop.news.service.ArticleIndexService;
+
+
+import com.abml.jpa.hibernate.model.ArticleIndex;
+import com.abml.jpa.hibernate.service.ArticleIndexService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
