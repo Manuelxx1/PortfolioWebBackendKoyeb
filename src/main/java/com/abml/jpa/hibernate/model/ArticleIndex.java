@@ -1,4 +1,7 @@
-package com.noticias.model;
+//package com.noticias.model;
+
+package com.abml.jpa.hibernate.model;
+
 
 import jakarta.persistence.*;
 import lombok.Data;
