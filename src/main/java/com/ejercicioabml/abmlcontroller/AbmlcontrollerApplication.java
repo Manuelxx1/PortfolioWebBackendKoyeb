@@ -580,7 +580,7 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
-String angularRoute="articulo-noticias/tecnologia/ciberseguridad/ciberseguridad2";
+
 
   private static final Map<String, List<String>> archivoPorPalabra = Map.of(
     "agua", List.of("agua.html", "explicacion.html"),
@@ -666,8 +666,28 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
             .body("No se encontró información que contenga esa palabra.");
     }
 
+
+//esto no sirve para routerLink de Angular 
+  //porque se esta usando un map como filtro de retorno de varios archivos
+  //de acuerdo a la frase de búsqueda que llega al endpoint 
+  //que se guarda en archivosCoincidentes
+  //su de usara asi se enviaría varios nombres de archivos html
+  //junto a la ruta del routerLink y eso rompería la logica de la ruta
+  //y si no se usa archivosCoincidentes el buscador con map no se usaría
+//y no tiene sentido entonces el map en el endpoint 
+  // cuando en realidad el endpoint se hizo para usar un map
+  //además para el routerLink se debe configurar el archivo  routes
+  //y las routes están preparadaspara seleccionarun component ts
+  //qye vinculan a su propia template archivo html
+  //el resultado seria el template del ts definido en la ruta
+  //y todo este endpoint con el map no tendria sentido haberlo  hecho
+  //esto solo sirve como se definió para abrir uno o varios archivos html
+  //desde el backend o incluso se podría desde el frontend con un a href normal 
+  //especificando el directorio o ruta donde esta el html y sus archivos  
+  //pero no con routerLink por lo explicado anteriormente 
+  
     // Generar HTML con los enlaces
-    /*String html = archivosCoincidentes.stream()
+    String html = archivosCoincidentes.stream()
         .map(archivo -> {
             String url = baseUrl + archivo;
             String nombre = archivo.replace(".html", "");
@@ -678,20 +698,11 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     return ResponseEntity.ok("<html><body>" + html + "</body></html>");
 }
 
-*/
 
-  //para probar si se puede com un routerLink
 
-String html = archivosCoincidentes.stream()
-        .map(archivo -> {
-            String url = angularRoute + archivo;
-            String nombre = archivo.replace(".html", "");
-            return  url  + nombre ;
-        })
-        .collect(Collectors.joining());
 
-    return ResponseEntity.ok( html );
-}
+
+  
 
   
   
