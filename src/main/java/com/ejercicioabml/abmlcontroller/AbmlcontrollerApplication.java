@@ -580,7 +580,7 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
-private String angularRoute=articulo-noticias/tecnologia/ciberseguridad/ciberseguridad2;
+String angularRoute="articulo-noticias/tecnologia/ciberseguridad/ciberseguridad2";
 
   private static final Map<String, List<String>> archivoPorPalabra = Map.of(
     "agua", List.of("agua.html", "explicacion.html"),
