@@ -580,8 +580,9 @@ private PersonaRepository personaRepository;
 @Value("${base.url}")
     private String baseUrl;
 
+private String angularRoute=articulo-noticias/tecnologia/ciberseguridad/ciberseguridad2;
 
-private static final Map<String, List<String>> archivoPorPalabra = Map.of(
+  private static final Map<String, List<String>> archivoPorPalabra = Map.of(
     "agua", List.of("agua.html", "explicacion.html"),
     "informacion", List.of("agua.html", "explicacion.html","planetatierra.html"),
     "sistema", List.of("sistema.html", "explicacion.html"),
@@ -666,7 +667,7 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     }
 
     // Generar HTML con los enlaces
-    String html = archivosCoincidentes.stream()
+    /*String html = archivosCoincidentes.stream()
         .map(archivo -> {
             String url = baseUrl + archivo;
             String nombre = archivo.replace(".html", "");
@@ -677,7 +678,23 @@ public ResponseEntity<String> obtenerLinkHtml(@RequestParam String frase) {
     return ResponseEntity.ok("<html><body>" + html + "</body></html>");
 }
 
+*/
 
+  //para probar si se puede com un routerLink
+
+String html = archivosCoincidentes.stream()
+        .map(archivo -> {
+            String url = angularRoute + archivo;
+            String nombre = archivo.replace(".html", "");
+            return  url  + nombre ;
+        })
+        .collect(Collectors.joining());
+
+    return ResponseEntity.ok( html );
+}
+
+  
+  
  /*       
  Para el filtrado por Map pero limitado
 @GetMapping("/html-link")
