@@ -11,6 +11,13 @@ import java.util.List;
 public interface ArticleIndexRepository extends JpaRepository<ArticleIndex, Long> {
 
     // Consulta nativa para aprovechar el índice FULLTEXT de MySQL
-    @Query(value = "SELECT * FROM article_search_index WHERE MATCH(title, lead_text, keywords) AGAINST(:termino IN NATURAL LANGUAGE MODE)", nativeQuery = true)
+  /*  @Query(value = "SELECT * FROM article_search_index WHERE MATCH(title, lead_text, keywords) AGAINST(:termino IN NATURAL LANGUAGE MODE)", nativeQuery = true)
+    List<ArticleIndex> buscarPorPalabrasClave(@Param("termino") String termino);
+*/
+
+    
+    //Buscador con sugerencias 
+    // Cambiamos a IN BOOLEAN MODE y concatenamos el asterisco '*' al final del término
+    @Query(value = "SELECT * FROM article_search_index WHERE MATCH(title, lead_text, keywords) AGAINST(CONCAT(:termino, '*') IN BOOLEAN MODE)", nativeQuery = true)
     List<ArticleIndex> buscarPorPalabrasClave(@Param("termino") String termino);
 }
