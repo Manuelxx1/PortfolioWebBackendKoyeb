@@ -24,4 +24,13 @@ public class ArticleIndexController {
         List<ArticleIndex> resultados = service.buscarArticulos(termino);
         return ResponseEntity.ok(resultados);
     }
+
+
+    // GET http://localhost:8080/api/noticias/sugerencias?q=ciber
+@GetMapping("/sugerencias")
+public ResponseEntity<List<String>> obtenerSugerencias(@RequestParam("q") String termino) {
+    // Le pide al servicio (y este al repositorio con la query DISTINCT) las palabras clave
+    List<String> palabrasSugeridas = service.obtenerListaDeKeywords(termino); 
+    return ResponseEntity.ok(palabrasSugeridas);
+}
 }
