@@ -1,6 +1,6 @@
 package com.abml.jpa.hibernate.repository;
 
-import com.abml.jpa.model.Comentario;
+import com.abml.jpa.hibernate.model.Comentario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
