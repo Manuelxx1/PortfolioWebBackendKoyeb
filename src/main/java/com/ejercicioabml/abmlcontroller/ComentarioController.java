@@ -16,7 +16,7 @@ public class ComentarioController {
     private ComentarioRepository comentarioRepository;
 
     // 1. Obtener comentarios de una noticia específica: GET /api/comentarios/noticia/5
-    @Override
+   // @Override
     @GetMapping("/noticia/{noticiaId}")
     public List<Comentario> obtenerComentariosPorNoticia(@PathVariable Long noticiaId) {
         return comentarioRepository.findByNoticiaIdOrderByFechaDesc(noticiaId);
