@@ -9,8 +9,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/comentarios")
-@CrossOrigin(origins = "http://localhost:4200") // Para que conecte con tu Angular local
-public class ComentarioController {
+//@CrossOrigin(origins = "http://localhost:4200") // Para que conecte con tu Angular local
+@CrossOrigin(origins = "https://4200-cs-582739288523-default.cs-us-east1-pkhd.cloudshell.dev")
+    
+    public class ComentarioController {
 
     @Autowired
     private ComentarioRepository comentarioRepository;
