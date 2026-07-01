@@ -31,4 +31,13 @@ public class ArticleIndex {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+
+    private LocalDateTime fecha;
+
+
+    @PrePersist
+    protected void onCreate() {
+        this.fecha = LocalDateTime.now();
+    }
 }
