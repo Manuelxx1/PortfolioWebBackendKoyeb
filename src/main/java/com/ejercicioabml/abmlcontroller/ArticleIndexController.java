@@ -25,7 +25,16 @@ public class ArticleIndexController {
         return ResponseEntity.ok(resultados);
     }
 
+    //por id para los artículos html para traerlos únicamente los datos 
+//del artículo seleccionado 
 
+@GetMapping("/buscarporid")
+    public ResponseEntity<List<ArticleIndex>> buscarporid(@RequestParam("q") String termino) {
+        List<ArticleIndex> resultadosporid = service.buscarPorId(termino);
+        return ResponseEntity.ok(resultadosporid);
+    }
+
+    
     // GET http://localhost:8080/api/noticias/sugerencias?q=ciber
 @GetMapping("/sugerencias")
 public ResponseEntity<List<String>> obtenerSugerencias(@RequestParam("q") String termino) {
