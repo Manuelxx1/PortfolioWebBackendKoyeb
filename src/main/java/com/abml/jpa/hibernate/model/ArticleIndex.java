@@ -34,11 +34,16 @@ public class ArticleIndex {
     private String imageUrl;
 
 
-    private LocalDateTime fecha;
+    
 
+// Este campo es solo para el nacimiento de la nota. Nunca se toca en los UPDATES.
+//insertable=false impide que hibernate realice un insert in to desde el frontend 
+    //updatable=false impide que hibernate actualize el registro desde el frontend
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
+private LocalDateTime fechaCreacion;
 
-    @PrePersist
-    protected void onCreate() {
-        this.fecha = LocalDateTime.now();
-    }
+// Este campo cambia cada vez que se edita el registro.
+@Column(name = "fecha_actualizacion", insertable = false, updatable = false)
+private LocalDateTime fechaActualizacion;
+    
 }
