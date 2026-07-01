@@ -66,5 +66,11 @@ public List<String> obtenerListaDeKeywords(String termino) {
         return repository.buscarPorPalabrasClaveCompleto(termino.trim());
     }
 
-    
+    //para obtener los datos para los artículos html
+    //usando sus id para que retorne únicamente 
+    //los datos del artículo solicitado 
+    public ArticleSearchIndex buscarPorId(Long id) {
+    return repository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Artículo no encontrado con el ID: " + id));
+}
 }
