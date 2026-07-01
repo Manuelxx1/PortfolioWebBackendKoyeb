@@ -29,7 +29,7 @@ public class ArticleIndexController {
 //del artículo seleccionado 
 
 @GetMapping("/buscarporid")
-    public ResponseEntity<List<ArticleIndex>> buscarporid(@RequestParam("q") String termino) {
+    public ResponseEntity<List<ArticleIndex>> buscarporid(@RequestParam("q") Long termino) {
         List<ArticleIndex> resultadosporid = service.buscarPorId(termino);
         return ResponseEntity.ok(resultadosporid);
     }
