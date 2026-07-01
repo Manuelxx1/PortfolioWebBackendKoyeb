@@ -5,6 +5,7 @@ package com.abml.jpa.hibernate.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "article_search_index")
