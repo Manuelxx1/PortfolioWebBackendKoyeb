@@ -31,4 +31,9 @@ public interface ArticleIndexRepository extends JpaRepository<ArticleIndex, Long
     // =========================================================================
     @Query(value = "SELECT DISTINCT keywords FROM article_search_index WHERE MATCH(title, lead_text, keywords) AGAINST(CONCAT(:termino, '*') IN BOOLEAN MODE) LIMIT 5", nativeQuery = true)
     List<String> buscarSugerenciasKeyword(@Param("termino") String termino);
+
+
+    //para obtener las noticias de hoy para la sección Inicio
+    @Query(value = "SELECT * FROM article_search_index WHERE DATE(fecha_creacion) = CURDATE() ORDER BY fecha_creacion DESC", nativeQuery = true)
+    List<ArticleIndex> findNoticiasDeHoyNativa();
 }
