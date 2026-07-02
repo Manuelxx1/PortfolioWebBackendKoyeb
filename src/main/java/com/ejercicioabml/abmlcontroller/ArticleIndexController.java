@@ -43,4 +43,19 @@ public ResponseEntity<List<String>> obtenerSugerencias(@RequestParam("q") String
     List<String> palabrasSugeridas = service.obtenerListaDeKeywords(termino); 
     return ResponseEntity.ok(palabrasSugeridas);
 }
+
+
+    //para obtener las noticias de hoy para seccion inicio
+    @GetMapping("/hoy")
+public ResponseEntity<List<ArticleIndex>> obtenerNoticiasDeHoy() {
+    List<ArticleIndex> noticiasDeHoy = service.obtenerNoticiasDeHoy(); // Cambiás por el nombre de tu service
+    
+    if (noticiasDeHoy.isEmpty()) {
+        // Opcional: Podés devolver un 204 No Content si hoy todavía no se publicó nada
+        return ResponseEntity.noContent().build(); 
+    }
+    
+    return ResponseEntity.ok(noticiasDeHoy);
+}
+
 }
