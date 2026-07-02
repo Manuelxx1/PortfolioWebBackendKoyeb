@@ -74,4 +74,12 @@ public ArticleIndex buscarPorId(Long id) {
     return repository.findById(id)
         .orElseThrow(() -> new RuntimeException("Artículo no encontrado con el ID: " + id));
 }
+
+
+
+    //para obtener las noticias de hoy para la sección Inicio
+    public List<ArticleIndex> obtenerNoticiasDeHoy() {
+    return repository.findNoticiasDeHoyNativa();
+}
+
 }
