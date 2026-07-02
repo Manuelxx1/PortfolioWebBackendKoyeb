@@ -44,8 +44,7 @@ public ResponseEntity<List<String>> obtenerSugerencias(@RequestParam("q") String
     return ResponseEntity.ok(palabrasSugeridas);
 }
 
-
-    //para obtener las noticias de hoy para seccion inicio
+//para obtener las noticias de hoy para seccion inicio
     @GetMapping("/hoy")
 public ResponseEntity<List<ArticleIndex>> obtenerNoticiasDeHoy() {
     List<ArticleIndex> noticiasDeHoy = service.obtenerNoticiasDeHoy(); // Cambiás por el nombre de tu service
@@ -58,4 +57,5 @@ public ResponseEntity<List<ArticleIndex>> obtenerNoticiasDeHoy() {
     return ResponseEntity.ok(noticiasDeHoy);
 }
 
+    
 }
